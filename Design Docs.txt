@@ -1,0 +1,72 @@
+Possible Characters:
+------------------------
+- Count + family (spouse, children)
+- servants (generic, personal, butler, cupbearer)
+- priest
+- knights
+- gentry (hangers-around) (gentlemen of the bedchamber, lady in waiting, etc.)
+- chamberlain (admin)
+- chancellor (secretary - often bishop)
+- treasurer
+- constable (military admin)
+- master of the horse
+- falconer
+- page -> squire -> knight (for children)
+- steward
+
+
+Game start
+----------------
+
+Create character (as Gentleman)
+  - chooose name, # of children)
+ ===> Game started, generate family
+ House screen, showing family & explaining what to do
+ 
+ Goals: Increase family prestige
+ 
+ 
+Mechanics:
+----------------
+- Each day start at home, choose one action for the day
+  - stay home -> interact with family
+  - go to court -> optional bring family
+  - visit county
+- Set amount of action slots per day
+- interpersonal actions or room interactions (turn order)
+
+--------------------------------------
+|   DATE   |     | NOTIFICATIONS |   |
+|-----------     -----------------   |
+| Calendar |   ------------          |
+|          |  | Courtier 1 |         |
+|          |   ------------          |
+|          |-------------------------|
+|          | | Action |  | Action |  |
+|          | ----------  ----------  |
+--------------------------------------
+
+Characters have traits & money(like ck2)
+Families/Dynasties have prestige
+
+Daily Prestige changes:
+------------------------
+
+Gain:
+- jobs
+- marriages (by family)
+- land
+- items (horse, etc.)
+- special items (event based)
+
+Lose:
+- missing court (increasing daily)
+- unemployed sons (by age)
+- unmarried children (by age)
+- poorly clothed
+- faling to have kids
+
+Letters:
+---------------
+- stay at home and write
+- delivered in the evening or once/tick if at home
