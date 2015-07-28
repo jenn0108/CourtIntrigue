@@ -20,14 +20,14 @@ namespace CourtIntrigue
         public MainWindow()
         {
             InitializeComponent();
-            game = new Game(NUM_PLAYERS,null);
             logger = new TextBoxLogger(this);
+            game = new Game(logger, NUM_PLAYERS, null);
         }
 
         private void nextButton_Click(object sender, EventArgs e)
         {
-            game.BeginDay(logger);
-            game.Tick(logger);
+            game.BeginDay();
+            game.Tick();
         }
 
         class TextBoxLogger : Logger

@@ -19,14 +19,19 @@ namespace CourtIntrigue
             Game = game;
         }
 
-        public virtual Action Tick(Room room, Logger logger)
+        public virtual Action Tick(Room room)
         {
             throw new NotImplementedException();
         }
 
-        public virtual Room BeginDay(Logger logger)
+        public virtual Room BeginDay()
         {
             throw new NotImplementedException();
+        }
+
+        protected void CharacterLog(string text)
+        {
+            Game.Log(Name + ": " + text);
         }
     }
 }

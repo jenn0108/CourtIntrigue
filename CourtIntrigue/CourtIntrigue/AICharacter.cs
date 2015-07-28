@@ -13,10 +13,10 @@ namespace CourtIntrigue
 
         }
 
-        public override Action Tick(Room room, Logger debugLogger)
+        public override Action Tick(Room room)
         {
-            debugLogger.PrintText(Name + ": Doing the needful!");
-            debugLogger.PrintText(Name + ": In room with: " + string.Join(", ", room.GetCharacters(this).Select(c => c.Name)));
+            CharacterLog("Doing the needful!");
+            CharacterLog("In room with: " + string.Join(", ", room.GetCharacters(this).Select(c => c.Name)));
 
             // Get number of solo actions
             string[] actions = room.Actions;
@@ -42,10 +42,10 @@ namespace CourtIntrigue
 
         }
 
-        public override Room BeginDay(Logger debugLogger)
+        public override Room BeginDay()
         {
             Room ret = Game.CommonRooms[Game.GetRandom(Game.CommonRooms.Length)];
-            debugLogger.PrintText(Name + " is going to " + ret.Name);
+            CharacterLog("Going to " + ret.Name);
             return ret;
         }
 

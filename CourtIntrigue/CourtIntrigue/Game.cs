@@ -16,9 +16,11 @@ namespace CourtIntrigue
         private Random random;
         private Dictionary<Character, Room> chosenRooms = new Dictionary<Character, Room>();
         private EventManager eventManager;
+        private Logger debugLogger;
         public Room[] CommonRooms { get; private set; }
-        public Game(int numCharacters, Character player)
+        public Game(Logger logger, int numCharacters, Character player)
         {
+            debugLogger = logger;
             eventManager = new EventManager();
             random = new Random();
 
@@ -32,13 +34,13 @@ namespace CourtIntrigue
             eventManager.LoadEventsFromFile("Events/testevents.xml");
         }
 
-        public void BeginDay(Logger debugLogger)
+        public void BeginDay()
         {
             debugLogger.PrintText("Wake up");
             chosenRooms.Clear();
             foreach (var character in characters)
             {
-                Room room = character.BeginDay(debugLogger);
+                Room room = character.BeginDay();
                 chosenRooms.Add(character, room);
                 room.AddCharacter(character);
             }
@@ -47,12 +49,12 @@ namespace CourtIntrigue
             debugLogger.PrintText("Start day");
         }
 
-        public void Tick(Logger debugLogger)
+        public void Tick()
         {
             debugLogger.PrintText("Begin tick");
             foreach (var character in characters)
             {
-                Action action = character.Tick(chosenRooms[character], debugLogger);
+                Action action = character.Tick(chosenRooms[character]);
                 if (action.Target == null )
                 {
                     debugLogger.PrintText(character.Name + " chose " + action.Identifer);
@@ -78,6 +80,11 @@ namespace CourtIntrigue
         public int GetRandom(int max)
         {
             return random.Next(max);
+        }
+
+        public void Log(string txt)
+        {
+            debugLogger.PrintText(txt);
         }
     }
 }
