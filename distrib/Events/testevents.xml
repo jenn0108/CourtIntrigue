@@ -1,0 +1,14 @@
+<events>
+  <event>
+    <id>eventid</id>
+    <description>Stuff Happens!</description>
+    <action>
+      <action_id>PUBLIC_URINATION_ACTION</action_id>
+    </action>
+    <options>
+      <option>
+        <label>Button Text</label>
+      </option>
+    </options>
+  </event>
+</events>
