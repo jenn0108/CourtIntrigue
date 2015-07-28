@@ -15,16 +15,21 @@ namespace CourtIntrigue
         private List<Character> characters = new List<Character>();
         private Random random;
         private Dictionary<Character, Room> chosenRooms = new Dictionary<Character, Room>();
+        private EventManager eventManager;
         public Room[] CommonRooms { get; private set; }
         public Game(int numCharacters, Character player)
         {
+            eventManager = new EventManager();
             random = new Random();
+
             for (int iCharacter = 0; iCharacter < numCharacters; ++iCharacter )
             {
                 string name = new string((char)('A' + iCharacter), 1);
                 characters.Add(new AICharacter(name, 0, this));
             }
             CommonRooms = new Room[2] { new Room("Town", false, new string[] { Action.PUBLIC_URINATION_ACTION }), new Room("Court", true, new string[] { Action.EAVESDROP_ACTION }) };
+
+            eventManager.LoadEventsFromFile("Events/testevents.xml");
         }
 
         public void BeginDay(Logger debugLogger)

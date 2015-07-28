@@ -49,6 +49,9 @@
     <Compile Include="Action.cs" />
     <Compile Include="AICharacter.cs" />
     <Compile Include="Character.cs" />
+    <Compile Include="Event.cs" />
+    <Compile Include="EventManager.cs" />
+    <Compile Include="Logic.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
