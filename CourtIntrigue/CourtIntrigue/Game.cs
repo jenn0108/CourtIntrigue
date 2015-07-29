@@ -52,24 +52,90 @@ namespace CourtIntrigue
         public void Tick()
         {
             debugLogger.PrintText("Begin tick");
+
+            //If a character accepts a conversion (or other pair action), he may have his turn
+            //consumed.  We need to keep track of which characters should have their turns
+            //skipped because of this.
+            ISet<Character> finishedCharacters = new HashSet<Character>();
+
+            //We're going to need to delay solo actions until after the pair actions so those
+            //characters can be interrupted.  This is an important gameplay idea so the last
+            //character in the turn order has the opportunity to talk to other characters.
+            Dictionary<Character, Action> soloActions = new Dictionary<Character, Action>();
+
+            //Give each player a turn according to turn order.
             foreach (var character in characters)
             {
+
+                //Check for characters that accepted another action.
+                if (finishedCharacters.Contains(character))
+                {
+                    debugLogger.PrintText("Skipping " + character.Name);
+                    continue;
+                }
+
+                //Give the character their turn.
                 Action action = character.Tick(chosenRooms[character]);
-                if (action.Target == null )
+
+                if (action.Target == null)
                 {
                     debugLogger.PrintText(character.Name + " chose " + action.Identifer);
+
+                    //This character has chosen a solo action.  Queue it up and move on.
+                    soloActions.Add(character, action);
+                    continue;
                 }
                 else
                 {
-                    chosenRooms[character].RemoveCharacter(character);
                     debugLogger.PrintText(character.Name + " chose " + action.Identifer + " with " + action.Target.Name);
-                }
 
-                // event.dologic();
+                    //This character is unavailable for interaction because he is busy.
+                    chosenRooms[character].RemoveCharacter(character);
+                }
+                
+                ExecuteAction(character, action, finishedCharacters);
+
             }
 
+            debugLogger.PrintText("Solo actions");
+
+            foreach (var pair in soloActions)
+            {
+                //Like the main action loop, if the character accepted a pair action before this point,
+                //it replaces their normal action.
+                if (finishedCharacters.Contains(pair.Key))
+                    continue;
+
+                ExecuteAction(pair.Key, pair.Value, finishedCharacters);
+            }
 
             debugLogger.PrintText("End tick");
+        }
+
+        private void ExecuteAction(Character character, Action action, ISet<Character> finishedCharacters)
+        {
+            //Find a matching event to execute.
+            Event eventToPlay = eventManager.FindEventForAction(action, random);
+            if (eventToPlay != null)
+            {
+                //We pass in an event results instead of accepting a return value because we want all
+                //the event logic along the way to touch the same instance instead of having to worry
+                //about merging a number of different instances.
+                EventResults results = new EventResults();
+                eventToPlay.Execute(results, eventManager, action);
+
+                //Did the target get their turn consumed?
+                if (!results.TargetGetsTurn && action.Target != null)
+                {
+                    //Remove the target from the room (since they are busy) and make sure they don't
+                    //get their normal action.
+                    finishedCharacters.Add(action.Target);
+                    chosenRooms[character].RemoveCharacter(action.Target);
+                }
+            }
+
+            //This character is now done.
+            finishedCharacters.Add(character);
         }
 
         /// <summary>

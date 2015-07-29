@@ -29,6 +29,11 @@ namespace CourtIntrigue
             throw new NotImplementedException();
         }
 
+        public virtual EventOption ChooseOption(Action action, Event e)
+        {
+            throw new NotImplementedException();
+        }
+
         protected void CharacterLog(string text)
         {
             Game.Log(Name + ": " + text);

@@ -15,7 +15,6 @@ namespace CourtIntrigue
 
         public override Action Tick(Room room)
         {
-            CharacterLog("Doing the needful!");
             CharacterLog("In room with: " + string.Join(", ", room.GetCharacters(this).Select(c => c.Name)));
 
             // Get number of solo actions
@@ -27,17 +26,17 @@ namespace CourtIntrigue
                 int num = Game.GetRandom(actions.Length + room.GetCharacters(this).Count());
                 if (num < actions.Length)
                 {
-                    return new Action(actions[num], null);
+                    return new Action(actions[num], this, null);
                 }
                 else
                 {
-                    return new Action(Action.APPROACH_ACTION, room.GetCharacters(this).ElementAt(num - actions.Length));
+                    return new Action(Action.APPROACH_ACTION, this, room.GetCharacters(this).ElementAt(num - actions.Length));
                 }
             }
             else
             {
                 int num = Game.GetRandom(actions.Length);
-                return new Action(actions[num], null);
+                return new Action(actions[num], this, null);
             }
 
         }
@@ -47,6 +46,14 @@ namespace CourtIntrigue
             Room ret = Game.CommonRooms[Game.GetRandom(Game.CommonRooms.Length)];
             CharacterLog("Going to " + ret.Name);
             return ret;
+        }
+
+        public override EventOption ChooseOption(Action action, Event e)
+        {
+            EventOption[] options = e.GetAvailableOptions(action);
+            EventOption chosen = options[Game.GetRandom(options.Length)];
+            CharacterLog("Choosing " + chosen.Label);
+            return chosen;
         }
 
     }
