@@ -136,6 +136,9 @@ namespace CourtIntrigue
 
             //This character is now done.
             finishedCharacters.Add(character);
+
+            // The initiator always gets their turn consumed so remove them from the room.
+            chosenRooms[character].RemoveCharacter(character);
         }
 
         /// <summary>
