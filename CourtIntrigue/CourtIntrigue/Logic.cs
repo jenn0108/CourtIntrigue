@@ -9,7 +9,7 @@ namespace CourtIntrigue
     class Logic
     {
         public static ILogic TRUE = new TrueLogic();
-        public static ILogic FALSE = new TrueLogic();
+        public static ILogic FALSE = new FalseLogic();
     }
 
     interface ILogic
