@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,15 +19,24 @@ namespace CourtIntrigue
         private EventManager eventManager;
         private Logger debugLogger;
         public Room[] CommonRooms { get; private set; }
+
+        private string[] maleNames;
+        private string[] femaleNames;
+        private string[] familyNames;
+
         public Game(Logger logger, int numCharacters, Character player)
         {
             debugLogger = logger;
             eventManager = new EventManager();
             random = new Random();
 
+            maleNames = File.ReadAllLines("Names/male_names.txt");
+            femaleNames = File.ReadAllLines("Names/female_names.txt");
+            familyNames = File.ReadAllLines("Names/family_names.txt");
+
             for (int iCharacter = 0; iCharacter < numCharacters; ++iCharacter )
             {
-                string name = new string((char)('A' + iCharacter), 1);
+                string name = GetRandomMaleName();
                 characters.Add(new AICharacter(name, 0, this));
             }
             CommonRooms = new Room[2] { new Room("Town", false, new string[] { Action.PUBLIC_URINATION_ACTION }), new Room("Court", true, new string[] { Action.EAVESDROP_ACTION }) };
@@ -149,6 +159,21 @@ namespace CourtIntrigue
         public int GetRandom(int max)
         {
             return random.Next(max);
+        }
+
+        public string GetRandomMaleName()
+        {
+            return maleNames[GetRandom(maleNames.Length)];
+        }
+
+        public string GetRandomFemaleName()
+        {
+            return femaleNames[GetRandom(femaleNames.Length)];
+        }
+
+        public string GetRandomFamilyName()
+        {
+            return familyNames[GetRandom(familyNames.Length)];
         }
 
         public void Log(string txt)
