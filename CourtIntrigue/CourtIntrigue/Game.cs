@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace CourtIntrigue
 {
@@ -31,7 +32,11 @@ namespace CourtIntrigue
             }
             CommonRooms = new Room[2] { new Room("Town", false, new string[] { Action.PUBLIC_URINATION_ACTION }), new Room("Court", true, new string[] { Action.EAVESDROP_ACTION }) };
 
-            eventManager.LoadEventsFromFile("Events/testevents.xml");
+            //Go load all the xml files in our events directory.
+            foreach(var file in Directory.EnumerateFiles("Events", "*.xml"))
+            {
+                eventManager.LoadEventsFromFile(file);
+            }
         }
 
         public void BeginDay()
