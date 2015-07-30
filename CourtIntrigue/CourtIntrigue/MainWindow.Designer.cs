@@ -33,6 +33,7 @@
             this.nextButton = new System.Windows.Forms.Button();
             this.debugBox = new System.Windows.Forms.TextBox();
             this.dateLabel = new System.Windows.Forms.Label();
+            this.debugButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.permanentSplit)).BeginInit();
             this.permanentSplit.Panel1.SuspendLayout();
             this.permanentSplit.Panel2.SuspendLayout();
@@ -50,6 +51,7 @@
             // 
             // permanentSplit.Panel1
             // 
+            this.permanentSplit.Panel1.Controls.Add(this.debugButton);
             this.permanentSplit.Panel1.Controls.Add(this.dateLabel);
             this.permanentSplit.Panel1.Controls.Add(this.nextButton);
             // 
@@ -108,6 +110,17 @@
             this.dateLabel.TabIndex = 1;
             this.dateLabel.Text = "Date:";
             // 
+            // debugButton
+            // 
+            this.debugButton.Location = new System.Drawing.Point(3, 595);
+            this.debugButton.Name = "debugButton";
+            this.debugButton.Size = new System.Drawing.Size(26, 33);
+            this.debugButton.TabIndex = 2;
+            this.debugButton.Text = "D";
+            this.debugButton.UseVisualStyleBackColor = true;
+            this.debugButton.Visible = false;
+            this.debugButton.Click += new System.EventHandler(this.debugButton_Click);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -136,6 +149,7 @@
         private System.Windows.Forms.Button nextButton;
         private System.Windows.Forms.TextBox debugBox;
         private System.Windows.Forms.Label dateLabel;
+        private System.Windows.Forms.Button debugButton;
     }
 }
 

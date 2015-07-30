@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace CourtIntrigue
 {
@@ -23,6 +24,11 @@ namespace CourtIntrigue
             InitializeComponent();
             logger = new TextBoxLogger(this);
             game = new Game(logger, NUM_PLAYERS, null);
+
+            if(Debugger.IsAttached)
+            {
+                debugButton.Visible = true;
+            }
         }
 
         private void nextButton_Click(object sender, EventArgs e)
@@ -53,6 +59,13 @@ namespace CourtIntrigue
             {
                 main.debugBox.AppendText(text + "\r\n");
             }
+        }
+
+        private void debugButton_Click(object sender, EventArgs e)
+        {
+            //Inspect game here for information
+            game.Log("DebugBreak()");
+            Debugger.Break();
         }
     }
 }
