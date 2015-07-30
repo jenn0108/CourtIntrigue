@@ -1,1 +1,13 @@
-Potter
+Stark
+Lannister
+Bolton
+Forrester
+Baratheon
+Tyrell
+Martell
+Tully
+Greyjoy
+Frey
+Arryn
+Mormont
+Umber

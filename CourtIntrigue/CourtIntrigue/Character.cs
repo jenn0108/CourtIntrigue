@@ -10,11 +10,18 @@ namespace CourtIntrigue
     {
         public string Name { get; private set; }
         public int Money { get; private set; }
+        public Dynasty Dynasty { get; private set; }
         protected Game Game { get; private set; }
 
-        public Character(string name, int money, Game game)
+        public string Fullname
+        {
+            get { return Name + " " + Dynasty.Name; }
+        }
+
+        public Character(string name, Dynasty dynasty, int money, Game game)
         {
             Name = name;
+            Dynasty = dynasty;
             Money = money;
             Game = game;
         }
@@ -36,7 +43,7 @@ namespace CourtIntrigue
 
         protected void CharacterLog(string text)
         {
-            Game.Log(Name + ": " + text);
+            Game.Log(Fullname + ": " + text);
         }
     }
 }

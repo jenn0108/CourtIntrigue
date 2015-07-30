@@ -8,7 +8,7 @@ namespace CourtIntrigue
 {
     class AICharacter : Character
     {
-        public AICharacter(string name, int money, Game game) : base(name, money, game)
+        public AICharacter(string name, Dynasty dynasty, int money, Game game) : base(name, dynasty, money, game)
         {
 
         }

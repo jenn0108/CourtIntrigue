@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.IO;
 
 namespace CourtIntrigue
 {
@@ -26,6 +25,7 @@ namespace CourtIntrigue
         private string[] maleNames;
         private string[] femaleNames;
         private string[] familyNames;
+        private Dictionary<string, Dynasty> dynasties;
 
         public Game(Logger logger, int numCharacters, Character player)
         {
@@ -38,12 +38,17 @@ namespace CourtIntrigue
 
             maleNames = File.ReadAllLines("Names/male_names.txt");
             femaleNames = File.ReadAllLines("Names/female_names.txt");
+            dynasties = new Dictionary<string, Dynasty>();
             familyNames = File.ReadAllLines("Names/family_names.txt");
+            foreach (var fam in familyNames)
+            {
+                dynasties.Add(fam, new Dynasty(fam));
+            }
 
             for (int iCharacter = 0; iCharacter < numCharacters; ++iCharacter )
             {
                 string name = GetRandomMaleName();
-                characters.Add(new AICharacter(name, 0, this));
+                characters.Add(new AICharacter(name, GetRandomDynasty(), 0, this));
             }
 
             //Go load all the xml files in our events directory.
@@ -190,9 +195,10 @@ namespace CourtIntrigue
             return femaleNames[GetRandom(femaleNames.Length)];
         }
 
-        public string GetRandomFamilyName()
+        public Dynasty GetRandomDynasty()
         {
-            return familyNames[GetRandom(familyNames.Length)];
+            string lastName = familyNames[GetRandom(familyNames.Length)];
+            return dynasties[lastName];
         }
 
         public void Log(string txt)
