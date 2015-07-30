@@ -48,6 +48,11 @@ namespace CourtIntrigue
             //option should be visible to the character.
             return Options;
         }
+
+        public string CreateActionDescription(Action a)
+        {
+            return ActionHelper.ReplaceStrings(Description, a);
+        }
     }
 
     class EventOption

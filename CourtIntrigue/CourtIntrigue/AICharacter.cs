@@ -52,6 +52,7 @@ namespace CourtIntrigue
         {
             EventOption[] options = e.GetAvailableOptions(action);
             EventOption chosen = options[Game.GetRandom(options.Length)];
+            CharacterLog("Event:" + e.CreateActionDescription(action));
             CharacterLog("Choosing " + chosen.Label);
             return chosen;
         }

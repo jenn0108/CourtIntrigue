@@ -38,7 +38,7 @@
   </event>
   <event>
     <id>APPROACH_ACTION_EVENT_1</id>
-    <description>$Target.Name would like to talk to you.</description>
+    <description>$Target.Name$ would like to talk to you.</description>
     <options>
       <option>
         <label>Refuse</label>
@@ -57,11 +57,11 @@
   </event>
   <event>
     <id>APPROACH_ACTION_EVENT_2</id>
-    <description>$Target.Name refuses to speak with you!</description>
+    <description>$Target.Name$ refuses to speak with you!</description>
   </event>
   <event>
     <id>APPROACH_ACTION_EVENT_3</id>
-    <description>$Target.Name accepts.  What would you like to discuss?</description>
+    <description>$Target.Name$ accepts.  What would you like to discuss?</description>
     <options>
       <option>
         <label>Weather</label>
