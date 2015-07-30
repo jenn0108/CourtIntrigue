@@ -18,8 +18,10 @@ namespace CourtIntrigue
         private Random random;
         private Dictionary<Character, Room> chosenRooms = new Dictionary<Character, Room>();
         private EventManager eventManager;
+        private RoomManager roomManager;
         private Logger debugLogger;
         public Room[] CommonRooms { get; private set; }
+        public DateTime CurrentDate { get; private set; }
 
         private string[] maleNames;
         private string[] femaleNames;
@@ -29,7 +31,10 @@ namespace CourtIntrigue
         {
             debugLogger = logger;
             eventManager = new EventManager();
+            roomManager = new RoomManager();
             random = new Random();
+
+            CurrentDate = new DateTime(1066, 10, 13);//Day before the Battle of Hastings, ok for now.
 
             maleNames = File.ReadAllLines("Names/male_names.txt");
             femaleNames = File.ReadAllLines("Names/female_names.txt");
@@ -40,17 +45,26 @@ namespace CourtIntrigue
                 string name = GetRandomMaleName();
                 characters.Add(new AICharacter(name, 0, this));
             }
-            CommonRooms = new Room[2] { new Room("Town", false, new string[] { Action.PUBLIC_URINATION_ACTION }), new Room("Court", true, new string[] { Action.EAVESDROP_ACTION }) };
 
             //Go load all the xml files in our events directory.
             foreach(var file in Directory.EnumerateFiles("Events", "*.xml"))
             {
                 eventManager.LoadEventsFromFile(file);
             }
+
+            //Go load all the xml files in our rooms directory.
+            foreach (var file in Directory.EnumerateFiles("Rooms", "*.xml"))
+            {
+                roomManager.LoadRoomsFromFile(file);
+            }
+
+            CommonRooms = roomManager.GetCommonRooms();
         }
 
         public void BeginDay()
         {
+            CurrentDate = CurrentDate.AddDays(1.0);
+
             debugLogger.PrintText("Wake up");
             chosenRooms.Clear();
             foreach (var character in characters)

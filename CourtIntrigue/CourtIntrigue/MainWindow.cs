@@ -12,7 +12,7 @@ namespace CourtIntrigue
 {
     public partial class MainWindow : Form
     {
-        private static int NUM_PLAYERS = 20;
+        private static int NUM_PLAYERS = 5; //For testing purposes 5 is much easier to read and understand
 
         Game game;
         TextBoxLogger logger;
