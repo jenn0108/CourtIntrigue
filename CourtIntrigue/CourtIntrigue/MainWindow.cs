@@ -16,6 +16,7 @@ namespace CourtIntrigue
 
         Game game;
         TextBoxLogger logger;
+        int dayState = 0;
 
         public MainWindow()
         {
@@ -26,8 +27,17 @@ namespace CourtIntrigue
 
         private void nextButton_Click(object sender, EventArgs e)
         {
-            game.BeginDay();
-            game.Tick();
+            //There is one day start followed by 5 action ticks.
+            //We'll loop through them as the user clicks the button.
+            if((dayState % 6) == 0)
+            {
+                game.BeginDay();
+            }
+            else
+            {
+                game.Tick();
+            }
+            ++dayState;
         }
 
         class TextBoxLogger : Logger
