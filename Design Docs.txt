@@ -70,3 +70,24 @@ Letters:
 ---------------
 - stay at home and write
 - delivered in the evening or once/tick if at home
+
+
+
+Trial Idea
+---------------
+- Count appoints 3 judges (count can be one of them)
+- "evidence" is presented by characters.  Evidence is positive or negative.
+	- Positive or negative depends on whether or not the character likes the
+	  defendent better than the judges/accuser.
+- judges render verdict based loosly on evidence and whether they like the
+  defendent or accuser better.
+- traits like just would affect the the judges decision based on evidence.
+
+First Impression Idea
+----------------------
+A timed opinion modifier can be created when a character first meets another
+that is basically whatever opinion they have at the moment (based on things
+like traits and family modifiers).  Some multiple of the initial opinion can
+be added as a first impression modifier.  So, if they have a -10 from traits,
+a -30 first impression could be added.  The first impression could slowly
+degrade over time.
