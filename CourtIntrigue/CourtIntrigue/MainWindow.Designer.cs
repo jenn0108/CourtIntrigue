@@ -29,11 +29,12 @@
         private void InitializeComponent()
         {
             this.permanentSplit = new System.Windows.Forms.SplitContainer();
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.nextButton = new System.Windows.Forms.Button();
-            this.debugBox = new System.Windows.Forms.TextBox();
-            this.dateLabel = new System.Windows.Forms.Label();
             this.debugButton = new System.Windows.Forms.Button();
+            this.dateLabel = new System.Windows.Forms.Label();
+            this.nextButton = new System.Windows.Forms.Button();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.debugBox = new System.Windows.Forms.TextBox();
+            this.restartButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.permanentSplit)).BeginInit();
             this.permanentSplit.Panel1.SuspendLayout();
             this.permanentSplit.Panel2.SuspendLayout();
@@ -51,6 +52,7 @@
             // 
             // permanentSplit.Panel1
             // 
+            this.permanentSplit.Panel1.Controls.Add(this.restartButton);
             this.permanentSplit.Panel1.Controls.Add(this.debugButton);
             this.permanentSplit.Panel1.Controls.Add(this.dateLabel);
             this.permanentSplit.Panel1.Controls.Add(this.nextButton);
@@ -61,6 +63,36 @@
             this.permanentSplit.Size = new System.Drawing.Size(1117, 640);
             this.permanentSplit.SplitterDistance = 203;
             this.permanentSplit.TabIndex = 0;
+            // 
+            // debugButton
+            // 
+            this.debugButton.Location = new System.Drawing.Point(3, 595);
+            this.debugButton.Name = "debugButton";
+            this.debugButton.Size = new System.Drawing.Size(26, 33);
+            this.debugButton.TabIndex = 2;
+            this.debugButton.Text = "D";
+            this.debugButton.UseVisualStyleBackColor = true;
+            this.debugButton.Visible = false;
+            this.debugButton.Click += new System.EventHandler(this.debugButton_Click);
+            // 
+            // dateLabel
+            // 
+            this.dateLabel.AutoSize = true;
+            this.dateLabel.Location = new System.Drawing.Point(12, 9);
+            this.dateLabel.Name = "dateLabel";
+            this.dateLabel.Size = new System.Drawing.Size(33, 13);
+            this.dateLabel.TabIndex = 1;
+            this.dateLabel.Text = "Date:";
+            // 
+            // nextButton
+            // 
+            this.nextButton.Location = new System.Drawing.Point(30, 595);
+            this.nextButton.Name = "nextButton";
+            this.nextButton.Size = new System.Drawing.Size(141, 33);
+            this.nextButton.TabIndex = 0;
+            this.nextButton.Text = "Step";
+            this.nextButton.UseVisualStyleBackColor = true;
+            this.nextButton.Click += new System.EventHandler(this.nextButton_Click);
             // 
             // splitContainer2
             // 
@@ -80,19 +112,10 @@
             this.splitContainer2.SplitterDistance = 229;
             this.splitContainer2.TabIndex = 0;
             // 
-            // nextButton
-            // 
-            this.nextButton.Location = new System.Drawing.Point(30, 595);
-            this.nextButton.Name = "nextButton";
-            this.nextButton.Size = new System.Drawing.Size(141, 33);
-            this.nextButton.TabIndex = 0;
-            this.nextButton.Text = "Step";
-            this.nextButton.UseVisualStyleBackColor = true;
-            this.nextButton.Click += new System.EventHandler(this.nextButton_Click);
-            // 
             // debugBox
             // 
             this.debugBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.debugBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.debugBox.Location = new System.Drawing.Point(0, 0);
             this.debugBox.Multiline = true;
             this.debugBox.Name = "debugBox";
@@ -101,25 +124,17 @@
             this.debugBox.Size = new System.Drawing.Size(910, 407);
             this.debugBox.TabIndex = 0;
             // 
-            // dateLabel
+            // restartButton
             // 
-            this.dateLabel.AutoSize = true;
-            this.dateLabel.Location = new System.Drawing.Point(12, 9);
-            this.dateLabel.Name = "dateLabel";
-            this.dateLabel.Size = new System.Drawing.Size(33, 13);
-            this.dateLabel.TabIndex = 1;
-            this.dateLabel.Text = "Date:";
-            // 
-            // debugButton
-            // 
-            this.debugButton.Location = new System.Drawing.Point(3, 595);
-            this.debugButton.Name = "debugButton";
-            this.debugButton.Size = new System.Drawing.Size(26, 33);
-            this.debugButton.TabIndex = 2;
-            this.debugButton.Text = "D";
-            this.debugButton.UseVisualStyleBackColor = true;
-            this.debugButton.Visible = false;
-            this.debugButton.Click += new System.EventHandler(this.debugButton_Click);
+            this.restartButton.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.restartButton.Location = new System.Drawing.Point(174, 595);
+            this.restartButton.Name = "restartButton";
+            this.restartButton.Size = new System.Drawing.Size(26, 33);
+            this.restartButton.TabIndex = 3;
+            this.restartButton.Text = "↻";
+            this.restartButton.UseVisualStyleBackColor = true;
+            this.restartButton.Visible = false;
+            this.restartButton.Click += new System.EventHandler(this.button1_Click);
             // 
             // MainWindow
             // 
@@ -150,6 +165,7 @@
         private System.Windows.Forms.TextBox debugBox;
         private System.Windows.Forms.Label dateLabel;
         private System.Windows.Forms.Button debugButton;
+        private System.Windows.Forms.Button restartButton;
     }
 }
 

@@ -27,6 +27,7 @@ namespace CourtIntrigue
 
             if(Debugger.IsAttached)
             {
+                restartButton.Visible = true;
                 debugButton.Visible = true;
             }
         }
@@ -66,6 +67,13 @@ namespace CourtIntrigue
             //Inspect game here for information
             game.Log("DebugBreak()");
             Debugger.Break();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            debugBox.Clear();
+            dayState = 0;
+            game = new Game(logger, NUM_PLAYERS, null);
         }
     }
 }
