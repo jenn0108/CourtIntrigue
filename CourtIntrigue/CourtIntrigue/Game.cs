@@ -13,6 +13,8 @@ namespace CourtIntrigue
     }
     class Game
     {
+        private static int MAX_CHILDREN = 3; // Small for testing purposes.
+
         private List<Character> characters = new List<Character>();
         private Random random;
         private Dictionary<Character, Room> chosenRooms = new Dictionary<Character, Room>();
@@ -47,8 +49,7 @@ namespace CourtIntrigue
 
             for (int iCharacter = 0; iCharacter < numCharacters; ++iCharacter )
             {
-                string name = GetRandomMaleName();
-                characters.Add(new AICharacter(name, GetRandomDynasty(), 0, this));
+                characters.Add(GetRandomAICharacter());
             }
 
             //Go load all the xml files in our events directory.
@@ -199,6 +200,25 @@ namespace CourtIntrigue
         {
             string lastName = familyNames[GetRandom(familyNames.Length)];
             return dynasties[lastName];
+        }
+
+        public AICharacter GetRandomAICharacter()
+        {
+            // All character have a wife for now.
+            Dynasty dynasty = GetRandomDynasty();
+            List<DependentCharacter> dependants = new List<DependentCharacter>();
+            dependants.Add(new DependentCharacter(GetRandomFemaleName(), dynasty, this, Character.GenderEnum.Female));
+
+            // Now add a random number of children with random genders.
+            int numChildren = GetRandom(MAX_CHILDREN);
+            for (int i = 0; i < numChildren; i++)
+            {
+                Character.GenderEnum gender = (Character.GenderEnum) GetRandom(2);
+                string name = gender == Character.GenderEnum.Female ? GetRandomFemaleName() : GetRandomMaleName();
+                dependants.Add(new DependentCharacter(name, dynasty, this, gender));
+            }
+
+            return new AICharacter(GetRandomMaleName(), dynasty, 0, this, Character.GenderEnum.Male, dependants);
         }
 
         public void Log(string txt)

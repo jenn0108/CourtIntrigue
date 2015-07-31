@@ -8,9 +8,13 @@ namespace CourtIntrigue
 {
     class Character
     {
+        public enum GenderEnum { Female, Male };
+
         public string Name { get; private set; }
         public int Money { get; private set; }
         public Dynasty Dynasty { get; private set; }
+        public GenderEnum Gender { get; private set; }
+        public List<DependentCharacter> Dependents { get; private set; }
         protected Game Game { get; private set; }
 
         public string Fullname
@@ -18,12 +22,14 @@ namespace CourtIntrigue
             get { return Name + " " + Dynasty.Name; }
         }
 
-        public Character(string name, Dynasty dynasty, int money, Game game)
+        public Character(string name, Dynasty dynasty, int money, Game game, GenderEnum gender, List<DependentCharacter> dependents)
         {
             Name = name;
             Dynasty = dynasty;
             Money = money;
             Game = game;
+            Gender = gender;
+            Dependents = dependents;
         }
 
         public virtual Action Tick(Room room)
