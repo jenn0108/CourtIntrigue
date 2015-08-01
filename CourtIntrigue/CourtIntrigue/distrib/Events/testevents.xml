@@ -5,22 +5,35 @@
     <requirements>
       <action_id>PUBLIC_URINATION_ACTION</action_id>
     </requirements>
-    <exec>
-      <everyone_in_room>
-        <for_character>
-          <add_information>
-            <id>PUBLIC_URINATION_SIGHTING_INFORMATION</id>
-            <parameters PeeingParty="ROOT"/>
-          </add_information>
-        </for_character>
-      </everyone_in_room>
-    </exec>
     <options>
       <option>
         <label>Pee in a ditch</label>
+        <exec>
+          <everyone_in_room>
+            <for_character>
+              <observe_information>
+                <id>PUBLIC_URINATION_SIGHTING_INFORMATION</id>
+                <parameters PeeingParty="ROOT"/>
+                <chance>20</chance>
+              </observe_information>
+            </for_character>
+          </everyone_in_room>
+        </exec>
       </option>
       <option>
         <label>Pee in an alley</label>
+        <exec>
+          <everyone_in_room>
+            <for_character>
+              <observe_information>
+                <id>PUBLIC_URINATION_SIGHTING_INFORMATION</id>
+                <parameters PeeingParty="ROOT"/>
+                <chance>5</chance>
+              </observe_information>
+            </for_character>
+          </everyone_in_room>
+        </exec>
+
       </option>
     </options>
   </event>

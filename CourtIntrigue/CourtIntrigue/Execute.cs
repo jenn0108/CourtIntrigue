@@ -63,25 +63,31 @@ namespace CourtIntrigue
         }
     }
 
-    class AddInformationExecute : IExecute
+    class ObserveInformationExecute : IExecute
     {
         private string informationId;
         private Dictionary<string, string> parameters;
-        public AddInformationExecute(string id, Dictionary<string,string> parameters)
+        private int chance;
+        public ObserveInformationExecute(string informationId, Dictionary<string,string> parameters, int chance)
         {
-            this.informationId = id;
+            this.informationId = informationId;
             this.parameters = parameters;
+            this.chance = chance;
         }
 
         public void Execute(EventResults result, Game game, EventContext context, Event e)
         {
-            Information information = game.GetInformationById(informationId);
-            Dictionary<string, object> computedParameters = new Dictionary<string, object>();
-            foreach(var pair in parameters)
+            if (game.GetRandom(100) < chance)
             {
-                computedParameters.Add(pair.Key, context.GetScopedCharacterByName(pair.Value));
+                Information information = game.GetInformationById(informationId);
+                Dictionary<string, object> computedParameters = new Dictionary<string, object>();
+                foreach (var pair in parameters)
+                {
+                    computedParameters.Add(pair.Key, context.GetScopedCharacterByName(pair.Value));
+                }
+                context.CurrentScope.KnownInformation.Add(new InformationInstance(information, computedParameters));
+                game.Log(context.CurrentScope.Name + " learned an information.");
             }
-            context.CurrentScope.KnownInformation.Add(new InformationInstance(information, computedParameters));
         }
     }
 

@@ -28,9 +28,9 @@ namespace CourtIntrigue
                 {
                     expressions.Add(ReadScopingLoop(reader));
                 }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "add_information")
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "observe_information")
                 {
-                    expressions.Add(ReadAddInformation(reader));
+                    expressions.Add(ReadObserveInformation(reader));
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == tag)
                 {
@@ -118,15 +118,20 @@ namespace CourtIntrigue
             return new EveryoneInRoomExecute(operation, requirements);
         }
 
-        private static IExecute ReadAddInformation(XmlReader reader)
+        private static IExecute ReadObserveInformation(XmlReader reader)
         {
             string id = null;
+            int chance = 100;
             Dictionary<string, string> parameters = new Dictionary<string, string>();
             while (reader.Read())
             {
                 if (reader.NodeType == XmlNodeType.Element && reader.Name == "id")
                 {
                     id = reader.ReadElementContentAsString();
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "chance")
+                {
+                    chance = reader.ReadElementContentAsInt();
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "parameters")
                 {
@@ -135,14 +140,13 @@ namespace CourtIntrigue
                         parameters.Add(reader.Name, reader.Value);
                     }
                 }
-
-                else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "add_information")
+                else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "observe_information")
                 {
                     break;
                 }
             }
 
-            return new AddInformationExecute(id, parameters);
+            return new ObserveInformationExecute(id, parameters, chance);
         }
     }
 }
