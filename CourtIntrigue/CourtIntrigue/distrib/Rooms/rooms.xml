@@ -1,5 +1,5 @@
 <rooms>
-<!--  <room>
+  <room>
     <id>TOWN_ROOM</id>
     <name>Town</name>
     <common>Yes</common>
@@ -7,7 +7,7 @@
     <solo_actions>
       <action>PUBLIC_URINATION_ACTION</action>
     </solo_actions>
-  </room> -->
+  </room>
   <room>
     <id>COURT_ROOM</id>
     <name>Court</name>
