@@ -12,9 +12,9 @@ namespace CourtIntrigue
         private List<Character> unoccuppiedCharacters = new List<Character>();
         public string Identifier { get; private set; }
         public string Name { get; private set; }
-        public bool CharactersApproachable { get; private set; }
         public bool Common { get; private set; }
-        public string[] Actions { get; private set; }
+        public string[] SoloActions { get; private set; }
+        public string[] PairActions { get; private set; }
 
         public IEnumerable<Character> GetCharacters(Character skip = null)
         {
@@ -27,14 +27,14 @@ namespace CourtIntrigue
             }
         }
 
-        public Room(string id, string name, bool approachable, bool common, string[] actions)
+        public Room(string id, string name, bool common, string[] soloActions, string[] pairActions)
         {
             Identifier = id;
             Name = name;
-            CharactersApproachable = approachable;
+            PairActions = pairActions;
             Common = common;
-            Actions = actions;
-            if (actions == null || actions.Length == 0)
+            SoloActions = soloActions;
+            if (soloActions == null || soloActions.Length == 0)
             {
                 throw new ArgumentNullException("Rooms must have at least one action");
             }
@@ -96,8 +96,8 @@ namespace CourtIntrigue
             string identifier = null;
             string name = null;
             bool common = false;
-            bool charactersApproachable = false;
-            List<string> actions = new List<string>();
+            List<string> soloActions = new List<string>();
+            List<string> pairActions = new List<string>();
             while (reader.Read())
             {
                 if (reader.NodeType == XmlNodeType.Element && reader.Name == "id")
@@ -112,25 +112,26 @@ namespace CourtIntrigue
                 {
                     common = reader.ReadElementContentAsString() == "Yes";
                 }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "characters_approachable")
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "solo_actions")
                 {
-                    charactersApproachable = reader.ReadElementContentAsString() == "Yes";
+                    soloActions = ReadActions(reader);
                 }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "actions")
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "pair_actions")
                 {
-                    actions = ReadActions(reader);
+                    pairActions = ReadActions(reader);
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "room")
                 {
                     break;
                 }
             }
-            return new Room(identifier, name, charactersApproachable, common, actions.ToArray());
+            return new Room(identifier, name, common, soloActions.ToArray(), pairActions.ToArray());
         }
 
 
         private List<string> ReadActions(XmlReader reader)
         {
+            string tag = reader.Name;
             List<string> actions = new List<string>();
             while (reader.Read())
             {
@@ -138,7 +139,7 @@ namespace CourtIntrigue
                 {
                     actions.Add(reader.ReadElementContentAsString());
                 }
-                else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "actions")
+                else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == tag)
                 {
                     break;
                 }

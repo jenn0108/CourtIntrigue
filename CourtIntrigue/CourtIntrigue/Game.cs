@@ -75,6 +75,11 @@ namespace CourtIntrigue
             CommonRooms = roomManager.GetCommonRooms();
         }
 
+        public string[] FindAllowableActions(Room room, Character initiator, Character target)
+        {
+            return eventManager.FindAllowableActions(room, initiator, target);
+        }
+
         public void BeginDay()
         {
             CurrentDate = CurrentDate.AddDays(1.0);

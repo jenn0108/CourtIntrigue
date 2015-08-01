@@ -17,11 +17,9 @@ namespace CourtIntrigue
         {
             CharacterLog("In room with: " + string.Join(", ", room.GetCharacters(this).Select(c => c.Name)));
 
-            // Get number of solo actions
-            string[] actions = room.Actions;
+            string[] actions = room.SoloActions;
 
-            // Determine if room is approachable & get them
-            if (room.CharactersApproachable)
+            if (room.PairActions.Length > 0)
             {
                 int num = Game.GetRandom(actions.Length + room.GetCharacters(this).Count());
                 if (num < actions.Length)
@@ -30,7 +28,9 @@ namespace CourtIntrigue
                 }
                 else
                 {
-                    return new Action(Action.APPROACH_ACTION, this, room.GetCharacters(this).ElementAt(num - actions.Length));
+                    Character otherCharacter = room.GetCharacters(this).ElementAt(num - actions.Length);
+                    string[] pairActions = Game.FindAllowableActions(room, this, otherCharacter);
+                    return new Action(pairActions[Game.GetRandom(pairActions.Length)], this, otherCharacter);
                 }
             }
             else

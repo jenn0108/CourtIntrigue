@@ -33,6 +33,29 @@ namespace CourtIntrigue
             return okToRun[R.Next(okToRun.Count)];
         }
 
+        public string[] FindAllowableActions(Room room, Character initiator, Character target)
+        {
+            List<string> actions = new List<string>();
+            foreach(var actionId in room.PairActions)
+            {
+                Action action = new Action(actionId, initiator, target);
+                foreach (var pair in events)
+                {
+                    if (pair.Value.ActionRequirements.Evaluate(action))
+                    {
+                        actions.Add(actionId);
+                        break;
+                    }
+                }
+            }
+            if (actions.Count() == 0)
+            {
+                throw new Exception("No pair events found in " + room.Name);
+            }
+
+            return actions.ToArray();
+        }
+
         public Event FindEventById(string id)
         {
             //We can just let this throw an exeception if the event isn't present

@@ -71,4 +71,11 @@
       </option>
     </options>
   </event>
+  <event>
+   <id>PUNCH_ACTION_EVENT_0</id>
+    <description>You sock $Target.Name$ right in the nose.</description>
+    <requirements>
+      <action_id>PUNCH_ACTION</action_id>
+    </requirements>
+  </event>
 </events>

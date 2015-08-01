@@ -1,20 +1,24 @@
 <rooms>
-  <room>
+<!--  <room>
     <id>TOWN_ROOM</id>
     <name>Town</name>
     <common>Yes</common>
     <characters_approachable>No</characters_approachable>
-    <actions>
+    <solo_actions>
       <action>PUBLIC_URINATION_ACTION</action>
-    </actions>
-  </room>
+    </solo_actions>
+  </room> -->
   <room>
     <id>COURT_ROOM</id>
     <name>Court</name>
     <common>Yes</common>
     <characters_approachable>Yes</characters_approachable>
-    <actions>
+    <solo_actions>
       <action>EAVESDROP_ACTION</action>
-    </actions>
+    </solo_actions>
+    <pair_actions>
+      <action>APPROACH_ACTION</action>
+      <action>PUNCH_ACTION</action>
+    </pair_actions>
   </room>
 </rooms>
