@@ -16,9 +16,9 @@ namespace CourtIntrigue
             List<IExecute> expressions = new List<IExecute>();
             while (reader.Read())
             {
-                if (reader.NodeType == XmlNodeType.Element && reader.Name == "target_event")
+                if (reader.NodeType == XmlNodeType.Element && reader.Name == "trigger_event")
                 {
-                    expressions.Add(new TargetEventExecute(reader.ReadElementContentAsString()));
+                    expressions.Add(new TriggerEventExecute(reader.ReadElementContentAsString()));
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "allow_event_selection")
                 {
@@ -27,6 +27,10 @@ namespace CourtIntrigue
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "everyone_in_room")
                 {
                     expressions.Add(ReadScopingLoop(reader));
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "target")
+                {
+                    expressions.Add(new TargetExecute(ReadExecute(reader)));
                 }
                 else if (reader.NodeType == XmlNodeType.Element && (reader.Name == "observe_information" ||
                          reader.Name == "tell_information"))

@@ -39,6 +39,11 @@ namespace CourtIntrigue
 
         public Character GetScopedCharacterByName(string name)
         {
+            if (name == "TARGET")
+            {
+                return Target;
+            }
+
             foreach(var pair in scopes)
             {
                 if (pair.Key == name)

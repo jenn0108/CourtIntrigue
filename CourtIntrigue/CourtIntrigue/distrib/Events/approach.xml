@@ -6,7 +6,9 @@
       <action_id>APPROACH_ACTION</action_id>
     </requirements>
     <exec>
-      <target_event>APPROACH_ACTION_EVENT_1</target_event>
+      <target>
+        <trigger_event>APPROACH_ACTION_EVENT_1</trigger_event>
+      </target>
     </exec>
   </event>
   <event>
@@ -16,14 +18,18 @@
       <option>
         <label>Refuse</label>
         <exec>
-          <target_event>APPROACH_ACTION_EVENT_2</target_event>
+          <target>
+            <trigger_event>APPROACH_ACTION_EVENT_2</trigger_event>
+          </target>
           <allow_event_selection/>
         </exec>
       </option>
       <option>
         <label>Accept</label>
         <exec>
-          <target_event>APPROACH_ACTION_EVENT_3</target_event>
+          <target>
+            <trigger_event>APPROACH_ACTION_EVENT_3</trigger_event>
+          </target>
         </exec>
       </option>
     </options>

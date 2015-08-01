@@ -49,17 +49,17 @@ namespace CourtIntrigue
         }
     }
 
-    class TargetEventExecute : IExecute
+    class TriggerEventExecute : IExecute
     {
         private string eventid;
-        public TargetEventExecute(string id)
+        public TriggerEventExecute(string id)
         {
             eventid = id;
         }
 
         public void Execute(EventResults result, Game game, EventContext context, Event e)
         {
-            game.GetEventById(eventid).Execute(result, game, new EventContext(null, context.Target, context.CurrentScope, context.Room));
+            game.GetEventById(eventid).Execute(result, game, new EventContext(null, context.CurrentScope, context.GetScopedCharacterByName("ROOT"), context.Room));
         }
     }
 
@@ -135,6 +135,22 @@ namespace CourtIntrigue
                 }
                 context.PopScope();
             }
+        }
+    }
+
+    class TargetExecute : IExecute
+    {
+        private IExecute operation;
+        public TargetExecute(IExecute operation)
+        {
+            this.operation = operation;
+        }
+
+        public void Execute(EventResults result, Game game, EventContext context, Event e)
+        {
+            context.PushScope(context.Target);
+            operation.Execute(result, game, context, e);
+            context.PopScope();
         }
     }
 }
