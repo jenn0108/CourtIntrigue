@@ -28,9 +28,10 @@ namespace CourtIntrigue
                 {
                     expressions.Add(ReadScopingLoop(reader));
                 }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "observe_information")
+                else if (reader.NodeType == XmlNodeType.Element && (reader.Name == "observe_information" ||
+                         reader.Name == "tell_information"))
                 {
-                    expressions.Add(ReadObserveInformation(reader));
+                    expressions.Add(ReadGainInformation(reader));
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == tag)
                 {
@@ -118,10 +119,11 @@ namespace CourtIntrigue
             return new EveryoneInRoomExecute(operation, requirements);
         }
 
-        private static IExecute ReadObserveInformation(XmlReader reader)
+        private static IExecute ReadGainInformation(XmlReader reader)
         {
             string id = null;
             int chance = 100;
+            string tag = reader.Name;
             Dictionary<string, string> parameters = new Dictionary<string, string>();
             while (reader.Read())
             {
@@ -140,13 +142,18 @@ namespace CourtIntrigue
                         parameters.Add(reader.Name, reader.Value);
                     }
                 }
-                else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "observe_information")
+                else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == tag)
                 {
                     break;
                 }
             }
 
-            return new ObserveInformationExecute(id, parameters, chance);
+            if (tag == "observe_information")
+                return new ObserveInformationExecute(id, parameters, chance);
+            else if (tag == "add_information")
+                return new TellInformationExecute(id, parameters);
+            else
+                throw new Exception("Found unknown information tag: " + tag);
         }
     }
 }
