@@ -1,0 +1,11 @@
+﻿<informations>
+  <information>
+    <id>PUBLIC_URINATION_SIGHTING_INFORMATION</id>
+    <parameters>
+      <parameter type="character">PeeingParty</parameter>
+    </parameters>
+    <description>
+      $PeeingParty.Name$ was seen urinating in public.
+    </description>
+  </information>
+</informations>

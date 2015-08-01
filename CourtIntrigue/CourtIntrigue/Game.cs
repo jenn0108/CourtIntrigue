@@ -20,6 +20,7 @@ namespace CourtIntrigue
         private Dictionary<Character, Room> chosenRooms = new Dictionary<Character, Room>();
         private EventManager eventManager;
         private RoomManager roomManager;
+        private InformationManager infoManager;
         private Logger debugLogger;
         public Room[] CommonRooms { get; private set; }
         public DateTime CurrentDate { get; private set; }
@@ -34,6 +35,7 @@ namespace CourtIntrigue
             debugLogger = logger;
             eventManager = new EventManager();
             roomManager = new RoomManager();
+            infoManager = new InformationManager();
             random = new Random();
 
             CurrentDate = new DateTime(1066, 10, 13);//Day before the Battle of Hastings, ok for now.
@@ -62,6 +64,12 @@ namespace CourtIntrigue
             foreach (var file in Directory.EnumerateFiles("Rooms", "*.xml"))
             {
                 roomManager.LoadRoomsFromFile(file);
+            }
+
+            //Go load all the xml files in our rooms directory.
+            foreach (var file in Directory.EnumerateFiles("Informations", "*.xml"))
+            {
+                infoManager.LoadInformationsFromFile(file);
             }
 
             CommonRooms = roomManager.GetCommonRooms();

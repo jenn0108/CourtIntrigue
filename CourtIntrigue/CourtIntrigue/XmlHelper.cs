@@ -74,6 +74,14 @@ namespace CourtIntrigue
                 return new AndLogic(expressions.ToArray());
         }
 
+        public static Type StringToType(string typeName)
+        {
+            if (typeName == "character")
+            {
+                return typeof(Character);
+            }
 
+            throw new ArgumentException("Found unexpected type name " + typeName);
+        }
     }
 }
