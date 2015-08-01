@@ -2,9 +2,9 @@
   <event>
     <id>PUBLIC_URINATION_EVENT_0</id>
     <description>You are suddenly overcome with the urge to urinate.  You can't wait any longer!</description>
-    <action>
+    <requirements>
       <action_id>PUBLIC_URINATION_ACTION</action_id>
-    </action>
+    </requirements>
     <options>
       <option>
         <label>Pee in a ditch</label>
@@ -17,9 +17,9 @@
   <event>
     <id>EAVESDROP_ACTION_0</id>
     <description>You need to drop some eaves!</description>
-    <action>
+    <requirements>
       <action_id>EAVESDROP_ACTION</action_id>
-    </action>
+    </requirements>
     <options>
       <option>
         <label>Go look for some eaves!</label>
@@ -29,9 +29,9 @@
   <event>
     <id>APPROACH_ACTION_EVENT_0</id>
     <description>You approach intent on starting a discussion...</description>
-    <action>
+    <requirements>
       <action_id>APPROACH_ACTION</action_id>
-    </action>
+    </requirements>
     <exec>
       <target_event>APPROACH_ACTION_EVENT_1</target_event>
     </exec>

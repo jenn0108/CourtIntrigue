@@ -93,7 +93,7 @@ namespace CourtIntrigue
                 {
                     description = reader.ReadElementContentAsString();
                 }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "action")
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "requirements")
                 {
                     actionLogic = XmlHelper.ReadLogic(reader);
                 }
