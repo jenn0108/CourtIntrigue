@@ -101,6 +101,11 @@ namespace CourtIntrigue
         {
             debugLogger.PrintText("Begin tick");
 
+            foreach (var room in chosenRooms.Values.GroupBy(r => r).Select( r => r.Key))
+            {
+                room.ResetUnoccupied();
+            }
+
             //If a character accepts a conversion (or other pair action), he may have his turn
             //consumed.  We need to keep track of which characters should have their turns
             //skipped because of this.
@@ -138,7 +143,7 @@ namespace CourtIntrigue
                     debugLogger.PrintText(character.Name + " chose " + action.Identifer + " with " + action.Target.Name);
 
                     //This character is unavailable for interaction because he is busy.
-                    chosenRooms[character].RemoveCharacter(character);
+                    chosenRooms[character].MarkBusy(character);
                 }
                 
                 ExecuteAction(character, action, finishedCharacters);
@@ -178,7 +183,7 @@ namespace CourtIntrigue
                     //Remove the target from the room (since they are busy) and make sure they don't
                     //get their normal action.
                     finishedCharacters.Add(action.Target);
-                    chosenRooms[character].RemoveCharacter(action.Target);
+                    chosenRooms[character].MarkBusy(action.Target);
                 }
             }
 
@@ -186,7 +191,7 @@ namespace CourtIntrigue
             finishedCharacters.Add(character);
 
             // The initiator always gets their turn consumed so remove them from the room.
-            chosenRooms[character].RemoveCharacter(character);
+            chosenRooms[character].MarkBusy(character);
         }
 
         /// <summary>

@@ -9,7 +9,8 @@ namespace CourtIntrigue
 {
     class Room
     {
-        private List<Character> unoccuppiedCharacters = new List<Character>();
+        private ISet<Character> unoccuppiedCharacters = new HashSet<Character>();
+        private ISet<Character> characters = new HashSet<Character>();
         public string Identifier { get; private set; }
         public string Name { get; private set; }
         public bool Common { get; private set; }
@@ -17,6 +18,17 @@ namespace CourtIntrigue
         public string[] PairActions { get; private set; }
 
         public IEnumerable<Character> GetCharacters(Character skip = null)
+        {
+            foreach (var character in characters)
+            {
+                if (character != skip)
+                {
+                    yield return character;
+                }
+            }
+        }
+
+        public IEnumerable<Character> GetUnoccuppiedCharacters(Character skip = null)
         {
             foreach (var character in unoccuppiedCharacters)
             {
@@ -42,12 +54,25 @@ namespace CourtIntrigue
 
         public void AddCharacter(Character character)
         {
+            characters.Add(character);
             unoccuppiedCharacters.Add(character);
         }
 
-        public void RemoveCharacter(Character character)
+        public void ClearRoom()
+        {
+            characters.Clear();
+            unoccuppiedCharacters.Clear();
+        }
+
+        public void MarkBusy(Character character)
         {
             unoccuppiedCharacters.Remove(character);
+        }
+
+        public void ResetUnoccupied()
+        {
+            unoccuppiedCharacters.Clear();
+            unoccuppiedCharacters.UnionWith(characters);
         }
     }
 

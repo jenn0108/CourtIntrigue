@@ -15,20 +15,20 @@ namespace CourtIntrigue
 
         public override EventContext Tick(Room room)
         {
-            CharacterLog("In room with: " + string.Join(", ", room.GetCharacters(this).Select(c => c.Name)));
+            CharacterLog("In room with: " + string.Join(", ", room.GetUnoccuppiedCharacters(this).Select(c => c.Name)));
 
             string[] actions = room.SoloActions;
 
             if (room.PairActions.Length > 0)
             {
-                int num = Game.GetRandom(actions.Length + room.GetCharacters(this).Count());
+                int num = Game.GetRandom(actions.Length + room.GetUnoccuppiedCharacters(this).Count());
                 if (num < actions.Length)
                 {
                     return new EventContext(actions[num], this, null, room);
                 }
                 else
                 {
-                    Character otherCharacter = room.GetCharacters(this).ElementAt(num - actions.Length);
+                    Character otherCharacter = room.GetUnoccuppiedCharacters(this).ElementAt(num - actions.Length);
                     string[] pairActions = Game.FindAllowableActions(room, this, otherCharacter);
                     return new EventContext(pairActions[Game.GetRandom(pairActions.Length)], this, otherCharacter, room);
                 }
