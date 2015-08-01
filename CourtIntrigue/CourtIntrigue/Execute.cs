@@ -59,7 +59,7 @@ namespace CourtIntrigue
 
         public void Execute(EventResults result, Game game, EventContext context, Event e)
         {
-            game.GetEventById(eventid).Execute(result, game, new EventContext(EventContext.CUSTOM_ACTION, context.Target, context.CurrentScope, context.Room));
+            game.GetEventById(eventid).Execute(result, game, new EventContext(null, context.Target, context.CurrentScope, context.Room));
         }
     }
 

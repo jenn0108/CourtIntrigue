@@ -110,6 +110,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="distrib\Events\approach.xml" />
     <Content Include="distrib\Events\testevents.xml" />
     <Content Include="distrib\Informations\testinformations.xml" />
     <Content Include="distrib\Names\family_names.txt" />

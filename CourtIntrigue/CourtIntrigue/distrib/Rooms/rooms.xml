@@ -18,7 +18,6 @@
     </solo_actions>
     <pair_actions>
       <action>APPROACH_ACTION</action>
-      <action>PUNCH_ACTION</action>
     </pair_actions>
   </room>
 </rooms>
