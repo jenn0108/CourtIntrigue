@@ -1,0 +1,74 @@
+<events>
+  <event>
+    <id>PUBLIC_URINATION_EVENT_0</id>
+    <description>You are suddenly overcome with the urge to urinate.  You can't wait any longer!</description>
+    <action>
+      <action_id>PUBLIC_URINATION_ACTION</action_id>
+    </action>
+    <options>
+      <option>
+        <label>Pee in a ditch</label>
+      </option>
+      <option>
+        <label>Pee in an alley</label>
+      </option>
+    </options>
+  </event>
+  <event>
+    <id>EAVESDROP_ACTION_0</id>
+    <description>You need to drop some eaves!</description>
+    <action>
+      <action_id>EAVESDROP_ACTION</action_id>
+    </action>
+    <options>
+      <option>
+        <label>Go look for some eaves!</label>
+      </option>
+    </options>
+  </event>
+  <event>
+    <id>APPROACH_ACTION_EVENT_0</id>
+    <description>You approach intent on starting a discussion...</description>
+    <action>
+      <action_id>APPROACH_ACTION</action_id>
+    </action>
+    <exec>
+      <target_event>APPROACH_ACTION_EVENT_1</target_event>
+    </exec>
+  </event>
+  <event>
+    <id>APPROACH_ACTION_EVENT_1</id>
+    <description>$Target.Name$ would like to talk to you.</description>
+    <options>
+      <option>
+        <label>Refuse</label>
+        <exec>
+          <target_event>APPROACH_ACTION_EVENT_2</target_event>
+          <allow_event_selection/>
+        </exec>
+      </option>
+      <option>
+        <label>Accept</label>
+        <exec>
+          <target_event>APPROACH_ACTION_EVENT_3</target_event>
+        </exec>
+      </option>
+    </options>
+  </event>
+  <event>
+    <id>APPROACH_ACTION_EVENT_2</id>
+    <description>$Target.Name$ refuses to speak with you!</description>
+  </event>
+  <event>
+    <id>APPROACH_ACTION_EVENT_3</id>
+    <description>$Target.Name$ accepts.  What would you like to discuss?</description>
+    <options>
+      <option>
+        <label>Weather</label>
+      </option>
+      <option>
+        <label>Public urination</label>
+      </option>
+    </options>
+  </event>
+</events>
