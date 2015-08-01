@@ -109,7 +109,7 @@ namespace CourtIntrigue
             //We're going to need to delay solo actions until after the pair actions so those
             //characters can be interrupted.  This is an important gameplay idea so the last
             //character in the turn order has the opportunity to talk to other characters.
-            Dictionary<Character, Action> soloActions = new Dictionary<Character, Action>();
+            Dictionary<Character, EventContext> soloActions = new Dictionary<Character, EventContext>();
 
             //Give each player a turn according to turn order.
             foreach (var character in characters)
@@ -123,7 +123,7 @@ namespace CourtIntrigue
                 }
 
                 //Give the character their turn.
-                Action action = character.Tick(chosenRooms[character]);
+                EventContext action = character.Tick(chosenRooms[character]);
 
                 if (action.Target == null)
                 {
@@ -160,7 +160,7 @@ namespace CourtIntrigue
             debugLogger.PrintText("End tick");
         }
 
-        private void ExecuteAction(Character character, Action action, ISet<Character> finishedCharacters)
+        private void ExecuteAction(Character character, EventContext action, ISet<Character> finishedCharacters)
         {
             //Find a matching event to execute.
             Event eventToPlay = eventManager.FindEventForAction(action, random);

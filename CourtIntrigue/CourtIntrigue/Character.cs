@@ -32,7 +32,7 @@ namespace CourtIntrigue
             Dependents = dependents;
         }
 
-        public virtual Action Tick(Room room)
+        public virtual EventContext Tick(Room room)
         {
             throw new NotImplementedException();
         }
@@ -42,7 +42,7 @@ namespace CourtIntrigue
             throw new NotImplementedException();
         }
 
-        public virtual EventOption ChooseOption(Action action, Event e)
+        public virtual EventOption ChooseOption(EventContext action, Event e)
         {
             throw new NotImplementedException();
         }

@@ -14,7 +14,7 @@ namespace CourtIntrigue
 
     interface ILogic
     {
-        bool Evaluate(Action action);
+        bool Evaluate(EventContext action);
     }
 
     class AndLogic : ILogic
@@ -24,7 +24,7 @@ namespace CourtIntrigue
         {
             subexpressions = subexps;
         }
-        public bool Evaluate(Action action)
+        public bool Evaluate(EventContext action)
         {
             for(int i = 0; i < subexpressions.Length; ++i)
             {
@@ -42,7 +42,7 @@ namespace CourtIntrigue
         {
             identifier = lookingFor;
         }
-        public bool Evaluate(Action action)
+        public bool Evaluate(EventContext action)
         {
             return action.Identifer == identifier;
         }
@@ -50,7 +50,7 @@ namespace CourtIntrigue
 
     class TrueLogic : ILogic
     {
-        public bool Evaluate(Action action)
+        public bool Evaluate(EventContext action)
         {
             return true;
         }
@@ -58,7 +58,7 @@ namespace CourtIntrigue
 
     class FalseLogic : ILogic
     {
-        public bool Evaluate(Action action)
+        public bool Evaluate(EventContext action)
         {
             return false;
         }

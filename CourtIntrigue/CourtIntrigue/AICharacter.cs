@@ -13,7 +13,7 @@ namespace CourtIntrigue
             CharacterLog("Created character with dependents: " + string.Join(", ", dependents.Select(c => c.Name + "(" + c.Gender.ToString() + ")")));
         }
 
-        public override Action Tick(Room room)
+        public override EventContext Tick(Room room)
         {
             CharacterLog("In room with: " + string.Join(", ", room.GetCharacters(this).Select(c => c.Name)));
 
@@ -24,19 +24,19 @@ namespace CourtIntrigue
                 int num = Game.GetRandom(actions.Length + room.GetCharacters(this).Count());
                 if (num < actions.Length)
                 {
-                    return new Action(actions[num], this, null);
+                    return new EventContext(actions[num], this, null, room);
                 }
                 else
                 {
                     Character otherCharacter = room.GetCharacters(this).ElementAt(num - actions.Length);
                     string[] pairActions = Game.FindAllowableActions(room, this, otherCharacter);
-                    return new Action(pairActions[Game.GetRandom(pairActions.Length)], this, otherCharacter);
+                    return new EventContext(pairActions[Game.GetRandom(pairActions.Length)], this, otherCharacter, room);
                 }
             }
             else
             {
                 int num = Game.GetRandom(actions.Length);
-                return new Action(actions[num], this, null);
+                return new EventContext(actions[num], this, null, room);
             }
 
         }
@@ -48,7 +48,7 @@ namespace CourtIntrigue
             return ret;
         }
 
-        public override EventOption ChooseOption(Action action, Event e)
+        public override EventOption ChooseOption(EventContext action, Event e)
         {
             EventOption[] options = e.GetAvailableOptions(action);
             EventOption chosen = options[Game.GetRandom(options.Length)];

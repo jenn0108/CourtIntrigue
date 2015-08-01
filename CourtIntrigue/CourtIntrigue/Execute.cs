@@ -13,12 +13,12 @@ namespace CourtIntrigue
 
     interface IExecute
     {
-        void Execute(EventResults r, EventManager m, Action a, Event e);
+        void Execute(EventResults r, EventManager m, EventContext a, Event e);
     }
 
     class NoOpExecute : IExecute
     {
-        public void Execute(EventResults r, EventManager m, Action a, Event e)
+        public void Execute(EventResults r, EventManager m, EventContext a, Event e)
         {
 
         }
@@ -32,7 +32,7 @@ namespace CourtIntrigue
             this.instructions = instructions;
         }
 
-        public void Execute(EventResults r, EventManager m, Action a, Event e)
+        public void Execute(EventResults r, EventManager m, EventContext a, Event e)
         {
             for(int i = 0; i < instructions.Length; ++i)
             {
@@ -43,7 +43,7 @@ namespace CourtIntrigue
 
     class AllowEventSelectionExecute : IExecute
     {
-        public void Execute(EventResults r, EventManager m, Action a, Event e)
+        public void Execute(EventResults r, EventManager m, EventContext a, Event e)
         {
             r.GiveTargetTurn();
         }
@@ -57,9 +57,9 @@ namespace CourtIntrigue
             eventid = id;
         }
 
-        public void Execute(EventResults r, EventManager m, Action a, Event e)
+        public void Execute(EventResults r, EventManager m, EventContext a, Event e)
         {
-            m.FindEventById(eventid).Execute(r, m, new Action(Action.CUSTOM_ACTION, a.Target, a.Initiator));
+            m.FindEventById(eventid).Execute(r, m, new EventContext(EventContext.CUSTOM_ACTION, a.Target, a.Initiator, a.Room));
         }
     }
 }

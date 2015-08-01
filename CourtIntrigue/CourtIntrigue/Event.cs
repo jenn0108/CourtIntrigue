@@ -23,7 +23,7 @@ namespace CourtIntrigue
             Options = options;
         }
 
-        public void Execute(EventResults r, EventManager m, Action a)
+        public void Execute(EventResults r, EventManager m, EventContext a)
         {
             //DirectExecute always happens if it is present.
             if (DirectExecute != null)
@@ -42,16 +42,16 @@ namespace CourtIntrigue
             }
         }
 
-        public EventOption[] GetAvailableOptions(Action action)
+        public EventOption[] GetAvailableOptions(EventContext action)
         {
             //In the future we will need to evaluate whether or not each
             //option should be visible to the character.
             return Options;
         }
 
-        public string CreateActionDescription(Action a)
+        public string CreateActionDescription(EventContext a)
         {
-            return ActionHelper.ReplaceStrings(Description, a);
+            return EventHelper.ReplaceStrings(Description, a);
         }
     }
 

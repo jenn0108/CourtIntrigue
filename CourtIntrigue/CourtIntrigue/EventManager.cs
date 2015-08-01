@@ -13,7 +13,7 @@ namespace CourtIntrigue
         //I'm not sure if we actually want to store events by id.
         private Dictionary<string, Event> events = new Dictionary<string, Event>();
 
-        public Event FindEventForAction(Action action, Random R)
+        public Event FindEventForAction(EventContext action, Random R)
         {
             //Which events can we perform?
             List<Event> okToRun = new List<Event>();
@@ -38,7 +38,7 @@ namespace CourtIntrigue
             List<string> actions = new List<string>();
             foreach(var actionId in room.PairActions)
             {
-                Action action = new Action(actionId, initiator, target);
+                EventContext action = new EventContext(actionId, initiator, target, room);
                 foreach (var pair in events)
                 {
                     if (pair.Value.ActionRequirements.Evaluate(action))
