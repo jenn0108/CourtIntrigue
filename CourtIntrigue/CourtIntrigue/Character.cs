@@ -15,6 +15,7 @@ namespace CourtIntrigue
         public Dynasty Dynasty { get; private set; }
         public GenderEnum Gender { get; private set; }
         public List<DependentCharacter> Dependents { get; private set; }
+        public List<InformationInstance> KnownInformation { get; private set; }
         protected Game Game { get; private set; }
 
         public string Fullname
@@ -30,6 +31,7 @@ namespace CourtIntrigue
             Game = game;
             Gender = gender;
             Dependents = dependents;
+            KnownInformation = new List<InformationInstance>();
         }
 
         public virtual EventContext Tick(Room room)

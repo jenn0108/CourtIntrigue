@@ -80,6 +80,16 @@ namespace CourtIntrigue
             return eventManager.FindAllowableActions(room, initiator, target);
         }
 
+        public Event GetEventById(string id)
+        {
+            return eventManager.FindEventById(id);
+        }
+
+        public Information GetInformationById(string id)
+        {
+            return infoManager.GetInformationById(id);
+        }
+
         public void BeginDay()
         {
             CurrentDate = CurrentDate.AddDays(1.0);
@@ -175,7 +185,7 @@ namespace CourtIntrigue
                 //the event logic along the way to touch the same instance instead of having to worry
                 //about merging a number of different instances.
                 EventResults results = new EventResults();
-                eventToPlay.Execute(results, eventManager, action);
+                eventToPlay.Execute(results, this, action);
 
                 //Did the target get their turn consumed?
                 if (!results.TargetGetsTurn && action.Target != null)

@@ -8,13 +8,13 @@ namespace CourtIntrigue
 {
     class InformationInstance
     {
-        private List<Character> characters;
+        private Dictionary<string, object> parameters;
         private Information information;
 
-        public InformationInstance(Information information, List<Character> characters)
+        public InformationInstance(Information information, Dictionary<string, object> parameters)
         {
             this.information = information;
-            this.characters = characters;
+            this.parameters = parameters;
         }
     }
 }

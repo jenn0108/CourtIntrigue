@@ -23,21 +23,21 @@ namespace CourtIntrigue
             Options = options;
         }
 
-        public void Execute(EventResults r, EventManager m, EventContext a)
+        public void Execute(EventResults result, Game game, EventContext context)
         {
             //DirectExecute always happens if it is present.
             if (DirectExecute != null)
-                DirectExecute.Execute(r, m, a, this);
+                DirectExecute.Execute(result, game, context, this);
 
             if (Options.Length > 0)
             {
                 //If there are options, the character must choose one.
-                EventOption chosen = a.Initiator.ChooseOption(a, this);
+                EventOption chosen = context.CurrentScope.ChooseOption(context, this);
 
                 if(chosen != null && chosen.DirectExecute != null)
                 {
                     //Execute the option activity.
-                    chosen.DirectExecute.Execute(r, m, a, this);
+                    chosen.DirectExecute.Execute(result, game, context, this);
                 }
             }
         }

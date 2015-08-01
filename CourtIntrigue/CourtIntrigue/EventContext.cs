@@ -16,16 +16,40 @@ namespace CourtIntrigue
         public static string PUBLIC_URINATION_ACTION = "PUBLIC_URINATION_ACTION";
 
         public string Identifer { get; private set; }
-        public Character Initiator { get; private set; }
         public Character Target { get; private set; }
         public Room Room { get; private set; }
+        private Stack<KeyValuePair<string,Character>> scopes = new Stack<KeyValuePair<string, Character>>();
+        public Character CurrentScope
+        {
+            get { return scopes.Peek().Value; }
+        }
 
         public EventContext(string ident, Character initiator, Character target, Room room)
         {
             Identifer = ident;
-            Initiator = initiator;
             Target = target;
             Room = room;
+            scopes.Push(new KeyValuePair<string, Character>("ROOT", initiator));
+        }
+
+        public void PushScope(Character newCharacter, string name = null)
+        {
+            scopes.Push(new KeyValuePair<string, Character>(name, newCharacter));
+        }
+
+        public void PopScope()
+        {
+            scopes.Pop();
+        }
+
+        public Character GetScopedCharacterByName(string name)
+        {
+            foreach(var pair in scopes)
+            {
+                if (pair.Key == name)
+                    return pair.Value;
+            }
+            throw new KeyNotFoundException(name + " not found in scopes.");
         }
     }
 

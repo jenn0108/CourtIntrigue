@@ -24,6 +24,14 @@ namespace CourtIntrigue
                 {
                     expressions.Add(new AllowEventSelectionExecute());
                 }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "everyone_in_room")
+                {
+                    expressions.Add(ReadScopingLoop(reader));
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "add_information")
+                {
+                    expressions.Add(ReadAddInformation(reader));
+                }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == tag)
                 {
                     break;
@@ -82,6 +90,59 @@ namespace CourtIntrigue
             }
 
             throw new ArgumentException("Found unexpected type name " + typeName);
+        }
+
+        private static IExecute ReadScopingLoop(XmlReader reader)
+        {
+            //How did we start? Used for determining when we're done.
+            string tag = reader.Name;
+            ILogic requirements = Logic.TRUE;
+            IExecute operation = Execute.NOOP;
+            while (reader.Read())
+            {
+                if (reader.NodeType == XmlNodeType.Element && reader.Name == "requirements")
+                {
+                    requirements = ReadLogic(reader);
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "for_character")
+                {
+                    operation = ReadExecute(reader);
+                }
+                else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == tag)
+                {
+                    break;
+                }
+            }
+
+            // TODO: make this more general.
+            return new EveryoneInRoomExecute(operation, requirements);
+        }
+
+        private static IExecute ReadAddInformation(XmlReader reader)
+        {
+            string id = null;
+            Dictionary<string, string> parameters = new Dictionary<string, string>();
+            while (reader.Read())
+            {
+                if (reader.NodeType == XmlNodeType.Element && reader.Name == "id")
+                {
+                    id = reader.ReadElementContentAsString();
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "parameters")
+                {
+                    while (reader.MoveToNextAttribute())
+                    {
+                        parameters.Add(reader.Name, reader.Value);
+                    }
+                }
+
+                else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "add_information")
+                {
+                    break;
+                }
+            }
+
+            return new AddInformationExecute(id, parameters);
         }
     }
 }

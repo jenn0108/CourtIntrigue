@@ -13,12 +13,12 @@ namespace CourtIntrigue
 
     interface IExecute
     {
-        void Execute(EventResults r, EventManager m, EventContext a, Event e);
+        void Execute(EventResults result, Game game, EventContext context, Event e);
     }
 
     class NoOpExecute : IExecute
     {
-        public void Execute(EventResults r, EventManager m, EventContext a, Event e)
+        public void Execute(EventResults result, Game game, EventContext context, Event e)
         {
 
         }
@@ -32,20 +32,20 @@ namespace CourtIntrigue
             this.instructions = instructions;
         }
 
-        public void Execute(EventResults r, EventManager m, EventContext a, Event e)
+        public void Execute(EventResults result, Game game, EventContext context, Event e)
         {
             for(int i = 0; i < instructions.Length; ++i)
             {
-                instructions[i].Execute(r, m, a, e);
+                instructions[i].Execute(result, game, context, e);
             }
         }
     }
 
     class AllowEventSelectionExecute : IExecute
     {
-        public void Execute(EventResults r, EventManager m, EventContext a, Event e)
+        public void Execute(EventResults result, Game game, EventContext context, Event e)
         {
-            r.GiveTargetTurn();
+            result.GiveTargetTurn();
         }
     }
 
@@ -57,9 +57,55 @@ namespace CourtIntrigue
             eventid = id;
         }
 
-        public void Execute(EventResults r, EventManager m, EventContext a, Event e)
+        public void Execute(EventResults result, Game game, EventContext context, Event e)
         {
-            m.FindEventById(eventid).Execute(r, m, new EventContext(EventContext.CUSTOM_ACTION, a.Target, a.Initiator, a.Room));
+            game.GetEventById(eventid).Execute(result, game, new EventContext(EventContext.CUSTOM_ACTION, context.Target, context.CurrentScope, context.Room));
+        }
+    }
+
+    class AddInformationExecute : IExecute
+    {
+        private string informationId;
+        private Dictionary<string, string> parameters;
+        public AddInformationExecute(string id, Dictionary<string,string> parameters)
+        {
+            this.informationId = id;
+            this.parameters = parameters;
+        }
+
+        public void Execute(EventResults result, Game game, EventContext context, Event e)
+        {
+            Information information = game.GetInformationById(informationId);
+            Dictionary<string, object> computedParameters = new Dictionary<string, object>();
+            foreach(var pair in parameters)
+            {
+                computedParameters.Add(pair.Key, context.GetScopedCharacterByName(pair.Value));
+            }
+            context.CurrentScope.KnownInformation.Add(new InformationInstance(information, computedParameters));
+        }
+    }
+
+    class EveryoneInRoomExecute : IExecute
+    {
+        private IExecute operation;
+        private ILogic requirements;
+        public EveryoneInRoomExecute(IExecute operation, ILogic requirements)
+        {
+            this.operation = operation;
+            this.requirements = requirements;
+        }
+
+        public void Execute(EventResults result, Game game, EventContext context, Event e)
+        {
+            foreach (var character in context.Room.GetCharacters(context.CurrentScope))
+            {
+                context.PushScope(character);
+                if (requirements.Evaluate(context))
+                {
+                    operation.Execute(result, game, context, e);
+                }
+                context.PopScope();
+            }
         }
     }
 }

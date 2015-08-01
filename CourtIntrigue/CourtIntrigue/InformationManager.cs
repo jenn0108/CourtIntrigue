@@ -11,11 +11,6 @@ namespace CourtIntrigue
     {
         private Dictionary<string, Information> informations = new Dictionary<string, Information>();
 
-        public InformationInstance CreateInformationInstance(string id, List<Character> characters)
-        {
-            return new InformationInstance(informations[id], characters);
-        }
-
         public void LoadInformationsFromFile(string filename)
         {
             using (XmlReader reader = XmlReader.Create(filename))
@@ -97,6 +92,11 @@ namespace CourtIntrigue
                 }
             }
             return parameters;
+        }
+
+        public Information GetInformationById(string id)
+        {
+            return informations[id];
         }
     }
 }
