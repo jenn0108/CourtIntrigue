@@ -48,7 +48,7 @@ namespace CourtIntrigue
                     }
                 }
             }
-            if (actions.Count() == 0)
+            if (actions.Count == 0)
             {
                 throw new Exception("No pair events found in " + room.Name);
             }

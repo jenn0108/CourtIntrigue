@@ -30,7 +30,7 @@ namespace CourtIntrigue
             {
                 if (reader.NodeType == XmlNodeType.Element && reader.Name == "trigger_event")
                 {
-                    expressions.Add(new TriggerEventExecute(reader.ReadElementContentAsString()));
+                    expressions.Add(ReadTriggerEvent(reader));
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "allow_event_selection")
                 {
@@ -50,7 +50,7 @@ namespace CourtIntrigue
                 }
                 else if (reader.NodeType == XmlNodeType.Element && (reader.Name == "tell_information"))
                 {
-                    expressions.Add(new TellInformationExecute());
+                    expressions.Add(new TellInformationExecute(ReadExecute(reader)));
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == tag)
                 {
@@ -177,6 +177,36 @@ namespace CourtIntrigue
 
             if (tag == "observe_information")
                 return new ObserveInformationExecute(id, parameters, chance);
+            else
+                throw new Exception("Found unknown information tag: " + tag);
+        }
+
+        private static IExecute ReadTriggerEvent(XmlReader reader)
+        {
+            string id = null;
+            string tag = reader.Name;
+            Dictionary<string, string> parameters = new Dictionary<string, string>();
+            while (reader.Read())
+            {
+                if (reader.NodeType == XmlNodeType.Element && reader.Name == "id")
+                {
+                    id = reader.ReadElementContentAsString();
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "parameters")
+                {
+                    while (reader.MoveToNextAttribute())
+                    {
+                        parameters.Add(reader.Name, reader.Value);
+                    }
+                }
+                else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == tag)
+                {
+                    break;
+                }
+            }
+
+            if (tag == "trigger_event")
+                return new TriggerEventExecute(id, parameters);
             else
                 throw new Exception("Found unknown information tag: " + tag);
         }

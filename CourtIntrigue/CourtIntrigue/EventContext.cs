@@ -13,10 +13,24 @@ namespace CourtIntrigue
         public string Identifer { get; private set; }
         public Character Target { get; private set; }
         public Room Room { get; private set; }
-        private Stack<KeyValuePair<string,Character>> scopes = new Stack<KeyValuePair<string, Character>>();
-        public Character CurrentScope
+        private Dictionary<string, object> parameters;
+        private List<KeyValuePair<string,object>> scopes = new List<KeyValuePair<string, object>>();
+        public object CurrentScope
         {
-            get { return scopes.Peek().Value; }
+            get { return scopes.Last().Value; }
+        }
+
+        public Character CurrentCharacter
+        {
+            get
+            {
+                for(int i = scopes.Count-1; i >= 0; --i)
+                {
+                    if (scopes[i].Value is Character)
+                        return scopes[i].Value as Character;
+                }
+                throw new Exception("There is no ROOT character in context.");
+            }
         }
 
         public EventContext(string ident, Character initiator, Character target, Room room)
@@ -24,32 +38,46 @@ namespace CourtIntrigue
             Identifer = ident;
             Target = target;
             Room = room;
-            scopes.Push(new KeyValuePair<string, Character>("ROOT", initiator));
+            scopes.Add(new KeyValuePair<string, object>("ROOT", initiator));
+            parameters = new Dictionary<string, object>();
         }
 
-        public void PushScope(Character newCharacter, string name = null)
+        public EventContext(string ident, Character initiator, Character target, Room room, Dictionary<string,object> parameters)
         {
-            scopes.Push(new KeyValuePair<string, Character>(name, newCharacter));
+            Identifer = ident;
+            Target = target;
+            Room = room;
+            scopes.Add(new KeyValuePair<string, object>("ROOT", initiator));
+            this.parameters = parameters;
+        }
+
+        public void PushScope(object newObject, string name = null)
+        {
+            scopes.Add(new KeyValuePair<string, object>(name, newObject));
         }
 
         public void PopScope()
         {
-            scopes.Pop();
+            scopes.RemoveAt(scopes.Count-1);
         }
 
-        public Character GetScopedCharacterByName(string name)
+        public object GetScopedObjectByName(string name)
         {
             if (name == "TARGET")
             {
                 return Target;
             }
+            else if (name == "TOP")
+            {
+                return CurrentScope;
+            }
 
-            foreach(var pair in scopes)
+            foreach (var pair in scopes)
             {
                 if (pair.Key == name)
                     return pair.Value;
             }
-            throw new KeyNotFoundException(name + " not found in scopes.");
+            return parameters[name];
         }
     }
 
@@ -145,13 +173,31 @@ namespace CourtIntrigue
             }
 
             //Get the property.  Will throw exception if it isn't a property.
-            PropertyInfo info = properties[parts[index]];
+            if(properties.ContainsKey(parts[index]))
+            {
+                PropertyInfo info = properties[parts[index]];
 
-            //Evaluate it on the object we've been given.
-            object val = info.GetValue(work);
+                //Evaluate it on the object we've been given.
+                object val = info.GetValue(work);
 
-            //Recurse in case we have more properties to evaluate
-            return EvaluateProperty(parts, index + 1, val);
+                //Recurse in case we have more properties to evaluate
+                return EvaluateProperty(parts, index + 1, val);
+            }
+            else if(work is EventContext)
+            {
+                EventContext context = work as EventContext;
+                return EvaluateProperty(parts, index + 1, context.GetScopedObjectByName(parts[index]));
+            }
+            else if (work is InformationInstance)
+            {
+                InformationInstance info = work as InformationInstance;
+                return EvaluateProperty(parts, index + 1, info.GetParameter(parts[index]));
+            }
+            else
+            {
+                
+                throw new Exception("Unhandled type " + type);
+            }
         }
     }
 }

@@ -27,6 +27,8 @@ namespace CourtIntrigue
 
         public void Execute(EventResults result, Game game, EventContext context)
         {
+            game.Log(context.CurrentCharacter.Fullname + ": Event:" + this.CreateActionDescription(context));
+
             //DirectExecute always happens if it is present.
             if (DirectExecute != null)
                 DirectExecute.Execute(result, game, context, this);
@@ -34,7 +36,7 @@ namespace CourtIntrigue
             if (Options.Length > 0)
             {
                 //If there are options, the character must choose one.
-                EventOption chosen = context.CurrentScope.ChooseOption(context, this);
+                EventOption chosen = context.CurrentCharacter.ChooseOption(context, this);
 
                 if(chosen != null && chosen.DirectExecute != null)
                 {

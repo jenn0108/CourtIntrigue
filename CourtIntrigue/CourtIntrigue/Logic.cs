@@ -52,7 +52,7 @@ namespace CourtIntrigue
     {
         public bool Evaluate(EventContext context)
         {
-            return context.CurrentScope.KnownInformation.Count() > 0;
+            return context.CurrentCharacter.KnownInformation.Count > 0;
         }
     }
 

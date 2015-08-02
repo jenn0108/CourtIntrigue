@@ -52,14 +52,22 @@ namespace CourtIntrigue
     class TriggerEventExecute : IExecute
     {
         private string eventid;
-        public TriggerEventExecute(string id)
+        private Dictionary<string, string> parameters;
+        public TriggerEventExecute(string id, Dictionary<string, string> parameters)
         {
             eventid = id;
+            this.parameters = parameters;
         }
 
         public void Execute(EventResults result, Game game, EventContext context, Event e)
         {
-            game.GetEventById(eventid).Execute(result, game, new EventContext(null, context.CurrentScope, context.GetScopedCharacterByName("ROOT"), context.Room));
+            Dictionary<string, object> computedParameters = new Dictionary<string, object>();
+            foreach (var pair in parameters)
+            {
+                computedParameters.Add(pair.Key, context.GetScopedObjectByName(pair.Value));
+            }
+            EventContext newContext = new EventContext(null, context.CurrentCharacter, context.GetScopedObjectByName("ROOT") as Character, context.Room, computedParameters);
+            game.GetEventById(eventid).Execute(result, game, newContext);
         }
     }
 
@@ -83,21 +91,29 @@ namespace CourtIntrigue
                 Dictionary<string, object> computedParameters = new Dictionary<string, object>();
                 foreach (var pair in parameters)
                 {
-                    computedParameters.Add(pair.Key, context.GetScopedCharacterByName(pair.Value));
+                    computedParameters.Add(pair.Key, context.GetScopedObjectByName(pair.Value));
                 }
-                context.CurrentScope.KnownInformation.Add(new InformationInstance(information, computedParameters));
-                game.Log(context.CurrentScope.Name + " learned an information.");
+                context.CurrentCharacter.KnownInformation.Add(new InformationInstance(information, computedParameters));
+                game.Log(context.CurrentCharacter.Name + " learned an information.");
             }
         }
     }
 
     class TellInformationExecute : IExecute
     {
+        public IExecute operation;
+        public TellInformationExecute(IExecute operation)
+        {
+            this.operation = operation;
+        }
         public void Execute(EventResults result, Game game, EventContext context, Event e)
         {
-            InformationInstance informationInstance = context.GetScopedCharacterByName("ROOT").ChooseInformation();
-            context.CurrentScope.KnownInformation.Add(informationInstance);
-            game.Log(context.CurrentScope.Name + " learned an information.");
+            InformationInstance informationInstance = (context.GetScopedObjectByName("ROOT") as Character).ChooseInformation();
+            context.CurrentCharacter.KnownInformation.Add(informationInstance);
+            game.Log(context.CurrentCharacter.Name + " learned an information.");
+            context.PushScope(informationInstance);
+            operation.Execute(result, game, context, e);
+            context.PopScope();
         }
     }
 
@@ -113,7 +129,7 @@ namespace CourtIntrigue
 
         public void Execute(EventResults result, Game game, EventContext context, Event e)
         {
-            foreach (var character in context.Room.GetCharacters(context.CurrentScope))
+            foreach (var character in context.Room.GetCharacters(context.CurrentCharacter))
             {
                 context.PushScope(character);
                 if (requirements.Evaluate(context))

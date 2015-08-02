@@ -52,14 +52,13 @@ namespace CourtIntrigue
         {
             EventOption[] options = e.GetAvailableOptions(context);
             EventOption chosen = options[Game.GetRandom(options.Length)];
-            CharacterLog("Event:" + e.CreateActionDescription(context));
             CharacterLog("Choosing " + EventHelper.ReplaceStrings(chosen.Label, context));
             return chosen;
         }
 
         public override InformationInstance ChooseInformation()
         {
-            return KnownInformation[Game.GetRandom(KnownInformation.Count())];
+            return KnownInformation[Game.GetRandom(KnownInformation.Count)];
         }
 
     }

@@ -12,7 +12,9 @@
     </requirements>
     <exec>
       <target>
-        <trigger_event>APPROACH_ACTION_EVENT_1</trigger_event>
+        <trigger_event>
+          <id>APPROACH_ACTION_EVENT_1</id>
+        </trigger_event>
       </target>
     </exec>
   </event>
@@ -27,7 +29,9 @@
         <label>Refuse</label>
         <exec>
           <target>
-            <trigger_event>APPROACH_ACTION_EVENT_2</trigger_event>
+            <trigger_event>
+              <id>APPROACH_ACTION_EVENT_2</id>
+            </trigger_event>
           </target>
           <allow_event_selection/>
         </exec>
@@ -36,7 +40,9 @@
         <label>Accept</label>
         <exec>
           <target>
-            <trigger_event>APPROACH_ACTION_EVENT_3</trigger_event>
+            <trigger_event>
+              <id>APPROACH_ACTION_EVENT_3</id>
+            </trigger_event>
           </target>
         </exec>
       </option>
@@ -66,7 +72,12 @@
         </requirements>
         <exec>
           <target>
-            <tell_information/>
+            <tell_information>
+              <trigger_event>
+                <id>APPROACH_ACTION_EVENT_4</id>
+                <parameters NewInformation="TOP"/>
+              </trigger_event>
+            </tell_information>
           </target>
         </exec>
       </option>
@@ -77,7 +88,7 @@
   A has just told B a piece of information.-->
   <event>
     <id>APPROACH_ACTION_EVENT_4</id>
-    <description>$NewInformation.Description$</description>
+    <description>You learn $NewInformation.Description$</description>
     <parameters>
       <parameter type="information">NewInformation</parameter>
     </parameters>

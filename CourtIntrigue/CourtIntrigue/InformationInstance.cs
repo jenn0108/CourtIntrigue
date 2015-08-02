@@ -11,10 +11,17 @@ namespace CourtIntrigue
         private Dictionary<string, object> parameters;
         private Information information;
 
+        public string Description { get { return EventHelper.ReplaceStrings(information.Description, this); } }
+
         public InformationInstance(Information information, Dictionary<string, object> parameters)
         {
             this.information = information;
             this.parameters = parameters;
+        }
+
+        public object GetParameter(string name)
+        {
+            return parameters[name];
         }
     }
 }

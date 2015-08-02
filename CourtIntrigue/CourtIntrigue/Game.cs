@@ -95,6 +95,10 @@ namespace CourtIntrigue
             CurrentDate = CurrentDate.AddDays(1.0);
 
             debugLogger.PrintText("Wake up");
+            foreach (var room in chosenRooms.Values.GroupBy(r => r).Select(r => r.Key))
+            {
+                room.ClearRoom();
+            }
             chosenRooms.Clear();
             foreach (var character in characters)
             {
@@ -175,25 +179,25 @@ namespace CourtIntrigue
             debugLogger.PrintText("End tick");
         }
 
-        private void ExecuteAction(Character character, EventContext action, ISet<Character> finishedCharacters)
+        private void ExecuteAction(Character character, EventContext context, ISet<Character> finishedCharacters)
         {
             //Find a matching event to execute.
-            Event eventToPlay = eventManager.FindEventForAction(action, random);
+            Event eventToPlay = eventManager.FindEventForAction(context, random);
             if (eventToPlay != null)
             {
                 //We pass in an event results instead of accepting a return value because we want all
                 //the event logic along the way to touch the same instance instead of having to worry
                 //about merging a number of different instances.
                 EventResults results = new EventResults();
-                eventToPlay.Execute(results, this, action);
+                eventToPlay.Execute(results, this, context);
 
                 //Did the target get their turn consumed?
-                if (!results.TargetGetsTurn && action.Target != null)
+                if (!results.TargetGetsTurn && context.Target != null)
                 {
                     //Remove the target from the room (since they are busy) and make sure they don't
                     //get their normal action.
-                    finishedCharacters.Add(action.Target);
-                    chosenRooms[character].MarkBusy(action.Target);
+                    finishedCharacters.Add(context.Target);
+                    chosenRooms[character].MarkBusy(context.Target);
                 }
             }
 
