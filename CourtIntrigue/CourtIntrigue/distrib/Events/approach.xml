@@ -11,11 +11,11 @@
       <action_id>APPROACH_ACTION</action_id>
     </requirements>
     <exec>
-      <target>
+      <set_scope name="TARGET">
         <trigger_event>
           <id>APPROACH_ACTION_EVENT_1</id>
         </trigger_event>
-      </target>
+      </set_scope>
     </exec>
   </event>
   <!-- Approach notification event.
@@ -28,22 +28,22 @@
       <option>
         <label>Refuse</label>
         <exec>
-          <target>
+          <set_scope name="TARGET">
             <trigger_event>
               <id>APPROACH_ACTION_EVENT_2</id>
             </trigger_event>
-          </target>
+          </set_scope>
           <allow_event_selection/>
         </exec>
       </option>
       <option>
         <label>Accept</label>
         <exec>
-          <target>
+          <set_scope name="TARGET">
             <trigger_event>
               <id>APPROACH_ACTION_EVENT_3</id>
             </trigger_event>
-          </target>
+          </set_scope>
         </exec>
       </option>
     </options>
@@ -71,14 +71,14 @@
           <has_information/>
         </requirements>
         <exec>
-          <target>
+          <set_scope name="TARGET">
             <tell_information>
               <trigger_event>
                 <id>APPROACH_ACTION_EVENT_4</id>
                 <parameters NewInformation="TOP"/>
               </trigger_event>
             </tell_information>
-          </target>
+          </set_scope>
         </exec>
       </option>
     </options>

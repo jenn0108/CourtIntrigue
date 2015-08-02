@@ -141,17 +141,19 @@ namespace CourtIntrigue
         }
     }
 
-    class TargetExecute : IExecute
+    class SetScopeExecute : IExecute
     {
+        private string scopeName;
         private IExecute operation;
-        public TargetExecute(IExecute operation)
+        public SetScopeExecute(string scopeName, IExecute operation)
         {
+            this.scopeName = scopeName;
             this.operation = operation;
         }
 
         public void Execute(EventResults result, Game game, EventContext context, Event e)
         {
-            context.PushScope(context.Target);
+            context.PushScope(context.GetScopedObjectByName(scopeName));
             operation.Execute(result, game, context, e);
             context.PopScope();
         }

@@ -40,9 +40,10 @@ namespace CourtIntrigue
                 {
                     expressions.Add(ReadScopingLoop(reader));
                 }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "target")
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "set_scope")
                 {
-                    expressions.Add(new TargetExecute(ReadExecute(reader)));
+                    string scopeName = reader.GetAttribute("name");
+                    expressions.Add(new SetScopeExecute(scopeName, ReadExecute(reader)));
                 }
                 else if (reader.NodeType == XmlNodeType.Element && (reader.Name == "observe_information"))
                 {
