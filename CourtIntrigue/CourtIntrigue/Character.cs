@@ -16,7 +16,7 @@ namespace CourtIntrigue
         public GenderEnum Gender { get; private set; }
         public List<DependentCharacter> Dependents { get; private set; }
         public List<InformationInstance> KnownInformation { get; private set; }
-        protected List<Trait> Traits { get; private set; }
+        protected Dictionary<string,Trait> Traits { get; private set; }
         protected Game Game { get; private set; }
 
         public string Fullname
@@ -33,7 +33,27 @@ namespace CourtIntrigue
             Gender = gender;
             Dependents = dependents;
             KnownInformation = new List<InformationInstance>();
-            Traits = new List<Trait>();
+            Traits = new Dictionary<string, Trait>();
+        }
+
+        public int GetOpinionOf(Character character)
+        {
+            int opinion = 0;
+            foreach (var trait in Traits.Values)
+            {
+                if (character.Traits.ContainsKey(trait.Identifier))
+                {
+                    opinion += trait.SameOpinion;
+                }
+                foreach (var oppositeId in trait.Opposites)
+                {
+                    if (character.Traits.ContainsKey(oppositeId))
+                    {
+                        opinion += trait.OppositeOpinion;
+                    }
+                }
+            }
+            return opinion;
         }
 
         public virtual EventContext Tick(Room room)
@@ -64,7 +84,7 @@ namespace CourtIntrigue
         internal void AddTrait(Trait trait)
         {
             CharacterLog(" Gained the trait: " + trait.Label);
-            Traits.Add(trait);
+            Traits.Add(trait.Identifier, trait);
         }
 
         protected void CharacterLog(string text)

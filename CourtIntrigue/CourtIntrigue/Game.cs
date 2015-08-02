@@ -81,6 +81,18 @@ namespace CourtIntrigue
             {
                 characters.Add(GetRandomAICharacter());
             }
+            foreach (var outer in characters)
+            {
+                foreach (var inner in characters)
+                {
+                    if (outer == inner)
+                    {
+                        continue;
+                    }
+                    Log(outer.Fullname + " opinion of " + inner.Fullname + " is " + outer.GetOpinionOf(inner));
+                }
+            }
+
         }
 
         public string[] FindAllowableActions(Room room, Character initiator, Character target)
