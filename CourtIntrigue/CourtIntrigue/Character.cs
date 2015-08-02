@@ -49,6 +49,16 @@ namespace CourtIntrigue
             throw new NotImplementedException();
         }
 
+        public virtual InformationInstance ChooseInformation()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddInformation(InformationInstance info)
+        {
+            KnownInformation.Add(info);
+        }
+
         protected void CharacterLog(string text)
         {
             Game.Log(Fullname + ": " + text);

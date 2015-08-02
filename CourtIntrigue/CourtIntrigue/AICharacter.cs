@@ -48,13 +48,18 @@ namespace CourtIntrigue
             return ret;
         }
 
-        public override EventOption ChooseOption(EventContext action, Event e)
+        public override EventOption ChooseOption(EventContext context, Event e)
         {
-            EventOption[] options = e.GetAvailableOptions(action);
+            EventOption[] options = e.GetAvailableOptions(context);
             EventOption chosen = options[Game.GetRandom(options.Length)];
-            CharacterLog("Event:" + e.CreateActionDescription(action));
-            CharacterLog("Choosing " + chosen.Label);
+            CharacterLog("Event:" + e.CreateActionDescription(context));
+            CharacterLog("Choosing " + EventHelper.ReplaceStrings(chosen.Label, context));
             return chosen;
+        }
+
+        public override InformationInstance ChooseInformation()
+        {
+            return KnownInformation[Game.GetRandom(KnownInformation.Count())];
         }
 
     }

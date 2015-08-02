@@ -106,6 +106,7 @@ namespace CourtIntrigue
             //Actions without a top level exec shouldn't do anything in their exec.
             IExecute dirExec = Execute.NOOP;
             List<EventOption> options = new List<EventOption>();
+            List<Parameter> parameters = new List<Parameter>();
             while (reader.Read())
             {
                 if (reader.NodeType == XmlNodeType.Element && reader.Name == "id")
@@ -128,12 +129,17 @@ namespace CourtIntrigue
                 {
                     options = ReadOptions(reader);
                 }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "parameters")
+                {
+                    parameters = XmlHelper.ReadParameters(reader);
+
+                }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "event")
                 {
                     break;
                 }
             }
-            return new Event(identifier, description, actionLogic, dirExec, options.ToArray());
+            return new Event(identifier, description, actionLogic, dirExec, options.ToArray(), parameters.ToArray());
         }
 
         private List<EventOption> ReadOptions(XmlReader reader)
@@ -160,6 +166,7 @@ namespace CourtIntrigue
 
             //Options without an exec shouldn't do anything.
             IExecute dirExec = Execute.NOOP;
+            ILogic requirements = Logic.TRUE;
 
             while (reader.Read())
             {
@@ -171,12 +178,16 @@ namespace CourtIntrigue
                 {
                     dirExec = XmlHelper.ReadExecute(reader);
                 }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "requirements")
+                {
+                    requirements = XmlHelper.ReadLogic(reader);
+                }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "option")
                 {
                     break;
                 }
             }
-            return new EventOption(label, dirExec);
+            return new EventOption(label, dirExec, requirements);
         }
 
 

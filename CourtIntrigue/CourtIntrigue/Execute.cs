@@ -93,23 +93,10 @@ namespace CourtIntrigue
 
     class TellInformationExecute : IExecute
     {
-        private string informationId;
-        private Dictionary<string, string> parameters;
-        public TellInformationExecute(string informationId, Dictionary<string, string> parameters)
-        {
-            this.informationId = informationId;
-            this.parameters = parameters;
-        }
-
         public void Execute(EventResults result, Game game, EventContext context, Event e)
         {
-            Information information = game.GetInformationById(informationId);
-            Dictionary<string, object> computedParameters = new Dictionary<string, object>();
-            foreach (var pair in parameters)
-            {
-                computedParameters.Add(pair.Key, context.GetScopedCharacterByName(pair.Value));
-            }
-            context.CurrentScope.KnownInformation.Add(new InformationInstance(information, computedParameters));
+            InformationInstance informationInstance = context.GetScopedCharacterByName("ROOT").ChooseInformation();
+            context.CurrentScope.KnownInformation.Add(informationInstance);
             game.Log(context.CurrentScope.Name + " learned an information.");
         }
     }

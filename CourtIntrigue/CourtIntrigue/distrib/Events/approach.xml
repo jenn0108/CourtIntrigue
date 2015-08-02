@@ -1,4 +1,9 @@
 ﻿<events>
+  <!-- CONVERSATION EVENTS-->
+  <!-- A initiates the approach to B. -->
+  <!-- Opening conversation event.
+  A = ROOT, B = TARGET.
+  ROOT is initiating and has chosen TARGET to talk to.-->
   <event>
     <id>APPROACH_ACTION_EVENT_0</id>
     <description>You approach intent on starting a discussion...</description>
@@ -11,6 +16,9 @@
       </target>
     </exec>
   </event>
+  <!-- Approach notification event.
+  B = ROOT, A = TARGET.
+  ROOT can refuse or accept to talk to TARGET.-->
   <event>
     <id>APPROACH_ACTION_EVENT_1</id>
     <description>$Target.Name$ would like to talk to you.</description>
@@ -34,10 +42,16 @@
       </option>
     </options>
   </event>
+  <!-- Approach rejection notification
+  A = ROOT, B = TARGET
+  Conversation is over. B gets a turn still and A does not.-->
   <event>
     <id>APPROACH_ACTION_EVENT_2</id>
     <description>$Target.Name$ refuses to speak with you!</description>
   </event>
+  <!-- Approach acceptance notification.
+  A = ROOT, B = TARGET
+  A now gets to choose a topic.-->
   <event>
     <id>APPROACH_ACTION_EVENT_3</id>
     <description>$Target.Name$ accepts.  What would you like to discuss?</description>
@@ -46,8 +60,26 @@
         <label>Weather</label>
       </option>
       <option>
-        <label>Public urination</label>
+        <label>Tell $Target.Name$ about...</label>
+        <requirements>
+          <has_information/>
+        </requirements>
+        <exec>
+          <target>
+            <tell_information/>
+          </target>
+        </exec>
       </option>
     </options>
+  </event>
+  <!-- Recieving information.
+  B = ROOT, A = TARGET
+  A has just told B a piece of information.-->
+  <event>
+    <id>APPROACH_ACTION_EVENT_4</id>
+    <description>$NewInformation.Description$</description>
+    <parameters>
+      <parameter type="information">NewInformation</parameter>
+    </parameters>
   </event>
 </events>

@@ -48,6 +48,14 @@ namespace CourtIntrigue
         }
     }
 
+    class HasInformationTestLogic : ILogic
+    {
+        public bool Evaluate(EventContext context)
+        {
+            return context.CurrentScope.KnownInformation.Count() > 0;
+        }
+    }
+
     class TrueLogic : ILogic
     {
         public bool Evaluate(EventContext action)

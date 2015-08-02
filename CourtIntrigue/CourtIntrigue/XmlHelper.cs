@@ -7,6 +7,18 @@ using System.Xml;
 
 namespace CourtIntrigue
 {
+    struct Parameter
+    {
+        Type Type;
+        string Name;
+
+        public Parameter(Type type, string name)
+        {
+            Type = type;
+            Name = name;
+        }
+    }
+
     static class XmlHelper
     {
         public static IExecute ReadExecute(XmlReader reader)
@@ -32,10 +44,13 @@ namespace CourtIntrigue
                 {
                     expressions.Add(new TargetExecute(ReadExecute(reader)));
                 }
-                else if (reader.NodeType == XmlNodeType.Element && (reader.Name == "observe_information" ||
-                         reader.Name == "tell_information"))
+                else if (reader.NodeType == XmlNodeType.Element && (reader.Name == "observe_information"))
                 {
                     expressions.Add(ReadGainInformation(reader));
+                }
+                else if (reader.NodeType == XmlNodeType.Element && (reader.Name == "tell_information"))
+                {
+                    expressions.Add(new TellInformationExecute());
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == tag)
                 {
@@ -68,6 +83,10 @@ namespace CourtIntrigue
                 {
                     expressions.Add(new ActionIdentifierTestLogic(reader.ReadElementContentAsString()));
                 }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "has_information")
+                {
+                    expressions.Add(new HasInformationTestLogic());
+                }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == tag)
                 {
                     break;
@@ -92,6 +111,10 @@ namespace CourtIntrigue
             if (typeName == "character")
             {
                 return typeof(Character);
+            }
+            else if (typeName == "information")
+            {
+                return typeof(Information);
             }
 
             throw new ArgumentException("Found unexpected type name " + typeName);
@@ -154,10 +177,27 @@ namespace CourtIntrigue
 
             if (tag == "observe_information")
                 return new ObserveInformationExecute(id, parameters, chance);
-            else if (tag == "add_information")
-                return new TellInformationExecute(id, parameters);
             else
                 throw new Exception("Found unknown information tag: " + tag);
+        }
+
+        public static List<Parameter> ReadParameters(XmlReader reader)
+        {
+            List<Parameter> parameters = new List<Parameter>();
+            while (reader.Read())
+            {
+                if (reader.NodeType == XmlNodeType.Element && reader.Name == "parameter")
+                {
+                    string type = reader.GetAttribute("type");
+                    string name = reader.ReadElementContentAsString();
+                    parameters.Add(new Parameter(XmlHelper.StringToType(type), name));
+                }
+                else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "parameters")
+                {
+                    break;
+                }
+            }
+            return parameters;
         }
     }
 }

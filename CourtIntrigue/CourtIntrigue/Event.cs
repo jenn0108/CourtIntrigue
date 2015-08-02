@@ -13,14 +13,16 @@ namespace CourtIntrigue
         public ILogic ActionRequirements { get; private set; }
         public EventOption[] Options { get; private set; }
         public IExecute DirectExecute { get; private set; }
+        public Parameter[] Parameters { get; private set; }
 
-        public Event(string id, string desc, ILogic requirements, IExecute dirExec, EventOption[] options)
+        public Event(string id, string desc, ILogic requirements, IExecute dirExec, EventOption[] options, Parameter[] parameters)
         {
             Identifier = id;
             Description = desc;
             ActionRequirements = requirements;
             DirectExecute = dirExec;
             Options = options;
+            Parameters = parameters;
         }
 
         public void Execute(EventResults result, Game game, EventContext context)
@@ -42,11 +44,17 @@ namespace CourtIntrigue
             }
         }
 
-        public EventOption[] GetAvailableOptions(EventContext action)
+        public EventOption[] GetAvailableOptions(EventContext context)
         {
-            //In the future we will need to evaluate whether or not each
-            //option should be visible to the character.
-            return Options;
+            List<EventOption> options = new List<EventOption>();
+            foreach (var option in Options)
+            {
+                if (option.Requirements.Evaluate(context))
+                {
+                    options.Add(option);
+                }
+            }
+            return options.ToArray();
         }
 
         public string CreateActionDescription(EventContext a)
@@ -59,11 +67,13 @@ namespace CourtIntrigue
     {
         public string Label { get; private set; }
         public IExecute DirectExecute { get; private set; }
+        public ILogic Requirements { get; private set; }
 
-        public EventOption(string label, IExecute dirExec)
+        public EventOption(string label, IExecute dirExec, ILogic requirements)
         {
             Label = label;
             DirectExecute = dirExec;
+            Requirements = requirements;
         }
     }
 

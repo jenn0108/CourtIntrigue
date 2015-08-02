@@ -52,7 +52,7 @@ namespace CourtIntrigue
 
             //Actions without a top level exec shouldn't do anything in their exec.
             IExecute dirExec = Execute.NOOP;
-            List<InformationParameter> parameters = new List<InformationParameter>();
+            List<Parameter> parameters = new List<Parameter>();
             while (reader.Read())
             {
                 if (reader.NodeType == XmlNodeType.Element && reader.Name == "id")
@@ -65,7 +65,7 @@ namespace CourtIntrigue
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "parameters")
                 {
-                    parameters = ReadParameters(reader);
+                    parameters = XmlHelper.ReadParameters(reader);
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "information")
                 {
@@ -75,24 +75,6 @@ namespace CourtIntrigue
             return new Information(identifier, description, parameters.ToArray());
         }
 
-        private List<InformationParameter> ReadParameters(XmlReader reader)
-        {
-            List<InformationParameter> parameters = new List<InformationParameter>();
-            while (reader.Read())
-            {
-                if (reader.NodeType == XmlNodeType.Element && reader.Name == "parameter")
-                {
-                    string type = reader.GetAttribute("type");
-                    string name = reader.ReadElementContentAsString();
-                    parameters.Add(new InformationParameter(XmlHelper.StringToType(type), name));
-                }
-                else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "parameters")
-                {
-                    break;
-                }
-            }
-            return parameters;
-        }
 
         public Information GetInformationById(string id)
         {
