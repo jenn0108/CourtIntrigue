@@ -16,6 +16,7 @@ namespace CourtIntrigue
         public GenderEnum Gender { get; private set; }
         public List<DependentCharacter> Dependents { get; private set; }
         public List<InformationInstance> KnownInformation { get; private set; }
+        protected List<Trait> Traits { get; private set; }
         protected Game Game { get; private set; }
 
         public string Fullname
@@ -32,6 +33,7 @@ namespace CourtIntrigue
             Gender = gender;
             Dependents = dependents;
             KnownInformation = new List<InformationInstance>();
+            Traits = new List<Trait>();
         }
 
         public virtual EventContext Tick(Room room)
@@ -59,9 +61,16 @@ namespace CourtIntrigue
             KnownInformation.Add(info);
         }
 
+        internal void AddTrait(Trait trait)
+        {
+            CharacterLog(" Gained the trait: " + trait.Label);
+            Traits.Add(trait);
+        }
+
         protected void CharacterLog(string text)
         {
             Game.Log(Fullname + ": " + text);
         }
+
     }
 }

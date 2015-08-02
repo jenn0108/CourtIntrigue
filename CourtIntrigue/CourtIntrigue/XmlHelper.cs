@@ -229,5 +229,23 @@ namespace CourtIntrigue
             }
             return parameters;
         }
+
+        public static string[] ReadList(XmlReader reader, string elementTag)
+        {
+            string tag = reader.Name;
+            List<string> elements = new List<string>();
+            while (reader.Read())
+            {
+                if (reader.NodeType == XmlNodeType.Element && reader.Name == elementTag)
+                {
+                    elements.Add(reader.ReadElementContentAsString());
+                }
+                else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == tag)
+                {
+                    break;
+                }
+            }
+            return elements.ToArray();
+        }
     }
 }

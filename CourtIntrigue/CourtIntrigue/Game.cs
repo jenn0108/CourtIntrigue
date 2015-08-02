@@ -21,6 +21,7 @@ namespace CourtIntrigue
         private EventManager eventManager;
         private RoomManager roomManager;
         private InformationManager infoManager;
+        private ModifierManager modifierManager;
         private Logger debugLogger;
         public Room[] CommonRooms { get; private set; }
         public DateTime CurrentDate { get; private set; }
@@ -36,6 +37,7 @@ namespace CourtIntrigue
             eventManager = new EventManager();
             roomManager = new RoomManager();
             infoManager = new InformationManager();
+            modifierManager = new ModifierManager();
             random = new Random();
 
             CurrentDate = new DateTime(1066, 10, 13);//Day before the Battle of Hastings, ok for now.
@@ -47,11 +49,6 @@ namespace CourtIntrigue
             foreach (var fam in familyNames)
             {
                 dynasties.Add(fam, new Dynasty(fam));
-            }
-
-            for (int iCharacter = 0; iCharacter < numCharacters; ++iCharacter )
-            {
-                characters.Add(GetRandomAICharacter());
             }
 
             //Go load all the xml files in our events directory.
@@ -66,13 +63,24 @@ namespace CourtIntrigue
                 roomManager.LoadRoomsFromFile(file);
             }
 
-            //Go load all the xml files in our rooms directory.
+            //Go load all the xml files in our information directory.
             foreach (var file in Directory.EnumerateFiles("Informations", "*.xml"))
             {
                 infoManager.LoadInformationsFromFile(file);
             }
 
+            //Go load all the xml files in our traits directory.
+            foreach (var file in Directory.EnumerateFiles("Traits", "*.xml"))
+            {
+                modifierManager.LoadTraitsFromFile(file);
+            }
+
             CommonRooms = roomManager.GetCommonRooms();
+
+            for (int iCharacter = 0; iCharacter < numCharacters; ++iCharacter)
+            {
+                characters.Add(GetRandomAICharacter());
+            }
         }
 
         public string[] FindAllowableActions(Room room, Character initiator, Character target)
@@ -250,7 +258,9 @@ namespace CourtIntrigue
                 dependants.Add(new DependentCharacter(name, dynasty, this, gender));
             }
 
-            return new AICharacter(GetRandomMaleName(), dynasty, 0, this, Character.GenderEnum.Male, dependants);
+            AICharacter character = new AICharacter(GetRandomMaleName(), dynasty, 0, this, Character.GenderEnum.Male, dependants);
+            modifierManager.AssignInitialTraits(this, character, 4);
+            return character;
         }
 
         public void Log(string txt)

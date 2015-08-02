@@ -1,0 +1,467 @@
+lustful = {
+	personality = yes
+	opposites =  {
+		chaste
+	}
+	fertility = 0.2
+	
+	intrigue = 1
+	
+	christian_church_opinion = -10
+	
+	monthly_character_piety = -0.25
+	
+	ai_greed = 20
+	ai_zeal = -10
+	
+}
+chaste = {
+	personality = yes
+	
+	potential = {
+		NOT = { religion_group = muslim }
+	}
+	
+	opposites =  {
+		lustful
+	}
+	fertility = -0.15
+	
+	learning = 1
+	
+	christian_church_opinion = 10
+	opposite_opinion = -10
+	
+	monthly_character_piety = 0.5
+	
+	ai_zeal = 10
+	
+}
+gluttonous = {
+	personality = yes
+	opposites =  {
+		temperate
+	}
+	
+	sex_appeal_opinion = -15
+	church_opinion = -10
+	same_opinion = 5
+	
+	stewardship = -2
+	
+	ai_greed = 20
+	ai_zeal = -10
+	
+}
+temperate = {
+	personality = yes
+	opposites =  {
+		gluttonous
+	}
+	
+	church_opinion = 10
+	opposite_opinion = -10
+	same_opinion = 10
+	
+	stewardship = 2
+	
+	ai_greed = -20
+	ai_zeal = 10
+	
+}
+greedy = {
+	personality = yes
+	opposites =  {
+		charitable
+	}
+	global_tax_modifier = 0.1
+	diplomacy = -1
+	
+	ai_honor = -10
+	ai_ambition = 15
+	ai_greed = 100
+	
+}
+charitable = {
+	personality = yes
+	opposites =  {
+		greedy
+	}
+	diplomacy = 3
+	
+	church_opinion = 10
+	opposite_opinion = -10
+	same_opinion = 10
+	
+	ai_honor = 10
+	ai_ambition = -15
+	ai_greed = -100
+	
+	ai_zeal = 10
+	
+}
+slothful = {
+	personality = yes
+	opposites =  {
+		diligent
+	}
+	
+	vassal_opinion = -10
+	
+	diplomacy = -1
+	intrigue = -1
+	stewardship = -1
+	martial = -1
+	learning = -1
+	
+	ai_ambition = -10
+	
+	ai_greed = 10
+	ai_zeal = -10
+	
+}
+diligent = {
+	personality = yes
+	opposites =  {
+		slothful
+	}
+	
+	vassal_opinion = 10
+	opposite_opinion = -10
+	same_opinion = 10
+	
+	diplomacy = 1
+	intrigue = 1
+	stewardship = 1
+	martial = 1
+	learning = 1
+	
+	ai_greed = -10
+	ai_zeal = 10
+	
+}
+envious = {
+	personality = yes
+	opposites =  {
+		kind
+	}
+	intrigue = 2
+	diplomacy = -1
+	
+	liege_opinion = -15
+	
+	ai_honor = -10
+	
+}
+kind = {
+	personality = yes
+	opposites =  {
+		envious
+		cruel
+	}
+	intrigue = -2
+	diplomacy = 2
+	
+	vassal_opinion = 10
+	opposite_opinion = -10
+	same_opinion = 10
+	
+	ai_honor = 10
+	
+}
+wroth = {
+	personality = yes
+	opposites =  {
+		patient
+	}
+	diplomacy = -1
+	intrigue = -1
+	martial = 3
+	
+	ai_rationality = -10
+	ai_honor = -5
+	
+}
+patient = {
+	personality = yes
+	opposites =  {
+		wroth
+	}
+	diplomacy = 1
+	intrigue = 1
+	stewardship = 1
+	learning = 1
+	opposite_opinion = -10
+	
+	ai_rationality = 10
+	
+	command_modifier = {
+		defence = 0.2
+	}
+	
+}
+proud = {
+	personality = yes
+	opposites =  {
+		humble
+	}
+	
+	monthly_character_prestige = 0.5
+	
+	ai_ambition = 10
+	
+}
+humble = {
+	personality = yes
+	opposites =  {
+		proud
+	}
+	
+	monthly_character_piety = 1
+	opposite_opinion = -10
+	same_opinion = 10
+	
+	ai_ambition = -10
+	
+}
+# OTHER
+deceitful = {
+	personality = yes
+	opposites =  {
+		honest
+	}
+	
+	intrigue = 3
+	diplomacy = -2
+	
+	opposite_opinion = -10
+	
+	ai_honor = -25
+	
+}
+honest = {
+	personality = yes
+	opposites =  {
+		deceitful
+	}
+	
+	intrigue = -2
+	diplomacy = 3
+	
+	opposite_opinion = -10
+	same_opinion = 10
+	
+	ai_honor = 25
+	
+}
+craven = {
+	personality = yes
+	opposites =  {
+		brave
+	}
+	
+	vassal_opinion = -5
+	
+	martial = -2
+	combat_rating = -1
+	
+	command_modifier = {
+		morale_defence = -0.2
+	}
+	
+}
+brave = {
+	personality = yes
+	opposites =  {
+		craven
+	}
+	
+	vassal_opinion = 10
+	opposite_opinion = -10
+	same_opinion = 10
+	
+	martial = 2
+	combat_rating = 1
+	
+	command_modifier = {
+		morale_defence = 0.1
+	}
+	
+}
+shy = {
+	personality = yes
+	opposites =  {
+		gregarious
+	}
+	
+	diplomacy = -2
+	
+}
+gregarious = {
+	personality = yes
+	opposites =  {
+		shy
+	}
+	
+	sex_appeal_opinion = 5
+	same_opinion = 5
+	
+	vassal_opinion = 5
+	
+	diplomacy = 2
+	
+	
+}
+ambitious = {
+	personality = yes
+	opposites =  {
+		content
+	}
+	
+	intrigue = 2
+	stewardship = 2
+	diplomacy = 2
+	martial = 2
+	learning = 2
+	
+	same_opinion = -5
+	ambition_opinion = -50 # Against those they want something from
+	
+	ai_ambition = 40
+	ai_zeal = 10
+	
+}
+content = {
+	personality = yes
+	opposites =  {
+		ambitious
+	}
+	
+	intrigue = -1
+	
+	liege_opinion = 50
+	
+	monthly_character_piety = 0.5
+	
+	ai_ambition = -40
+	ai_zeal = -10
+}
+arbitrary = {
+	personality = yes
+	opposites =  {
+		just
+	}
+	
+	stewardship = -2
+	learning = -1
+	
+	vassal_opinion = -10
+	
+	ai_rationality = -20
+	ai_honor = -10
+	ai_zeal = -10
+	
+}
+just = {
+	personality = yes
+	opposites =  {
+		arbitrary
+	}
+	
+	stewardship = 2
+	learning = 1
+	
+	vassal_opinion = 10
+	opposite_opinion = -10
+	same_opinion = 10
+	
+	ai_rationality = 20
+	ai_honor = 10
+	ai_zeal = 10
+	
+}
+cynical = {
+	personality = yes
+	opposites = {
+		zealous
+	}
+	
+	intrigue = 2
+	
+	church_opinion = -5
+	opposite_opinion = -10
+	same_opinion = 10
+	
+	monthly_character_piety = -0.2
+	
+	ai_rationality = 10
+	ai_zeal = -100
+	
+}
+zealous = {
+	personality = yes
+	opposites =  {
+		cynical
+		sympathy_christendom
+		sympathy_islam
+		sympathy_pagans
+		sympathy_zoroastrianism
+		sympathy_judaism
+		sympathy_indian
+	}
+	
+	martial = 2
+	
+	church_opinion = 10
+	infidel_opinion = -50
+	opposite_opinion = -10
+	same_opinion_if_same_religion = 30
+	
+	monthly_character_piety = 1
+	
+	ai_rationality = -10
+	ai_zeal = 100
+	
+}
+paranoid = {
+	personality = yes
+	opposites =  {
+		trusting
+	}
+	
+	intrigue = 2
+	diplomacy = -1
+	
+	ai_honor = -10
+	
+}
+trusting = {
+	personality = yes
+	opposites =  {
+		paranoid
+	}
+	
+	intrigue = -2
+	diplomacy = 1
+	
+	ai_honor = 10
+	
+}
+cruel = {
+	personality = yes
+	opposites =  {
+		kind
+	}
+	
+	intrigue = 1
+	diplomacy = -1
+	
+	vassal_opinion = -10
+	ai_honor = -10
+	ai_greed = 10
+	
+	command_modifier = {
+		morale_offence = 0.1
+	}
+	
+}
