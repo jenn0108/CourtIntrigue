@@ -31,7 +31,7 @@ namespace CourtIntrigue
 
             //DirectExecute always happens if it is present.
             if (DirectExecute != null)
-                DirectExecute.Execute(result, game, context, this);
+                DirectExecute.Execute(result, game, context);
 
             if (Options.Length > 0)
             {
@@ -41,7 +41,7 @@ namespace CourtIntrigue
                 if(chosen != null && chosen.DirectExecute != null)
                 {
                     //Execute the option activity.
-                    chosen.DirectExecute.Execute(result, game, context, this);
+                    chosen.DirectExecute.Execute(result, game, context);
                 }
             }
         }

@@ -13,12 +13,12 @@ namespace CourtIntrigue
 
     interface IExecute
     {
-        void Execute(EventResults result, Game game, EventContext context, Event e);
+        void Execute(EventResults result, Game game, EventContext context);
     }
 
     class NoOpExecute : IExecute
     {
-        public void Execute(EventResults result, Game game, EventContext context, Event e)
+        public void Execute(EventResults result, Game game, EventContext context)
         {
 
         }
@@ -32,18 +32,18 @@ namespace CourtIntrigue
             this.instructions = instructions;
         }
 
-        public void Execute(EventResults result, Game game, EventContext context, Event e)
+        public void Execute(EventResults result, Game game, EventContext context)
         {
             for(int i = 0; i < instructions.Length; ++i)
             {
-                instructions[i].Execute(result, game, context, e);
+                instructions[i].Execute(result, game, context);
             }
         }
     }
 
     class AllowEventSelectionExecute : IExecute
     {
-        public void Execute(EventResults result, Game game, EventContext context, Event e)
+        public void Execute(EventResults result, Game game, EventContext context)
         {
             result.GiveTargetTurn();
         }
@@ -59,7 +59,7 @@ namespace CourtIntrigue
             this.parameters = parameters;
         }
 
-        public void Execute(EventResults result, Game game, EventContext context, Event e)
+        public void Execute(EventResults result, Game game, EventContext context)
         {
             Dictionary<string, object> computedParameters = new Dictionary<string, object>();
             foreach (var pair in parameters)
@@ -83,7 +83,7 @@ namespace CourtIntrigue
             this.chance = chance;
         }
 
-        public void Execute(EventResults result, Game game, EventContext context, Event e)
+        public void Execute(EventResults result, Game game, EventContext context)
         {
             if (game.GetRandom(100) < chance)
             {
@@ -97,7 +97,7 @@ namespace CourtIntrigue
                 if(context.CurrentCharacter.AddInformation(newInfo))
                 {
                     game.Log(context.CurrentCharacter.Name + " learned an information.");
-                    newInfo.ExecuteOnObserve(context.CurrentCharacter, game, context.Room, e);
+                    newInfo.ExecuteOnObserve(context.CurrentCharacter, game, context.Room);
                 }
             }
         }
@@ -110,19 +110,19 @@ namespace CourtIntrigue
         {
             this.operation = operation;
         }
-        public void Execute(EventResults result, Game game, EventContext context, Event e)
+        public void Execute(EventResults result, Game game, EventContext context)
         {
             Character tellingCharacter = context.GetScopedObjectByName("ROOT") as Character;
             InformationInstance informationInstance = tellingCharacter.ChooseInformation();
             bool isNewInformation = context.CurrentCharacter.AddInformation(informationInstance);
             context.PushScope(informationInstance);
-            operation.Execute(result, game, context, e);
+            operation.Execute(result, game, context);
             context.PopScope();
 
             if(isNewInformation)
             {
                 game.Log(context.CurrentCharacter.Name + " learned an information.");
-                informationInstance.ExecuteOnTold(context.CurrentCharacter, tellingCharacter, game, context.Room, e);
+                informationInstance.ExecuteOnTold(context.CurrentCharacter, tellingCharacter, game, context.Room);
             }
         }
     }
@@ -137,14 +137,14 @@ namespace CourtIntrigue
             this.requirements = requirements;
         }
 
-        public void Execute(EventResults result, Game game, EventContext context, Event e)
+        public void Execute(EventResults result, Game game, EventContext context)
         {
             foreach (var character in context.Room.GetCharacters(context.CurrentCharacter))
             {
                 context.PushScope(character);
                 if (requirements.Evaluate(context))
                 {
-                    operation.Execute(result, game, context, e);
+                    operation.Execute(result, game, context);
                 }
                 context.PopScope();
             }
@@ -161,10 +161,10 @@ namespace CourtIntrigue
             this.operation = operation;
         }
 
-        public void Execute(EventResults result, Game game, EventContext context, Event e)
+        public void Execute(EventResults result, Game game, EventContext context)
         {
             context.PushScope(context.GetScopedObjectByName(scopeName));
-            operation.Execute(result, game, context, e);
+            operation.Execute(result, game, context);
             context.PopScope();
         }
     }
@@ -177,7 +177,7 @@ namespace CourtIntrigue
             this.prestigeChange = prestigeChange;
         }
 
-        public void Execute(EventResults result, Game game, EventContext context, Event e)
+        public void Execute(EventResults result, Game game, EventContext context)
         {
             context.CurrentCharacter.Dynasty.PrestigeChange(prestigeChange);
         }

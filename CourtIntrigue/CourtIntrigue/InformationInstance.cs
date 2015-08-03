@@ -24,7 +24,7 @@ namespace CourtIntrigue
             return parameters[name];
         }
 
-        public void ExecuteOnObserve(Character currentCharacter, Game game, Room room, Event e)
+        public void ExecuteOnObserve(Character currentCharacter, Game game, Room room)
         {
             foreach(var param in information.Parameters)
             {
@@ -38,15 +38,15 @@ namespace CourtIntrigue
             //The current character is the root of the new context so that they will be the
             //default scope in the on_observe we are about to run.
             EventContext observeContext = new EventContext("", currentCharacter, null, room, parameters);
-            information.OnObserve.Execute(new EventResults(), game, observeContext, e);
+            information.OnObserve.Execute(new EventResults(), game, observeContext);
         }
 
-        public void ExecuteOnTold(Character currentCharacter, Character tellingCharacter, Game game, Room room, Event e)
+        public void ExecuteOnTold(Character currentCharacter, Character tellingCharacter, Game game, Room room)
         {
             //The current character is the root of the new context so that they will be the
             //default scope in the on_observe we are about to run.
             EventContext observeContext = new EventContext("", currentCharacter, tellingCharacter, room, parameters);
-            information.OnTold.Execute(new EventResults(), game, observeContext, e);
+            information.OnTold.Execute(new EventResults(), game, observeContext);
         }
 
         public override bool Equals(object obj)
