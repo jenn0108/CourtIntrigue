@@ -13,6 +13,7 @@ namespace CourtIntrigue
     }
     class Game
     {
+        public static int TICKS_PER_DAY = 5;
         private static int MAX_CHILDREN = 3; // Small for testing purposes.
 
         private List<Character> characters = new List<Character>();
@@ -117,6 +118,16 @@ namespace CourtIntrigue
         public void BeginDay()
         {
             debugLogger.PrintText("Wake up");
+            foreach(var outer in characters)
+            {
+                foreach(var inner in characters)
+                {
+                    if (inner == outer)
+                        continue;
+
+                    Log(outer.Fullname + " opinion of " + inner.Fullname + " is " + outer.GetOpinionOf(inner));
+                }
+            }
             foreach (var character in characters)
             {
                 modifierManager.EvaluatePrestigeModifiers(character);
@@ -198,6 +209,12 @@ namespace CourtIntrigue
             debugLogger.PrintText("End tick");
 
             ++CurrentTime;
+        }
+
+        public OpinionModifierInstance CreateOpinionModifier(string identifier, Character character)
+        {
+            OpinionModifier mod = modifierManager.GetOpinionModifierById(identifier);
+            return new OpinionModifierInstance(character, mod, CurrentTime);
         }
 
         private void ExecuteAction(Character character, EventContext context, ISet<Character> finishedCharacters)

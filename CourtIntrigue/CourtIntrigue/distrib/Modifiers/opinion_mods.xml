@@ -1,0 +1,16 @@
+﻿<opinion_mods>
+  <opinion_mod>
+    <id>PUBLIC_URINATION_OBSERVE_OPINION_MOD</id>
+    <label>Ewwww!</label>
+    <description>Urinating in public is unseemly causing people to dislike you.</description>
+    <duration>10</duration>
+    <opinion_change>-10</opinion_change>
+  </opinion_mod>
+  <opinion_mod>
+    <id>PUBLIC_URINATION_TOLD_OPINION_MOD</id>
+    <label>Ewwww!</label>
+    <description>Urinating in public is unseemly causing people to dislike you.</description>
+    <duration>5</duration>
+    <opinion_change>-10</opinion_change>
+  </opinion_mod>
+</opinion_mods>

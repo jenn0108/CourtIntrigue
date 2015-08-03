@@ -11,6 +11,7 @@ namespace CourtIntrigue
     {
         private Dictionary<string, Trait> traits = new Dictionary<string, Trait>();
         private List<PrestigeModifier> prestigeModifiers = new List<PrestigeModifier>();
+        private Dictionary<string, OpinionModifier> opinionModifiers = new Dictionary<string, OpinionModifier>();
 
         private Trait ReadTrait(XmlReader reader)
         {
@@ -93,6 +94,44 @@ namespace CourtIntrigue
             return new PrestigeModifier(identifier, label, description, requirements, dailyChange);
         }
 
+        private OpinionModifier ReadOpinionModifier(XmlReader reader)
+        {
+            string identifier = null;
+            string description = null;
+            string label = null;
+            int change = 0;
+            int duration = int.MaxValue;
+
+            while (reader.Read())
+            {
+                if (reader.NodeType == XmlNodeType.Element && reader.Name == "id")
+                {
+                    identifier = reader.ReadElementContentAsString();
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "description")
+                {
+                    description = reader.ReadElementContentAsString();
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "label")
+                {
+                    label = reader.ReadElementContentAsString();
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "duration")
+                {
+                    duration = reader.ReadElementContentAsInt();
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "opinion_change")
+                {
+                    change = reader.ReadElementContentAsInt();
+                }
+                else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "opinion_mod")
+                {
+                    break;
+                }
+            }
+            return new OpinionModifier(identifier, label, description, duration, change);
+        }
+
         public void LoadTraitsFromFile(string filename)
         {
             using (XmlReader reader = XmlReader.Create(filename))
@@ -134,8 +173,33 @@ namespace CourtIntrigue
                     {
                         ReadPrestigeModifiers(reader);
                     }
+                    else if (reader.NodeType == XmlNodeType.Element && reader.Name == "opinion_mods")
+                    {
+                        ReadOpinionModifiers(reader);
+                    }
                 }
             }
+        }
+
+        private void ReadOpinionModifiers(XmlReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.NodeType == XmlNodeType.Element && reader.Name == "opinion_mod")
+                {
+                    OpinionModifier mod = ReadOpinionModifier(reader);
+                    opinionModifiers.Add(mod.Identifier, mod);
+                }
+                else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "opinion_mods")
+                {
+                    break;
+                }
+            }
+        }
+
+        public OpinionModifier GetOpinionModifierById(string identifier)
+        {
+            return opinionModifiers[identifier];
         }
 
         private void ReadPrestigeModifiers(XmlReader reader)

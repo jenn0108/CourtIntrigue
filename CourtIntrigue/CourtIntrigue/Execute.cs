@@ -169,6 +169,24 @@ namespace CourtIntrigue
         }
     }
 
+    class ApplyOpinionModifierExecute : IExecute
+    {
+        private string identifier;
+        private string character;
+        public ApplyOpinionModifierExecute(string identifier, string character)
+        {
+            this.identifier = identifier;
+            this.character = character;
+        }
+
+        public void Execute(EventResults result, Game game, EventContext context)
+        {
+            OpinionModifierInstance mod = game.CreateOpinionModifier(identifier, context.GetScopedObjectByName(character) as Character);
+            context.CurrentCharacter.AddOpinionModifier(mod);
+        }
+
+    }
+
     class PrestigeChangeExecute : IExecute
     {
         private int change;

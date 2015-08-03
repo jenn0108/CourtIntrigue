@@ -59,6 +59,10 @@ namespace CourtIntrigue
                 {
                     expressions.Add(new PrestigeChangeExecute(reader.ReadElementContentAsInt()));
                 }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "apply_opinion_mod")
+                {
+                    expressions.Add(ReadApplyOpinionMod(reader));
+                }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == tag)
                 {
                     break;
@@ -190,6 +194,29 @@ namespace CourtIntrigue
                 return new ObserveInformationExecute(id, parameters, chance);
             else
                 throw new Exception("Found unknown information tag: " + tag);
+        }
+
+        private static IExecute ReadApplyOpinionMod(XmlReader reader)
+        {
+            string id = null;
+            string character = null;
+            while (reader.Read())
+            {
+                if (reader.NodeType == XmlNodeType.Element && reader.Name == "id")
+                {
+                    id = reader.ReadElementContentAsString();
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "character")
+                {
+                    character = reader.ReadElementContentAsString();
+                }
+                else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "apply_opinion_mod")
+                {
+                    break;
+                }
+            }
+
+            return new ApplyOpinionModifierExecute(id, character);
         }
 
         private static IExecute ReadTriggerEvent(XmlReader reader)

@@ -21,6 +21,7 @@ namespace CourtIntrigue
         protected ISet<InformationInstance> history = new HashSet<InformationInstance>();
         protected Dictionary<string, Trait> Traits { get; private set; }
         protected ISet<PrestigeModifier> PrestigeModifiers { get; private set; }
+        protected Dictionary<Character, ISet<OpinionModifierInstance>> opinionModifiers = new Dictionary<Character, ISet<OpinionModifierInstance>>();
         protected Game Game { get; private set; }
 
         public string Fullname
@@ -76,11 +77,34 @@ namespace CourtIntrigue
                     }
                 }
             }
+            ISet<OpinionModifierInstance> mods = null;
+            if(opinionModifiers.TryGetValue(character, out mods))
+            {
+                foreach(var mod in mods)
+                {
+                    opinion += mod.GetChange(Game.CurrentTime);
+                }
+            }
             return opinion;
         }
 
         public Room BeginDay()
         {
+            //Remove expired opinion modifiers
+            foreach(var pair in opinionModifiers)
+            {
+                ISet<OpinionModifierInstance> expiredMods = new HashSet<OpinionModifierInstance>();
+                foreach(var mod in pair.Value)
+                {
+                    if(mod.IsExpired(Game.CurrentTime))
+                    {
+                        expiredMods.Add(mod);
+                    }
+                }
+
+                pair.Value.ExceptWith(expiredMods);
+            }
+
             return OnBeginDay();
         }
 
@@ -154,6 +178,17 @@ namespace CourtIntrigue
         public void RemovePrestigeModifier(PrestigeModifier modifier)
         {
             PrestigeModifiers.Remove(modifier);
+        }
+
+        public void AddOpinionModifier(OpinionModifierInstance mod)
+        {
+            ISet<OpinionModifierInstance> list;
+            if (!opinionModifiers.TryGetValue(mod.Target, out list))
+            {
+                list = new HashSet<OpinionModifierInstance>();
+                opinionModifiers.Add(mod.Target, list);
+            }
+            list.Add(mod);
         }
 
         public void MarkBusy()

@@ -10,13 +10,20 @@
     <on_observe>
       <set_scope name="PeeingParty">
         <prestige_change>-2</prestige_change>
-        <inform/>
       </set_scope>
+      <apply_opinion_mod>
+        <id>PUBLIC_URINATION_OBSERVE_OPINION_MOD</id>
+        <character>PeeingParty</character>
+      </apply_opinion_mod>
     </on_observe>
     <on_told>
       <set_scope name="PeeingParty">
         <prestige_change>-1</prestige_change>
       </set_scope>
+      <apply_opinion_mod>
+        <id>PUBLIC_URINATION_TOLD_OPINION_MOD</id>
+        <character>PeeingParty</character>
+      </apply_opinion_mod>
     </on_told>
   </information>
 </informations>
