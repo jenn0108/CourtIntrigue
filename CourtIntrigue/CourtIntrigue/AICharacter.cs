@@ -13,7 +13,7 @@ namespace CourtIntrigue
             CharacterLog("Created character with spouse: " + spouse.Name + " and children: " + string.Join(", ", children.Select(c => c.Name + "(" + c.Gender.ToString() + ")")));
         }
 
-        public override EventContext Tick(Room room)
+        public override EventContext Tick()
         {
             CharacterLog("In room with: " + string.Join(", ", room.GetUnoccuppiedCharacters(this).Select(c => c.Name)));
 
@@ -24,19 +24,19 @@ namespace CourtIntrigue
                 int num = Game.GetRandom(actions.Length + room.GetUnoccuppiedCharacters(this).Count());
                 if (num < actions.Length)
                 {
-                    return new EventContext(actions[num], this, null, room);
+                    return new EventContext(actions[num], this, null);
                 }
                 else
                 {
                     Character otherCharacter = room.GetUnoccuppiedCharacters(this).ElementAt(num - actions.Length);
                     string[] pairActions = Game.FindAllowableActions(room, this, otherCharacter);
-                    return new EventContext(pairActions[Game.GetRandom(pairActions.Length)], this, otherCharacter, room);
+                    return new EventContext(pairActions[Game.GetRandom(pairActions.Length)], this, otherCharacter);
                 }
             }
             else
             {
                 int num = Game.GetRandom(actions.Length);
-                return new EventContext(actions[num], this, null, room);
+                return new EventContext(actions[num], this, null);
             }
 
         }

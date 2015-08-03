@@ -38,7 +38,7 @@ namespace CourtIntrigue
             List<string> actions = new List<string>();
             foreach(var actionId in room.PairActions)
             {
-                EventContext action = new EventContext(actionId, initiator, target, room);
+                EventContext action = new EventContext(actionId, initiator, target);
                 foreach (var pair in events)
                 {
                     if (pair.Value.ActionRequirements.Evaluate(action))

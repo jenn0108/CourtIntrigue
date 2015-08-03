@@ -52,6 +52,12 @@ namespace CourtIntrigue
             }
         }
 
+        public void RemoveCharacter(Character character)
+        {
+            characters.Remove(character);
+            unoccuppiedCharacters.Remove(character);
+        }
+
         public void AddCharacter(Character character)
         {
             characters.Add(character);

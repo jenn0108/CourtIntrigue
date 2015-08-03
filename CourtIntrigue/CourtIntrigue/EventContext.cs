@@ -12,7 +12,7 @@ namespace CourtIntrigue
     {
         public string Identifer { get; private set; }
         public Character Target { get; private set; }
-        public Room Room { get; private set; }
+        public Room Room { get { return (scopes.First().Value as Character).CurrentRoom; } }
         private Dictionary<string, object> parameters;
         private List<KeyValuePair<string,object>> scopes = new List<KeyValuePair<string, object>>();
         public object CurrentScope
@@ -33,20 +33,18 @@ namespace CourtIntrigue
             }
         }
 
-        public EventContext(string ident, Character initiator, Character target, Room room)
+        public EventContext(string ident, Character initiator, Character target)
         {
             Identifer = ident;
             Target = target;
-            Room = room;
             scopes.Add(new KeyValuePair<string, object>("ROOT", initiator));
             parameters = new Dictionary<string, object>();
         }
 
-        public EventContext(string ident, Character initiator, Character target, Room room, Dictionary<string,object> parameters)
+        public EventContext(string ident, Character initiator, Character target, Dictionary<string, object> parameters)
         {
             Identifer = ident;
             Target = target;
-            Room = room;
             scopes.Add(new KeyValuePair<string, object>("ROOT", initiator));
             this.parameters = parameters;
         }

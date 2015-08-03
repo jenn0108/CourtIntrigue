@@ -16,6 +16,7 @@ namespace CourtIntrigue
         public GenderEnum Gender { get; private set; }
         public DependentCharacter Spouse { get; private set; }
         public List<DependentCharacter> Children { get; private set; }
+        protected Room room;
         protected List<InformationInstance> KnownInformation { get; private set; }
         protected ISet<InformationInstance> history = new HashSet<InformationInstance>();
         protected Dictionary<string, Trait> Traits { get; private set; }
@@ -25,6 +26,23 @@ namespace CourtIntrigue
         public string Fullname
         {
             get { return Name + " " + Dynasty.Name; }
+        }
+
+        public Room CurrentRoom
+        {
+            get { return room; }
+            set
+            {
+                if (room != null)
+                {
+                    room.RemoveCharacter(this);
+                }
+                room = value;
+                if (room != null)
+                {
+                    room.AddCharacter(this);
+                }
+            }
         }
 
         public Character(string name, Dynasty dynasty, int money, Game game, GenderEnum gender, DependentCharacter spouse, List<DependentCharacter> children)
@@ -61,7 +79,7 @@ namespace CourtIntrigue
             return opinion;
         }
 
-        public virtual EventContext Tick(Room room)
+        public virtual EventContext Tick()
         {
             throw new NotImplementedException();
         }
@@ -126,6 +144,14 @@ namespace CourtIntrigue
         public void RemovePrestigeModifier(PrestigeModifier modifier)
         {
             PrestigeModifiers.Remove(modifier);
+        }
+
+        public void MarkBusy()
+        {
+            if (CurrentRoom != null)
+            {
+                CurrentRoom.MarkBusy(this);
+            }
         }
 
         public override string ToString()

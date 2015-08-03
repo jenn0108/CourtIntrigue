@@ -17,7 +17,6 @@ namespace CourtIntrigue
 
         private List<Character> characters = new List<Character>();
         private Random random;
-        private Dictionary<Character, Room> chosenRooms = new Dictionary<Character, Room>();
         private EventManager eventManager;
         private RoomManager roomManager;
         private InformationManager infoManager;
@@ -93,9 +92,7 @@ namespace CourtIntrigue
                 foreach (var inner in characters)
                 {
                     if (outer == inner)
-                    {
                         continue;
-                    }
                     Log(outer.Fullname + " opinion of " + inner.Fullname + " is " + outer.GetOpinionOf(inner));
                 }
             }*/
@@ -124,17 +121,9 @@ namespace CourtIntrigue
             {
                 modifierManager.EvaluatePrestigeModifiers(character);
             }
-
-            foreach (var room in chosenRooms.Values.GroupBy(r => r).Select(r => r.Key))
-            {
-                room.ClearRoom();
-            }
-            chosenRooms.Clear();
             foreach (var character in characters)
             {
-                Room room = character.BeginDay();
-                chosenRooms.Add(character, room);
-                room.AddCharacter(character);
+                character.CurrentRoom = character.BeginDay();
             }
 
 
@@ -145,7 +134,7 @@ namespace CourtIntrigue
         {
             debugLogger.PrintText("Begin tick");
 
-            foreach (var room in chosenRooms.Values.GroupBy(r => r).Select( r => r.Key))
+            foreach (var room in characters.Select(c => c.CurrentRoom).GroupBy(r => r).Select(r => r.Key))
             {
                 room.ResetUnoccupied();
             }
@@ -172,7 +161,7 @@ namespace CourtIntrigue
                 }
 
                 //Give the character their turn.
-                EventContext action = character.Tick(chosenRooms[character]);
+                EventContext action = character.Tick();
 
                 if (action.Target == null)
                 {
@@ -187,7 +176,7 @@ namespace CourtIntrigue
                     debugLogger.PrintText(character.Name + " chose " + action.Identifer + " with " + action.Target.Name);
 
                     //This character is unavailable for interaction because he is busy.
-                    chosenRooms[character].MarkBusy(character);
+                    character.MarkBusy();
                 }
                 
                 ExecuteAction(character, action, finishedCharacters);
@@ -229,7 +218,7 @@ namespace CourtIntrigue
                     //Remove the target from the room (since they are busy) and make sure they don't
                     //get their normal action.
                     finishedCharacters.Add(context.Target);
-                    chosenRooms[character].MarkBusy(context.Target);
+                    context.Target.MarkBusy();
                 }
             }
 
@@ -237,7 +226,7 @@ namespace CourtIntrigue
             finishedCharacters.Add(character);
 
             // The initiator always gets their turn consumed so remove them from the room.
-            chosenRooms[character].MarkBusy(character);
+            character.MarkBusy();
         }
 
         /// <summary>

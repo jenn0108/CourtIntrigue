@@ -66,7 +66,7 @@ namespace CourtIntrigue
             {
                 computedParameters.Add(pair.Key, context.GetScopedObjectByName(pair.Value));
             }
-            EventContext newContext = new EventContext(null, context.CurrentCharacter, context.GetScopedObjectByName("ROOT") as Character, context.Room, computedParameters);
+            EventContext newContext = new EventContext(null, context.CurrentCharacter, context.GetScopedObjectByName("ROOT") as Character, computedParameters);
             game.GetEventById(eventid).Execute(result, game, newContext);
         }
     }
