@@ -99,7 +99,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="distrib\Traits\base_traits.xml.temp" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -125,7 +124,7 @@
     <Content Include="distrib\Traits\00_traits.txt" />
     <Content Include="distrib\Traits\01_traits.txt" />
     <Content Include="distrib\Traits\02_traits.txt" />
-    <Content Include="distrib\Traits\new.xml">
+    <Content Include="distrib\Traits\traits.xml">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
