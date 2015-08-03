@@ -16,9 +16,9 @@ namespace CourtIntrigue
             Name = name;
         }
 
-        public void PrestigeChange(int prestigeChange)
+        public void PrestigeChange(int change)
         {
-            Prestige += prestigeChange;
+            Prestige += change;
         }
     }
 }

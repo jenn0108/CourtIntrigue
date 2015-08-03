@@ -24,6 +24,7 @@ namespace CourtIntrigue
             InitializeComponent();
             logger = new TextBoxLogger(this);
             game = new Game(logger, NUM_PLAYERS, null);
+            UpdateDate();
 
             if(Debugger.IsAttached)
             {
@@ -32,11 +33,24 @@ namespace CourtIntrigue
             }
         }
 
+
+        public void UpdateDate()
+        {
+            int tick = game.CurrentTime % 5;
+            int day = (game.CurrentTime / 5) % 10;
+            int season = (game.CurrentTime / 50) % 4;
+            int year = game.CurrentTime / 200;
+            string[] seasons = new string[] { "Winter", "Spring", "Summer", "Fall" };
+            string[] ticks = new string[] { "Early Morning", "Morning", "Afternoon", "Late Afternoon", "Evening" };
+            dateLabel.Text = string.Format("{0}, Day {1} of {2}, Year {3}", ticks[tick], day+1, seasons[season], year+1);
+        }
+
         private void nextButton_Click(object sender, EventArgs e)
         {
+            UpdateDate();
             //There is one day start followed by 5 action ticks.
             //We'll loop through them as the user clicks the button.
-            if((dayState % 6) == 0)
+            if ((dayState % 6) == 0)
             {
                 game.BeginDay();
             }
@@ -74,6 +88,19 @@ namespace CourtIntrigue
             debugBox.Clear();
             dayState = 0;
             game = new Game(logger, NUM_PLAYERS, null);
+            UpdateDate();
+        }
+
+        private void speedStep_Click(object sender, EventArgs e)
+        {
+            debugBox.Visible = false;
+            for (int i=0; i<240; ++i)
+            {
+                nextButton_Click(sender, e);
+            }
+            debugBox.Visible = true;
+            debugBox.AppendText("\n");
+
         }
     }
 }

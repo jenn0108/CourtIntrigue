@@ -10,13 +10,15 @@ namespace CourtIntrigue
     {
         private Dictionary<string, object> parameters;
         private Information information;
+        private int time;
 
         public string Description { get { return EventHelper.ReplaceStrings(information.Description, this); } }
 
-        public InformationInstance(Information information, Dictionary<string, object> parameters)
+        public InformationInstance(Information information, Dictionary<string, object> parameters, int time)
         {
             this.information = information;
             this.parameters = parameters;
+            this.time = time;
         }
 
         public object GetParameter(string name)
@@ -53,12 +55,9 @@ namespace CourtIntrigue
         {
             if(obj is InformationInstance)
             {
-                //TODO:We need to add a timestamp to this class and check it here
-                //to avoid the problem of two incidents of the same type being
-                //equal even when they happen on different days/steps.
                 InformationInstance other = obj as InformationInstance;
 
-                if (other.information != information || other.parameters.Count != parameters.Count)
+                if (other.information != information || other.parameters.Count != parameters.Count || other.time != time)
                     return false;
 
                 foreach(var pair in parameters)
@@ -81,6 +80,8 @@ namespace CourtIntrigue
             {
                 code += pair.Key.GetHashCode() + pair.Value.GetHashCode() * 545345;
             }
+            code += time * 89633;
+
             return code;
         }
     }

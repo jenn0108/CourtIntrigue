@@ -29,12 +29,13 @@
         private void InitializeComponent()
         {
             this.permanentSplit = new System.Windows.Forms.SplitContainer();
+            this.speedStep = new System.Windows.Forms.Button();
+            this.restartButton = new System.Windows.Forms.Button();
             this.debugButton = new System.Windows.Forms.Button();
             this.dateLabel = new System.Windows.Forms.Label();
             this.nextButton = new System.Windows.Forms.Button();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.debugBox = new System.Windows.Forms.TextBox();
-            this.restartButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.permanentSplit)).BeginInit();
             this.permanentSplit.Panel1.SuspendLayout();
             this.permanentSplit.Panel2.SuspendLayout();
@@ -52,6 +53,7 @@
             // 
             // permanentSplit.Panel1
             // 
+            this.permanentSplit.Panel1.Controls.Add(this.speedStep);
             this.permanentSplit.Panel1.Controls.Add(this.restartButton);
             this.permanentSplit.Panel1.Controls.Add(this.debugButton);
             this.permanentSplit.Panel1.Controls.Add(this.dateLabel);
@@ -63,6 +65,28 @@
             this.permanentSplit.Size = new System.Drawing.Size(1117, 640);
             this.permanentSplit.SplitterDistance = 203;
             this.permanentSplit.TabIndex = 0;
+            // 
+            // speedStep
+            // 
+            this.speedStep.Location = new System.Drawing.Point(30, 556);
+            this.speedStep.Name = "speedStep";
+            this.speedStep.Size = new System.Drawing.Size(141, 33);
+            this.speedStep.TabIndex = 4;
+            this.speedStep.Text = "Speed Step";
+            this.speedStep.UseVisualStyleBackColor = true;
+            this.speedStep.Click += new System.EventHandler(this.speedStep_Click);
+            // 
+            // restartButton
+            // 
+            this.restartButton.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.restartButton.Location = new System.Drawing.Point(174, 595);
+            this.restartButton.Name = "restartButton";
+            this.restartButton.Size = new System.Drawing.Size(26, 33);
+            this.restartButton.TabIndex = 3;
+            this.restartButton.Text = "↻";
+            this.restartButton.UseVisualStyleBackColor = true;
+            this.restartButton.Visible = false;
+            this.restartButton.Click += new System.EventHandler(this.button1_Click);
             // 
             // debugButton
             // 
@@ -124,18 +148,6 @@
             this.debugBox.Size = new System.Drawing.Size(910, 407);
             this.debugBox.TabIndex = 0;
             // 
-            // restartButton
-            // 
-            this.restartButton.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.restartButton.Location = new System.Drawing.Point(174, 595);
-            this.restartButton.Name = "restartButton";
-            this.restartButton.Size = new System.Drawing.Size(26, 33);
-            this.restartButton.TabIndex = 3;
-            this.restartButton.Text = "↻";
-            this.restartButton.UseVisualStyleBackColor = true;
-            this.restartButton.Visible = false;
-            this.restartButton.Click += new System.EventHandler(this.button1_Click);
-            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -166,6 +178,7 @@
         private System.Windows.Forms.Label dateLabel;
         private System.Windows.Forms.Button debugButton;
         private System.Windows.Forms.Button restartButton;
+        private System.Windows.Forms.Button speedStep;
     }
 }
 

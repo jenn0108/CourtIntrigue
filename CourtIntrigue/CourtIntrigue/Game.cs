@@ -24,7 +24,7 @@ namespace CourtIntrigue
         private ModifierManager modifierManager;
         private Logger debugLogger;
         public Room[] CommonRooms { get; private set; }
-        public DateTime CurrentDate { get; private set; }
+        public int CurrentTime { get; private set; }
 
         private string[] maleNames;
         private string[] femaleNames;
@@ -40,7 +40,7 @@ namespace CourtIntrigue
             modifierManager = new ModifierManager();
             random = new Random();
 
-            CurrentDate = new DateTime(1066, 10, 13);//Day before the Battle of Hastings, ok for now.
+            CurrentTime = 0;
 
             maleNames = File.ReadAllLines("Names/male_names.txt");
             femaleNames = File.ReadAllLines("Names/female_names.txt");
@@ -81,6 +81,7 @@ namespace CourtIntrigue
             {
                 characters.Add(GetRandomAICharacter());
             }
+            /*
             foreach (var outer in characters)
             {
                 foreach (var inner in characters)
@@ -91,7 +92,7 @@ namespace CourtIntrigue
                     }
                     Log(outer.Fullname + " opinion of " + inner.Fullname + " is " + outer.GetOpinionOf(inner));
                 }
-            }
+            }*/
 
         }
 
@@ -112,8 +113,6 @@ namespace CourtIntrigue
 
         public void BeginDay()
         {
-            CurrentDate = CurrentDate.AddDays(1.0);
-
             debugLogger.PrintText("Wake up");
             foreach (var room in chosenRooms.Values.GroupBy(r => r).Select(r => r.Key))
             {
@@ -197,6 +196,8 @@ namespace CourtIntrigue
             }
 
             debugLogger.PrintText("End tick");
+
+            ++CurrentTime;
         }
 
         private void ExecuteAction(Character character, EventContext context, ISet<Character> finishedCharacters)

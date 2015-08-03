@@ -93,7 +93,7 @@ namespace CourtIntrigue
                 {
                     computedParameters.Add(pair.Key, context.GetScopedObjectByName(pair.Value));
                 }
-                InformationInstance newInfo = new InformationInstance(information, computedParameters);
+                InformationInstance newInfo = new InformationInstance(information, computedParameters, game.CurrentTime);
                 if(context.CurrentCharacter.AddInformation(newInfo))
                 {
                     game.Log(context.CurrentCharacter.Name + " learned an information.");
@@ -171,15 +171,15 @@ namespace CourtIntrigue
 
     class PrestigeChangeExecute : IExecute
     {
-        private int prestigeChange;
-        public PrestigeChangeExecute(int prestigeChange)
+        private int change;
+        public PrestigeChangeExecute(int change)
         {
-            this.prestigeChange = prestigeChange;
+            this.change = change;
         }
 
         public void Execute(EventResults result, Game game, EventContext context)
         {
-            context.CurrentCharacter.Dynasty.PrestigeChange(prestigeChange);
+            context.CurrentCharacter.Dynasty.PrestigeChange(change);
         }
     }
 }

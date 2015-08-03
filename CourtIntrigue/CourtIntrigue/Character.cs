@@ -80,6 +80,9 @@ namespace CourtIntrigue
         public void AddHistory(InformationInstance info)
         {
             history.Add(info);
+
+            if (history.Count > 1)
+                return;
         }
 
         public bool AddInformation(InformationInstance info)
