@@ -14,7 +14,7 @@ namespace CourtIntrigue
 
     interface ILogic
     {
-        bool Evaluate(EventContext action);
+        bool Evaluate(EventContext context);
     }
 
     class AndLogic : ILogic
@@ -24,11 +24,11 @@ namespace CourtIntrigue
         {
             subexpressions = subexps;
         }
-        public bool Evaluate(EventContext action)
+        public bool Evaluate(EventContext context)
         {
             for(int i = 0; i < subexpressions.Length; ++i)
             {
-                if (!subexpressions[i].Evaluate(action))
+                if (!subexpressions[i].Evaluate(context))
                     return false;
             }
             return true;
@@ -42,9 +42,9 @@ namespace CourtIntrigue
         {
             identifier = lookingFor;
         }
-        public bool Evaluate(EventContext action)
+        public bool Evaluate(EventContext context)
         {
-            return action.Identifer == identifier;
+            return context.Identifer == identifier;
         }
     }
 
@@ -56,9 +56,17 @@ namespace CourtIntrigue
         }
     }
 
+    class HasSpouseTestLogic : ILogic
+    {
+        public bool Evaluate(EventContext context)
+        {
+            return context.CurrentCharacter.Spouse != null;
+        }
+    }
+
     class TrueLogic : ILogic
     {
-        public bool Evaluate(EventContext action)
+        public bool Evaluate(EventContext context)
         {
             return true;
         }
@@ -66,7 +74,7 @@ namespace CourtIntrigue
 
     class FalseLogic : ILogic
     {
-        public bool Evaluate(EventContext action)
+        public bool Evaluate(EventContext context)
         {
             return false;
         }

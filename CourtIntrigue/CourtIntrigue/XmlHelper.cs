@@ -94,6 +94,10 @@ namespace CourtIntrigue
                 {
                     expressions.Add(new HasInformationTestLogic());
                 }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "has_spouse")
+                {
+                    expressions.Add(new HasSpouseTestLogic());
+                }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == tag)
                 {
                     break;

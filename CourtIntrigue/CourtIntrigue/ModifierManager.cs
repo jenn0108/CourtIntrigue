@@ -9,7 +9,8 @@ namespace CourtIntrigue
 {
     class ModifierManager
     {
-        public Dictionary<string, Trait> traits = new Dictionary<string, Trait>();
+        private Dictionary<string, Trait> traits = new Dictionary<string, Trait>();
+        private List<PrestigeModifier> prestigeModifiers = new List<PrestigeModifier>();
 
         private Trait ReadTrait(XmlReader reader)
         {
@@ -54,7 +55,43 @@ namespace CourtIntrigue
             return new Trait(identifier, label, description, sameOpinion, oppositeOpinion, opposites);
         }
 
+        private PrestigeModifier ReadPrestigeModifier(XmlReader reader)
+        {
+            string identifier = null;
+            string description = null;
+            string label = null;
+            int dailyChange = 0;
+            ILogic requirements = Logic.TRUE;
 
+            while (reader.Read())
+            {
+                if (reader.NodeType == XmlNodeType.Element && reader.Name == "id")
+                {
+                    identifier = reader.ReadElementContentAsString();
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "description")
+                {
+                    description = reader.ReadElementContentAsString();
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "label")
+                {
+                    label = reader.ReadElementContentAsString();
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "requirements")
+                {
+                    requirements = XmlHelper.ReadLogic(reader);
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "daily_change")
+                {
+                    dailyChange = reader.ReadElementContentAsInt();
+                }
+                else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "prestige_mod")
+                {
+                    break;
+                }
+            }
+            return new PrestigeModifier(identifier, label, description, requirements, dailyChange);
+        }
 
         public void LoadTraitsFromFile(string filename)
         {
@@ -82,6 +119,53 @@ namespace CourtIntrigue
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "traits")
                 {
                     break;
+                }
+            }
+        }
+
+
+        public void LoadModifiersFromFile(string filename)
+        {
+            using (XmlReader reader = XmlReader.Create(filename))
+            {
+                while (reader.Read())
+                {
+                    if (reader.NodeType == XmlNodeType.Element && reader.Name == "prestige_mods")
+                    {
+                        ReadPrestigeModifiers(reader);
+                    }
+                }
+            }
+        }
+
+        private void ReadPrestigeModifiers(XmlReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.NodeType == XmlNodeType.Element && reader.Name == "prestige_mod")
+                {
+                    PrestigeModifier mod = ReadPrestigeModifier(reader);
+                    prestigeModifiers.Add(mod);
+                }
+                else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "prestige_mods")
+                {
+                    break;
+                }
+            }
+        }
+
+        public void EvaluatePrestigeModifiers(Character character)
+        {
+            foreach (var modifier in prestigeModifiers)
+            {
+                if (modifier.EvaluateRequirements(character))
+                {
+                    character.AddPrestigeModifier(modifier);
+                    character.Dynasty.PrestigeChange(modifier.DailyChange);
+                }
+                else
+                {
+                    character.RemovePrestigeModifier(modifier);
                 }
             }
         }

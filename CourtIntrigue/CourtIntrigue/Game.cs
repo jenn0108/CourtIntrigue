@@ -75,6 +75,12 @@ namespace CourtIntrigue
                 modifierManager.LoadTraitsFromFile(file);
             }
 
+            //Go load all the xml files in our modifiers directory.
+            foreach (var file in Directory.EnumerateFiles("Modifiers", "*.xml"))
+            {
+                modifierManager.LoadModifiersFromFile(file);
+            }
+
             CommonRooms = roomManager.GetCommonRooms();
 
             for (int iCharacter = 0; iCharacter < numCharacters; ++iCharacter)
@@ -114,6 +120,11 @@ namespace CourtIntrigue
         public void BeginDay()
         {
             debugLogger.PrintText("Wake up");
+            foreach (var character in characters)
+            {
+                modifierManager.EvaluatePrestigeModifiers(character);
+            }
+
             foreach (var room in chosenRooms.Values.GroupBy(r => r).Select(r => r.Key))
             {
                 room.ClearRoom();
@@ -259,19 +270,19 @@ namespace CourtIntrigue
         {
             // All character have a wife for now.
             Dynasty dynasty = GetRandomDynasty();
-            List<DependentCharacter> dependants = new List<DependentCharacter>();
-            dependants.Add(new DependentCharacter(GetRandomFemaleName(), dynasty, this, Character.GenderEnum.Female));
+            DependentCharacter spouse = new DependentCharacter(GetRandomFemaleName(), dynasty, this, Character.GenderEnum.Female);
 
             // Now add a random number of children with random genders.
+            List<DependentCharacter> children = new List<DependentCharacter>();
             int numChildren = GetRandom(MAX_CHILDREN);
             for (int i = 0; i < numChildren; i++)
             {
                 Character.GenderEnum gender = (Character.GenderEnum) GetRandom(2);
                 string name = gender == Character.GenderEnum.Female ? GetRandomFemaleName() : GetRandomMaleName();
-                dependants.Add(new DependentCharacter(name, dynasty, this, gender));
+                children.Add(new DependentCharacter(name, dynasty, this, gender));
             }
 
-            AICharacter character = new AICharacter(GetRandomMaleName(), dynasty, 0, this, Character.GenderEnum.Male, dependants);
+            AICharacter character = new AICharacter(GetRandomMaleName(), dynasty, 0, this, Character.GenderEnum.Male, spouse, children);
             modifierManager.AssignInitialTraits(this, character, 4);
             return character;
         }

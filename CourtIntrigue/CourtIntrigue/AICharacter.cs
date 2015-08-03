@@ -8,9 +8,9 @@ namespace CourtIntrigue
 {
     class AICharacter : Character
     {
-        public AICharacter(string name, Dynasty dynasty, int money, Game game, GenderEnum gender, List<DependentCharacter> dependents) : base(name, dynasty, money, game, gender, dependents)
+        public AICharacter(string name, Dynasty dynasty, int money, Game game, GenderEnum gender, DependentCharacter spouse, List<DependentCharacter> children) : base(name, dynasty, money, game, gender, spouse, children)
         {
-            CharacterLog("Created character with dependents: " + string.Join(", ", dependents.Select(c => c.Name + "(" + c.Gender.ToString() + ")")));
+            CharacterLog("Created character with spouse: " + spouse.Name + " and children: " + string.Join(", ", children.Select(c => c.Name + "(" + c.Gender.ToString() + ")")));
         }
 
         public override EventContext Tick(Room room)

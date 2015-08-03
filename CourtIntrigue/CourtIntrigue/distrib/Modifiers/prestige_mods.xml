@@ -1,0 +1,11 @@
+<prestige_mods>
+  <prestige_mod>
+    <id>MARRIED_PRESTIGE_MOD</id>
+    <label>Married</label>
+    <description>Being married is socially advantageous.</description>
+    <requirements>
+      <has_spouse/>
+    </requirements>
+    <daily_change>1</daily_change>
+  </prestige_mod>
+</prestige_mods>
