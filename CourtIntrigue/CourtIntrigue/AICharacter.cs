@@ -13,7 +13,7 @@ namespace CourtIntrigue
             CharacterLog("Created character with spouse: " + spouse.Name + " and children: " + string.Join(", ", children.Select(c => c.Name + "(" + c.Gender.ToString() + ")")));
         }
 
-        public override EventContext Tick()
+        public override EventContext OnTick()
         {
             CharacterLog("In room with: " + string.Join(", ", room.GetUnoccuppiedCharacters(this).Select(c => c.Name)));
 
@@ -41,7 +41,7 @@ namespace CourtIntrigue
 
         }
 
-        public override Room BeginDay()
+        public override Room OnBeginDay()
         {
             Room ret = Game.CommonRooms[Game.GetRandom(Game.CommonRooms.Length)];
             CharacterLog("Going to " + ret.Name);

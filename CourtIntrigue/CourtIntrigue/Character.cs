@@ -79,12 +79,22 @@ namespace CourtIntrigue
             return opinion;
         }
 
-        public virtual EventContext Tick()
+        public Room BeginDay()
+        {
+            return OnBeginDay();
+        }
+
+        public EventContext Tick()
+        {
+            return OnTick();
+        }
+
+        public virtual EventContext OnTick()
         {
             throw new NotImplementedException();
         }
 
-        public virtual Room BeginDay()
+        public virtual Room OnBeginDay()
         {
             throw new NotImplementedException();
         }
