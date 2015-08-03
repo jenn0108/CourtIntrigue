@@ -9,13 +9,15 @@ namespace CourtIntrigue
 {
     struct Parameter
     {
-        Type Type;
-        string Name;
+        public Type Type;
+        public string Name;
+        public bool Inform;
 
-        public Parameter(Type type, string name)
+        public Parameter(Type type, string name, bool inform)
         {
             Type = type;
             Name = name;
+            Inform = inform;
         }
     }
 
@@ -52,6 +54,10 @@ namespace CourtIntrigue
                 else if (reader.NodeType == XmlNodeType.Element && (reader.Name == "tell_information"))
                 {
                     expressions.Add(new TellInformationExecute(ReadExecute(reader)));
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "prestige_change")
+                {
+                    expressions.Add(new PrestigeChangeExecute(reader.ReadElementContentAsInt()));
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == tag)
                 {
@@ -220,8 +226,9 @@ namespace CourtIntrigue
                 if (reader.NodeType == XmlNodeType.Element && reader.Name == "parameter")
                 {
                     string type = reader.GetAttribute("type");
+                    bool inform = reader.GetAttribute("inform") != "No";
                     string name = reader.ReadElementContentAsString();
-                    parameters.Add(new Parameter(XmlHelper.StringToType(type), name));
+                    parameters.Add(new Parameter(XmlHelper.StringToType(type), name, inform));
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "parameters")
                 {

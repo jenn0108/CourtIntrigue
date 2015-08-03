@@ -15,5 +15,10 @@ namespace CourtIntrigue
         {
             Name = name;
         }
+
+        public void PrestigeChange(int prestigeChange)
+        {
+            Prestige += prestigeChange;
+        }
     }
 }

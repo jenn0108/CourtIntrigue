@@ -15,8 +15,9 @@ namespace CourtIntrigue
         public Dynasty Dynasty { get; private set; }
         public GenderEnum Gender { get; private set; }
         public List<DependentCharacter> Dependents { get; private set; }
-        public List<InformationInstance> KnownInformation { get; private set; }
-        protected Dictionary<string,Trait> Traits { get; private set; }
+        protected List<InformationInstance> KnownInformation { get; private set; }
+        protected ISet<InformationInstance> history = new HashSet<InformationInstance>();
+        protected Dictionary<string, Trait> Traits { get; private set; }
         protected Game Game { get; private set; }
 
         public string Fullname
@@ -76,12 +77,30 @@ namespace CourtIntrigue
             throw new NotImplementedException();
         }
 
-        public void AddInformation(InformationInstance info)
+        public void AddHistory(InformationInstance info)
         {
-            KnownInformation.Add(info);
+            history.Add(info);
         }
 
-        internal void AddTrait(Trait trait)
+        public bool AddInformation(InformationInstance info)
+        {
+            //You can't learn about something you actually did.
+            if (history.Contains(info))
+                return false;
+
+            if (KnownInformation.Contains(info))
+                return false;
+
+            KnownInformation.Add(info);
+            return true;
+        }
+
+        public bool HasInformation()
+        {
+            return KnownInformation.Count > 0;
+        }
+
+        public void AddTrait(Trait trait)
         {
             CharacterLog(" Gained the trait: " + trait.Label);
             Traits.Add(trait.Identifier, trait);

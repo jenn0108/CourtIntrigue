@@ -45,13 +45,8 @@ namespace CourtIntrigue
         {
             string identifier = null;
             string description = null;
-
-            //Actions without any action logic can't be triggered in FindInformationForAction
-            //so we can just use FALSE so they'll always be unavailable.
-            ILogic actionLogic = Logic.FALSE;
-
-            //Actions without a top level exec shouldn't do anything in their exec.
-            IExecute dirExec = Execute.NOOP;
+            IExecute onObserve = Execute.NOOP;
+            IExecute onTold = Execute.NOOP;
             List<Parameter> parameters = new List<Parameter>();
             while (reader.Read())
             {
@@ -67,12 +62,20 @@ namespace CourtIntrigue
                 {
                     parameters = XmlHelper.ReadParameters(reader);
                 }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "on_observe")
+                {
+                    onObserve = XmlHelper.ReadExecute(reader);
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "on_told")
+                {
+                    onTold = XmlHelper.ReadExecute(reader);
+                }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "information")
                 {
                     break;
                 }
             }
-            return new Information(identifier, description, parameters.ToArray());
+            return new Information(identifier, description, parameters.ToArray(), onObserve, onTold);
         }
 
 

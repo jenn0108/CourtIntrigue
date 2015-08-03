@@ -7,5 +7,16 @@
     <description>
       $PeeingParty.Name$ was seen urinating in public.
     </description>
+    <on_observe>
+      <set_scope name="PeeingParty">
+        <prestige_change>-2</prestige_change>
+        <inform/>
+      </set_scope>
+    </on_observe>
+    <on_told>
+      <set_scope name="PeeingParty">
+        <prestige_change>-1</prestige_change>
+      </set_scope>
+    </on_told>
   </information>
 </informations>

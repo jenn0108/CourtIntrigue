@@ -93,8 +93,12 @@ namespace CourtIntrigue
                 {
                     computedParameters.Add(pair.Key, context.GetScopedObjectByName(pair.Value));
                 }
-                context.CurrentCharacter.KnownInformation.Add(new InformationInstance(information, computedParameters));
-                game.Log(context.CurrentCharacter.Name + " learned an information.");
+                InformationInstance newInfo = new InformationInstance(information, computedParameters);
+                if(context.CurrentCharacter.AddInformation(newInfo))
+                {
+                    game.Log(context.CurrentCharacter.Name + " learned an information.");
+                    newInfo.ExecuteOnObserve(context.CurrentCharacter, game, context.Room, e);
+                }
             }
         }
     }
@@ -108,12 +112,18 @@ namespace CourtIntrigue
         }
         public void Execute(EventResults result, Game game, EventContext context, Event e)
         {
-            InformationInstance informationInstance = (context.GetScopedObjectByName("ROOT") as Character).ChooseInformation();
-            context.CurrentCharacter.KnownInformation.Add(informationInstance);
-            game.Log(context.CurrentCharacter.Name + " learned an information.");
+            Character tellingCharacter = context.GetScopedObjectByName("ROOT") as Character;
+            InformationInstance informationInstance = tellingCharacter.ChooseInformation();
+            bool isNewInformation = context.CurrentCharacter.AddInformation(informationInstance);
             context.PushScope(informationInstance);
             operation.Execute(result, game, context, e);
             context.PopScope();
+
+            if(isNewInformation)
+            {
+                game.Log(context.CurrentCharacter.Name + " learned an information.");
+                informationInstance.ExecuteOnTold(context.CurrentCharacter, tellingCharacter, game, context.Room, e);
+            }
         }
     }
 
@@ -156,6 +166,20 @@ namespace CourtIntrigue
             context.PushScope(context.GetScopedObjectByName(scopeName));
             operation.Execute(result, game, context, e);
             context.PopScope();
+        }
+    }
+
+    class PrestigeChangeExecute : IExecute
+    {
+        private int prestigeChange;
+        public PrestigeChangeExecute(int prestigeChange)
+        {
+            this.prestigeChange = prestigeChange;
+        }
+
+        public void Execute(EventResults result, Game game, EventContext context, Event e)
+        {
+            context.CurrentCharacter.Dynasty.PrestigeChange(prestigeChange);
         }
     }
 }
