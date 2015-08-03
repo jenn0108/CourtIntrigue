@@ -27,5 +27,10 @@ namespace CourtIntrigue
         {
             return requirements.Evaluate(new EventContext(null, character, null, null, null));
         }
+
+        public override string ToString()
+        {
+            return identifier;
+        }
     }
 }

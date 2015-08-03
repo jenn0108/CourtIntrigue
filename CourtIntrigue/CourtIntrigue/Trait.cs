@@ -25,5 +25,10 @@ namespace CourtIntrigue
             Opposites = opposites;
         }
 
+        public override string ToString()
+        {
+            return Identifier;
+        }
+
     }
 }

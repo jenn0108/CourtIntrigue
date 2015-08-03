@@ -127,5 +127,10 @@ namespace CourtIntrigue
         {
             PrestigeModifiers.Remove(modifier);
         }
+
+        public override string ToString()
+        {
+            return Fullname;
+        }
     }
 }

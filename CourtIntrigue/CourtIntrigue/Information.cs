@@ -22,5 +22,11 @@ namespace CourtIntrigue
             OnObserve = onObserve;
             OnTold = onTold;
         }
+
+        public override string ToString()
+        {
+            return Identifier;
+        }
     }
+
 }

@@ -74,6 +74,11 @@ namespace CourtIntrigue
             unoccuppiedCharacters.Clear();
             unoccuppiedCharacters.UnionWith(characters);
         }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 
 

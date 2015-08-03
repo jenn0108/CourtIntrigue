@@ -63,6 +63,11 @@ namespace CourtIntrigue
         {
             return EventHelper.ReplaceStrings(Description, a);
         }
+
+        public override string ToString()
+        {
+            return Identifier;
+        }
     }
 
     class EventOption

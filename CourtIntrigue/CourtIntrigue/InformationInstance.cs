@@ -84,5 +84,23 @@ namespace CourtIntrigue
 
             return code;
         }
+
+        public override string ToString()
+        {
+            StringBuilder builder = new StringBuilder();
+
+            builder.Append(information.Identifier);
+            builder.Append(" (");
+            foreach (var pair in parameters)
+            {
+                builder.Append(pair.Key);
+                builder.Append(" = ");
+                builder.Append(pair.Value);
+                builder.Append(" ");
+            }
+            builder.Length -= 1;
+            builder.Append(")");
+            return builder.ToString();
+        }
     }
 }
