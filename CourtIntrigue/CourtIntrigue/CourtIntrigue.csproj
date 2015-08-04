@@ -72,6 +72,12 @@
     <Compile Include="Information.cs" />
     <Compile Include="InformationInstance.cs" />
     <Compile Include="InformationManager.cs" />
+    <Compile Include="JournalForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="JournalForm.Designer.cs">
+      <DependentUpon>JournalForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Logic.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
@@ -89,6 +95,9 @@
     <Compile Include="Room.cs" />
     <Compile Include="Trait.cs" />
     <Compile Include="XmlHelper.cs" />
+    <EmbeddedResource Include="JournalForm.resx">
+      <DependentUpon>JournalForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>

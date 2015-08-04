@@ -36,6 +36,8 @@
             this.nextButton = new System.Windows.Forms.Button();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.debugBox = new System.Windows.Forms.TextBox();
+            this.journalButton = new System.Windows.Forms.Button();
+            this.calendarButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.permanentSplit)).BeginInit();
             this.permanentSplit.Panel1.SuspendLayout();
             this.permanentSplit.Panel2.SuspendLayout();
@@ -53,6 +55,8 @@
             // 
             // permanentSplit.Panel1
             // 
+            this.permanentSplit.Panel1.Controls.Add(this.calendarButton);
+            this.permanentSplit.Panel1.Controls.Add(this.journalButton);
             this.permanentSplit.Panel1.Controls.Add(this.speedStep);
             this.permanentSplit.Panel1.Controls.Add(this.restartButton);
             this.permanentSplit.Panel1.Controls.Add(this.debugButton);
@@ -133,7 +137,7 @@
             // 
             this.splitContainer2.Panel2.Controls.Add(this.debugBox);
             this.splitContainer2.Size = new System.Drawing.Size(910, 640);
-            this.splitContainer2.SplitterDistance = 229;
+            this.splitContainer2.SplitterDistance = 500;
             this.splitContainer2.TabIndex = 0;
             // 
             // debugBox
@@ -145,8 +149,27 @@
             this.debugBox.Name = "debugBox";
             this.debugBox.ReadOnly = true;
             this.debugBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.debugBox.Size = new System.Drawing.Size(910, 407);
+            this.debugBox.Size = new System.Drawing.Size(910, 136);
             this.debugBox.TabIndex = 0;
+            // 
+            // journalButton
+            // 
+            this.journalButton.Location = new System.Drawing.Point(31, 106);
+            this.journalButton.Name = "journalButton";
+            this.journalButton.Size = new System.Drawing.Size(141, 33);
+            this.journalButton.TabIndex = 5;
+            this.journalButton.Text = "Journal";
+            this.journalButton.UseVisualStyleBackColor = true;
+            this.journalButton.Click += new System.EventHandler(this.journalButton_Click);
+            // 
+            // calendarButton
+            // 
+            this.calendarButton.Location = new System.Drawing.Point(31, 47);
+            this.calendarButton.Name = "calendarButton";
+            this.calendarButton.Size = new System.Drawing.Size(141, 33);
+            this.calendarButton.TabIndex = 6;
+            this.calendarButton.Text = "Calendar";
+            this.calendarButton.UseVisualStyleBackColor = true;
             // 
             // MainWindow
             // 
@@ -179,6 +202,8 @@
         private System.Windows.Forms.Button debugButton;
         private System.Windows.Forms.Button restartButton;
         private System.Windows.Forms.Button speedStep;
+        private System.Windows.Forms.Button calendarButton;
+        private System.Windows.Forms.Button journalButton;
     }
 }
 

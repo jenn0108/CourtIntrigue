@@ -25,6 +25,8 @@ namespace CourtIntrigue
         private Logger debugLogger;
         public Room[] CommonRooms { get; private set; }
         public int CurrentTime { get; private set; }
+        public int CurrentDay { get { return CurrentTime - (CurrentTime % Game.TICKS_PER_DAY); } }
+        public Character[] AllCharacters { get { return characters.ToArray(); } }
 
         private string[] maleNames;
         private string[] femaleNames;
@@ -214,7 +216,7 @@ namespace CourtIntrigue
         public OpinionModifierInstance CreateOpinionModifier(string identifier, Character character)
         {
             OpinionModifier mod = modifierManager.GetOpinionModifierById(identifier);
-            return new OpinionModifierInstance(character, mod, CurrentTime);
+            return new OpinionModifierInstance(character, mod, CurrentDay);
         }
 
         private void ExecuteAction(Character character, EventContext context, ISet<Character> finishedCharacters)

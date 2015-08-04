@@ -19,7 +19,7 @@ namespace CourtIntrigue
         protected Room room;
         protected List<InformationInstance> KnownInformation { get; private set; }
         protected ISet<InformationInstance> history = new HashSet<InformationInstance>();
-        protected Dictionary<string, Trait> Traits { get; private set; }
+        protected Dictionary<string, Trait> traits { get; private set; }
         protected ISet<PrestigeModifier> PrestigeModifiers { get; private set; }
         protected Dictionary<Character, ISet<OpinionModifierInstance>> opinionModifiers = new Dictionary<Character, ISet<OpinionModifierInstance>>();
         protected Game Game { get; private set; }
@@ -27,6 +27,11 @@ namespace CourtIntrigue
         public string Fullname
         {
             get { return Name + " " + Dynasty.Name; }
+        }
+
+        public IEnumerable<Trait> Traits
+        {
+            get { return traits.Values; }
         }
 
         public Room CurrentRoom
@@ -56,22 +61,51 @@ namespace CourtIntrigue
             Spouse = spouse;
             Children = children;
             KnownInformation = new List<InformationInstance>();
-            Traits = new Dictionary<string, Trait>();
+            traits = new Dictionary<string, Trait>();
             PrestigeModifiers = new HashSet<PrestigeModifier>();
+        }
+
+        public IEnumerable<OpinionModifierInstance> GetOpinionModifiersAbout(Character character)
+        {
+            ISet<OpinionModifierInstance> list;
+            if (opinionModifiers.TryGetValue(character, out list))
+            {
+                return list;
+            }
+            return Enumerable.Empty<OpinionModifierInstance>();
+        }
+
+        public IEnumerable<InformationInstance> GetInformationAbout(Character character)
+        {
+            if(character == this)
+            {
+                foreach(var info in history)
+                {
+                    yield return info;
+                }
+            }
+            else
+            {
+                foreach (var info in KnownInformation)
+                {
+                    if (info.IsAbout(character))
+                        yield return info;
+                }
+            }
         }
 
         public int GetOpinionOf(Character character)
         {
             int opinion = 0;
-            foreach (var trait in Traits.Values)
+            foreach (var trait in traits.Values)
             {
-                if (character.Traits.ContainsKey(trait.Identifier))
+                if (character.traits.ContainsKey(trait.Identifier))
                 {
                     opinion += trait.SameOpinion;
                 }
                 foreach (var oppositeId in trait.Opposites)
                 {
-                    if (character.Traits.ContainsKey(oppositeId))
+                    if (character.traits.ContainsKey(oppositeId))
                     {
                         opinion += trait.OppositeOpinion;
                     }
@@ -162,7 +196,7 @@ namespace CourtIntrigue
         public void AddTrait(Trait trait)
         {
             CharacterLog(" Gained the trait: " + trait.Label);
-            Traits.Add(trait.Identifier, trait);
+            traits.Add(trait.Identifier, trait);
         }
 
         protected void CharacterLog(string text)

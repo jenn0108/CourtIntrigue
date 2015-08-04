@@ -93,7 +93,7 @@ namespace CourtIntrigue
                 {
                     computedParameters.Add(pair.Key, context.GetScopedObjectByName(pair.Value));
                 }
-                InformationInstance newInfo = new InformationInstance(information, computedParameters, game.CurrentTime);
+                InformationInstance newInfo = new InformationInstance(information, computedParameters, game.CurrentDay);
                 if(context.CurrentCharacter.AddInformation(newInfo))
                 {
                     game.Log(context.CurrentCharacter.Name + " learned an information.");

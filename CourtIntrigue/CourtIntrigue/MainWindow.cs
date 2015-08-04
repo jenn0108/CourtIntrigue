@@ -102,5 +102,13 @@ namespace CourtIntrigue
             debugBox.AppendText("\n");
 
         }
+
+        private void journalButton_Click(object sender, EventArgs e)
+        {
+            JournalForm journalForm = new JournalForm(game.AllCharacters, game);
+            journalForm.TopLevel = false;
+            splitContainer2.Panel1.Controls.Add(journalForm);
+            journalForm.Show();
+        }
     }
 }

@@ -73,6 +73,16 @@ namespace CourtIntrigue
             return false;
         }
 
+        public bool IsAbout(Character character)
+        {
+            foreach(var pair in parameters)
+            {
+                if (pair.Value == character)
+                    return true;
+            }
+            return false;
+        }
+
         public override int GetHashCode()
         {
             int code = information.GetHashCode() * 34578454;

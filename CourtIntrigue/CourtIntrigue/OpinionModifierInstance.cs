@@ -13,6 +13,8 @@ namespace CourtIntrigue
         private OpinionModifier modifier;
         private int time;
 
+        public string Description {  get { return modifier.Description; } }
+
         public OpinionModifierInstance(Character target, OpinionModifier modifier, int time)
         {
             this.Target = target;
@@ -22,13 +24,13 @@ namespace CourtIntrigue
 
         public int GetChange(int currentTime)
         {
-            double proportion = 1.0 - (double)(currentTime - time) / (double)(modifier.Duration * Game.TICKS_PER_DAY);
+            double proportion = 1.0 - (currentTime - time) / (double)(modifier.Duration * Game.TICKS_PER_DAY);
             return (int)Math.Round(proportion  * modifier.Change);
         }
 
         public bool IsExpired(int currentTime)
         {
-            return time + modifier.Duration * Game.TICKS_PER_DAY < currentTime;
+            return time + modifier.Duration * Game.TICKS_PER_DAY <= currentTime;
         }
 
         public override string ToString()
