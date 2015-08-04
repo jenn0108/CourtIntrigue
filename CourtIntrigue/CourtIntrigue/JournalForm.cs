@@ -51,6 +51,12 @@ namespace CourtIntrigue
             traitLabel.Text = string.Join(", ", character.Traits.Select(t => t.Label));
 
             StringBuilder opModBuilder = new StringBuilder();
+            opModBuilder.AppendLine("Prestige Modifiers:");
+            foreach (PrestigeModifier mod in perspectiveChar.CurrentPrestigeModifiers)
+            {
+                opModBuilder.AppendLine(string.Format("{0} {1}", mod.DailyChange, mod.Description));
+            }
+            opModBuilder.AppendLine("Opinion Modifiers:");
             foreach (OpinionModifierInstance mod in perspectiveChar.GetOpinionModifiersAbout(character))
             {
                 opModBuilder.AppendLine(string.Format("{0} {1}", mod.GetChange(game.CurrentTime), mod.Description));

@@ -20,7 +20,7 @@ namespace CourtIntrigue
         protected List<InformationInstance> KnownInformation { get; private set; }
         protected ISet<InformationInstance> history = new HashSet<InformationInstance>();
         protected Dictionary<string, Trait> traits { get; private set; }
-        protected ISet<PrestigeModifier> PrestigeModifiers { get; private set; }
+        protected ISet<PrestigeModifier> prestigeModifiers { get; private set; }
         protected Dictionary<Character, ISet<OpinionModifierInstance>> opinionModifiers = new Dictionary<Character, ISet<OpinionModifierInstance>>();
         protected Game Game { get; private set; }
 
@@ -32,6 +32,11 @@ namespace CourtIntrigue
         public IEnumerable<Trait> Traits
         {
             get { return traits.Values; }
+        }
+
+        public IEnumerable<PrestigeModifier> CurrentPrestigeModifiers
+        {
+            get { return prestigeModifiers; }
         }
 
         public Room CurrentRoom
@@ -62,7 +67,7 @@ namespace CourtIntrigue
             Children = children;
             KnownInformation = new List<InformationInstance>();
             traits = new Dictionary<string, Trait>();
-            PrestigeModifiers = new HashSet<PrestigeModifier>();
+            prestigeModifiers = new HashSet<PrestigeModifier>();
         }
 
         public IEnumerable<OpinionModifierInstance> GetOpinionModifiersAbout(Character character)
@@ -206,12 +211,12 @@ namespace CourtIntrigue
 
         public void AddPrestigeModifier(PrestigeModifier modifier)
         {
-            PrestigeModifiers.Add(modifier);
+            prestigeModifiers.Add(modifier);
         }
 
         public void RemovePrestigeModifier(PrestigeModifier modifier)
         {
-            PrestigeModifiers.Remove(modifier);
+            prestigeModifiers.Remove(modifier);
         }
 
         public void AddOpinionModifier(OpinionModifierInstance mod)

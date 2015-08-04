@@ -9,18 +9,18 @@ namespace CourtIntrigue
     class PrestigeModifier
     {
         public int DailyChange { get; private set; }
-        private string description;
-        private string identifier;
-        private string label;
+        public string Description { get; private set; }
+        public string Identifier { get; private set; }
+        public string Label { get; private set; }
         private ILogic requirements;
 
         public PrestigeModifier(string identifier, string label, string description, ILogic requirements, int dailyChange)
         {
-            this.identifier = identifier;
-            this.label = label;
-            this.description = description;
+            Identifier = identifier;
+            Label = label;
+            Description = description;
             this.requirements = requirements;
-            this.DailyChange = dailyChange;
+            DailyChange = dailyChange;
         }
 
         public bool EvaluateRequirements(Character character)
@@ -30,7 +30,7 @@ namespace CourtIntrigue
 
         public override string ToString()
         {
-            return identifier;
+            return Identifier;
         }
     }
 }
