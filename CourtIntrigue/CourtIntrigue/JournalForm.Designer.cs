@@ -38,6 +38,8 @@
             this.prestigeLabel = new System.Windows.Forms.Label();
             this.debugStatsBox = new System.Windows.Forms.TextBox();
             this.informationLabel = new System.Windows.Forms.TextBox();
+            this.goldLabel = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // knownCharacters
@@ -141,11 +143,33 @@
             this.informationLabel.TabIndex = 10;
             this.informationLabel.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             // 
+            // goldLabel
+            // 
+            this.goldLabel.AutoSize = true;
+            this.goldLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.goldLabel.Location = new System.Drawing.Point(727, 54);
+            this.goldLabel.Name = "goldLabel";
+            this.goldLabel.Size = new System.Drawing.Size(32, 17);
+            this.goldLabel.TabIndex = 12;
+            this.goldLabel.Text = "130";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.label2.Location = new System.Drawing.Point(679, 54);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(42, 17);
+            this.label2.TabIndex = 11;
+            this.label2.Text = "Gold:";
+            // 
             // JournalForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(894, 462);
+            this.Controls.Add(this.goldLabel);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.informationLabel);
             this.Controls.Add(this.debugStatsBox);
             this.Controls.Add(this.prestigeLabel);
@@ -176,5 +200,7 @@
         private System.Windows.Forms.Label prestigeLabel;
         private System.Windows.Forms.TextBox debugStatsBox;
         private System.Windows.Forms.TextBox informationLabel;
+        private System.Windows.Forms.Label goldLabel;
+        private System.Windows.Forms.Label label2;
     }
 }

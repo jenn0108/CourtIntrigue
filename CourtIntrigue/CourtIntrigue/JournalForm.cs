@@ -33,6 +33,7 @@ namespace CourtIntrigue
                 return;
 
             nameLabel.Text = character.Fullname;
+            goldLabel.Text = character.Money.ToString();
             int opinion = character.GetOpinionOf(perspectiveChar);
             if (opinion > 0)
                 opinionLabel.Text = "+" + opinion;
