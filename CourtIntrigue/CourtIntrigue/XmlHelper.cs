@@ -38,7 +38,7 @@ namespace CourtIntrigue
                 {
                     expressions.Add(new AllowEventSelectionExecute());
                 }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "everyone_in_room")
+                else if (reader.NodeType == XmlNodeType.Element && (reader.Name == "everyone_in_room" || reader.Name == "any_child"))
                 {
                     expressions.Add(ReadScopingLoop(reader));
                 }
@@ -96,11 +96,27 @@ namespace CourtIntrigue
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "has_information")
                 {
-                    expressions.Add(new HasInformationTestLogic());
+                    expressions.Add(Logic.HAS_INFORMATION);
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "true")
+                {
+                    expressions.Add(Logic.TRUE);
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "false")
+                {
+                    expressions.Add(Logic.FALSE);
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "has_spouse")
                 {
-                    expressions.Add(new HasSpouseTestLogic());
+                    expressions.Add(Logic.HAS_SPOUSE);
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "has_trait")
+                {
+                    expressions.Add(new HasTraitLogic(reader.ReadElementContentAsString()));
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "any_child")
+                {
+                    expressions.Add(new AnyChildLogic(ReadLogic(reader)));
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == tag)
                 {
@@ -158,7 +174,12 @@ namespace CourtIntrigue
             }
 
             // TODO: make this more general.
-            return new EveryoneInRoomExecute(operation, requirements);
+            if (tag == "everyone_in_room")
+                return new EveryoneInRoomExecute(operation, requirements);
+            else if (tag == "any_child")
+                return new AnyChildExecute(operation, requirements);
+            else
+                throw new Exception("Unexpected tag " + tag);
         }
 
         private static IExecute ReadGainInformation(XmlReader reader)

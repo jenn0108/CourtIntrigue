@@ -8,8 +8,11 @@ namespace CourtIntrigue
 {
     class Logic
     {
+        //Classes with no members only need a single instance.
         public static ILogic TRUE = new TrueLogic();
         public static ILogic FALSE = new FalseLogic();
+        public static ILogic HAS_INFORMATION = new HasInformationTestLogic();
+        public static ILogic HAS_SPOUSE = new HasSpouseTestLogic();
     }
 
     interface ILogic
@@ -61,6 +64,52 @@ namespace CourtIntrigue
         public bool Evaluate(EventContext context)
         {
             return context.CurrentCharacter.Spouse != null;
+        }
+    }
+
+    class HasTraitLogic : ILogic
+    {
+        private string traitId;
+
+        public HasTraitLogic(string trait)
+        {
+            traitId = trait;
+        }
+
+        public bool Evaluate(EventContext context)
+        {
+            return context.CurrentCharacter.HasTrait(traitId);
+        }
+    }
+
+    class AnyChildLogic : ILogic
+    {
+        private ILogic requirements;
+
+        public AnyChildLogic(ILogic requirements)
+        {
+            this.requirements = requirements;
+        }
+
+        public bool Evaluate(EventContext context)
+        {
+            //No children means its never true.
+            if (context.CurrentCharacter.Children.Count == 0)
+                return false;
+
+            //TODO: start with a random child index.
+            for(int i = 0; i < context.CurrentCharacter.Children.Count; ++i)
+            {
+                context.PushScope(context.CurrentCharacter.Children[i]);
+                if(requirements.Evaluate(context))
+                {
+                    //We've found a child that meets the requirements.
+                    context.PopScope();
+                    return true;
+                }
+                context.PopScope();
+            }
+            return false;
         }
     }
 

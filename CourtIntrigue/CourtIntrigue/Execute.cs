@@ -127,6 +127,36 @@ namespace CourtIntrigue
         }
     }
 
+    class AnyChildExecute : IExecute
+    {
+        private IExecute operation;
+        private ILogic requirements;
+        public AnyChildExecute(IExecute operation, ILogic requirements)
+        {
+            this.operation = operation;
+            this.requirements = requirements;
+        }
+
+        public void Execute(EventResults result, Game game, EventContext context)
+        {
+            //TODO: Start with random index.
+            for(int i = 0; i < context.CurrentCharacter.Children.Count; ++i)
+            {
+                Character character = context.CurrentCharacter.Children[i];
+                context.PushScope(character);
+                if (requirements.Evaluate(context))
+                {
+                    operation.Execute(result, game, context);
+
+                    //AnyChild stops after a single interation.
+                    context.PopScope();
+                    return;
+                }
+                context.PopScope();
+            }
+        }
+    }
+
     class EveryoneInRoomExecute : IExecute
     {
         private IExecute operation;

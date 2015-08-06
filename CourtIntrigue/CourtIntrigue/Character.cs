@@ -16,6 +16,7 @@ namespace CourtIntrigue
         public GenderEnum Gender { get; private set; }
         public DependentCharacter Spouse { get; private set; }
         public List<DependentCharacter> Children { get; private set; }
+        public Room Home { get; private set; }
         protected Room room;
         protected List<InformationInstance> KnownInformation { get; private set; }
         protected ISet<InformationInstance> history = new HashSet<InformationInstance>();
@@ -56,12 +57,13 @@ namespace CourtIntrigue
             }
         }
 
-        public Character(string name, Dynasty dynasty, int money, Game game, GenderEnum gender, DependentCharacter spouse, List<DependentCharacter> children)
+        public Character(string name, Dynasty dynasty, int money, Game game, GenderEnum gender, DependentCharacter spouse, List<DependentCharacter> children, Room home)
         {
             Name = name;
             Dynasty = dynasty;
             Money = money;
             Game = game;
+            Home = home;
             Gender = gender;
             Spouse = spouse;
             Children = children;
@@ -202,6 +204,11 @@ namespace CourtIntrigue
         {
             CharacterLog(" Gained the trait: " + trait.Label);
             traits.Add(trait.Identifier, trait);
+        }
+
+        public bool HasTrait(string traitId)
+        {
+            return traits.ContainsKey(traitId);
         }
 
         protected void CharacterLog(string text)

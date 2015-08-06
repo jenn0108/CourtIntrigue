@@ -81,6 +81,11 @@ namespace CourtIntrigue
             unoccuppiedCharacters.UnionWith(characters);
         }
 
+        public Room Clone()
+        {
+            return new Room(Identifier, Name, Common, SoloActions, PairActions);
+        }
+
         public override string ToString()
         {
             return Name;
@@ -95,6 +100,11 @@ namespace CourtIntrigue
         public Room[] GetCommonRooms()
         {
             return rooms.Where(r => r.Common).ToArray();
+        }
+
+        public Room GetRoomById(string id)
+        {
+            return rooms.Where(r => r.Identifier == id).First();
         }
 
         public void LoadRoomsFromFile(string filename)
@@ -181,6 +191,11 @@ namespace CourtIntrigue
                 }
             }
             return actions;
+        }
+
+        public Room MakeUniqueRoom(string id)
+        {
+            return GetRoomById(id).Clone();
         }
     }
 }

@@ -8,7 +8,7 @@ namespace CourtIntrigue
 {
     class AICharacter : Character
     {
-        public AICharacter(string name, Dynasty dynasty, int money, Game game, GenderEnum gender, DependentCharacter spouse, List<DependentCharacter> children) : base(name, dynasty, money, game, gender, spouse, children)
+        public AICharacter(string name, Dynasty dynasty, int money, Game game, GenderEnum gender, DependentCharacter spouse, List<DependentCharacter> children, Room home) : base(name, dynasty, money, game, gender, spouse, children, home)
         {
             CharacterLog("Created character with spouse: " + spouse.Name + " and children: " + string.Join(", ", children.Select(c => c.Name + "(" + c.Gender.ToString() + ")")));
         }
@@ -43,9 +43,18 @@ namespace CourtIntrigue
 
         public override Room OnBeginDay()
         {
-            Room ret = Game.CommonRooms[Game.GetRandom(Game.CommonRooms.Length)];
-            CharacterLog("Going to " + ret.Name);
-            return ret;
+            int index = Game.GetRandom(Game.CommonRooms.Length + 1);
+            if(index == Game.CommonRooms.Length)
+            {
+                CharacterLog("Staying home");
+                return Home;
+            }
+            else
+            {
+                Room ret = Game.CommonRooms[index];
+                CharacterLog("Going to " + ret.Name);
+                return ret;
+            }
         }
 
         public override EventOption ChooseOption(EventContext context, Event e)

@@ -276,9 +276,10 @@ namespace CourtIntrigue
 
         public AICharacter GetRandomAICharacter()
         {
+            Room home = roomManager.MakeUniqueRoom("ESTATE_ROOM");
             // All character have a wife for now.
             Dynasty dynasty = GetRandomDynasty();
-            DependentCharacter spouse = new DependentCharacter(GetRandomFemaleName(), dynasty, this, Character.GenderEnum.Female);
+            DependentCharacter spouse = new DependentCharacter(GetRandomFemaleName(), dynasty, this, Character.GenderEnum.Female, home);
 
             // Now add a random number of children with random genders.
             List<DependentCharacter> children = new List<DependentCharacter>();
@@ -287,10 +288,10 @@ namespace CourtIntrigue
             {
                 Character.GenderEnum gender = (Character.GenderEnum) GetRandom(2);
                 string name = gender == Character.GenderEnum.Female ? GetRandomFemaleName() : GetRandomMaleName();
-                children.Add(new DependentCharacter(name, dynasty, this, gender));
+                children.Add(new DependentCharacter(name, dynasty, this, gender, home));
             }
 
-            AICharacter character = new AICharacter(GetRandomMaleName(), dynasty, 0, this, Character.GenderEnum.Male, spouse, children);
+            AICharacter character = new AICharacter(GetRandomMaleName(), dynasty, 0, this, Character.GenderEnum.Male, spouse, children, home);
             modifierManager.AssignInitialTraits(this, character, 4);
             return character;
         }

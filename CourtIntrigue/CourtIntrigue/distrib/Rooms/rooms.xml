@@ -20,4 +20,13 @@
       <action>APPROACH_ACTION</action>
     </pair_actions>
   </room>
+  <room>
+    <id>ESTATE_ROOM</id>
+    <name>Home</name>
+    <common>No</common>
+    <characters_approachable>No</characters_approachable>
+    <solo_actions>
+      <action>PUBLIC_URINATION_ACTION</action>
+    </solo_actions>
+  </room>
 </rooms>
