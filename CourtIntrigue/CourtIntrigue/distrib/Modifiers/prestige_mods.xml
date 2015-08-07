@@ -8,4 +8,138 @@
     </requirements>
     <daily_change>1</daily_change>
   </prestige_mod>
+
+  <!-- Job Modifiers -->
+  <prestige_mod>
+    <id>CHANCELLOR_PRESTIGE_MOD</id>
+    <label>Chancellor</label>
+    <description>The chancellor is a prestigeous position.</description>
+    <requirements>
+      <has_job>CHANCELLOR_JOB</has_job>
+    </requirements>
+    <daily_change>10</daily_change>
+  </prestige_mod>
+  <prestige_mod>
+    <id>CONSTABLE_PRESTIGE_MOD</id>
+    <label>Constable</label>
+    <description>The constable is a prestigeous position.</description>
+    <requirements>
+      <has_job>CONSTABLE_JOB</has_job>
+    </requirements>
+    <daily_change>10</daily_change>
+  </prestige_mod>
+  <prestige_mod>
+    <id>CHAMBERLAIN_PRESTIGE_MOD</id>
+    <label>Chamberlain</label>
+    <description>The chamberlain is a prestigeous position.</description>
+    <requirements>
+      <has_job>CHAMBERLAIN_JOB</has_job>
+    </requirements>
+    <daily_change>10</daily_change>
+  </prestige_mod>
+  <prestige_mod>
+    <id>TREASURER_PRESTIGE_MOD</id>
+    <label>Treasurer</label>
+    <description>The treasurer is a prestigeous position.</description>
+    <requirements>
+      <has_job>TREASURER_JOB</has_job>
+    </requirements>
+    <daily_change>10</daily_change>
+  </prestige_mod>
+  <prestige_mod>
+    <id>MASTEROFHORSE_PRESTIGE_MOD</id>
+    <label>Master of the Horse</label>
+    <description>The master of the horse is a prestigeous position.</description>
+    <requirements>
+      <has_job>MASTEROFHORSE_JOB</has_job>
+    </requirements>
+    <daily_change>5</daily_change>
+  </prestige_mod>
+  <prestige_mod>
+    <id>FALCONER_PRESTIGE_MOD</id>
+    <label>Falconer</label>
+    <description>The falconer is a prestigeous position.</description>
+    <requirements>
+      <has_job>FALCONER_JOB</has_job>
+    </requirements>
+    <daily_change>5</daily_change>
+  </prestige_mod>
+  <prestige_mod>
+    <id>PRIEST_PRESTIGE_MOD</id>
+    <label>Priest</label>
+    <description>Priests are respectable persons.</description>
+    <requirements>
+      <has_job>PRIEST_JOB</has_job>
+    </requirements>
+    <daily_change>5</daily_change>
+  </prestige_mod>
+  <prestige_mod>
+    <id>BISHOP_PRESTIGE_MOD</id>
+    <label>Bishop</label>
+    <description>Bishops are respectable persons.</description>
+    <requirements>
+      <has_job>BISHOP_JOB</has_job>
+    </requirements>
+    <daily_change>10</daily_change>
+  </prestige_mod>
+  
+  <!-- Rank modifiers -->
+  <prestige_mod>
+    <id>KNIGHT_PRESTIGE_MOD</id>
+    <label>Count</label>
+    <description>A Knight is an important person.</description>
+    <requirements>
+      <has_title_type>KNIGHT_TITLE</has_title_type>
+    </requirements>
+    <daily_change>3</daily_change>
+  </prestige_mod>
+  <prestige_mod>
+    <id>BARON_PRESTIGE_MOD</id>
+    <label>Baron</label>
+    <description>A Baron is an important person.</description>
+    <requirements>
+      <has_title_type>BARON_TITLE</has_title_type>
+    </requirements>
+    <daily_change>5</daily_change>
+  </prestige_mod>
+  <prestige_mod>
+    <id>COUNT_PRESTIGE_MOD</id>
+    <label>Count</label>
+    <description>A Count is an important person.</description>
+    <requirements>
+      <has_title_type>COUNT_TITLE</has_title_type>
+    </requirements>
+    <daily_change>7</daily_change>
+  </prestige_mod>
+  
+  <!-- Applied to children of a dynasty -->
+  <prestige_mod>
+    <id>PAGE_PRESTIGE_MOD</id>
+    <label>Page</label>
+    <description>Being a page is an important part of a feudal upbringing.</description>
+    <requirements>
+      <has_job>PAGE_JOB</has_job>
+    </requirements>
+    <daily_change>1</daily_change>
+  </prestige_mod>
+  <prestige_mod>
+    <id>SQUIRE_PRESTIGE_MOD</id>
+    <label>Page</label>
+    <description>Being a squire is an important part of a feudal upbringing.</description>
+    <requirements>
+      <has_job>SQUIRE_JOB</has_job>
+    </requirements>
+    <daily_change>2</daily_change>
+  </prestige_mod>
+  
+  <!-- Transient modifiers -->
+  <prestige_mod>
+    <id>TOURNAMENT_CHAMPION_PRESTIGE_MOD</id>
+    <label>Champion</label>
+    <description>Champions are always well regarded!</description>
+    <requirements>
+      <!-- Awarded to the winner of a tournament.  Held until next tournament -->
+    </requirements>
+    <daily_change>10</daily_change>
+  </prestige_mod>
 </prestige_mods>
