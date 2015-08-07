@@ -56,7 +56,7 @@ namespace CourtIntrigue
             return new Trait(identifier, label, description, sameOpinion, oppositeOpinion, opposites);
         }
 
-        private PrestigeModifier ReadPrestigeModifier(XmlReader reader)
+        private PrestigeModifier ReadPrestigeModifier(XmlReader reader, Dictionary<string, int> badTags)
         {
             string identifier = null;
             string description = null;
@@ -80,7 +80,7 @@ namespace CourtIntrigue
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "requirements")
                 {
-                    requirements = XmlHelper.ReadLogic(reader);
+                    requirements = XmlHelper.ReadLogic(reader, badTags);
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "daily_change")
                 {
@@ -94,7 +94,7 @@ namespace CourtIntrigue
             return new PrestigeModifier(identifier, label, description, requirements, dailyChange);
         }
 
-        private OpinionModifier ReadOpinionModifier(XmlReader reader)
+        private OpinionModifier ReadOpinionModifier(XmlReader reader, Dictionary<string, int> badTags)
         {
             string identifier = null;
             string description = null;
@@ -123,6 +123,13 @@ namespace CourtIntrigue
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "opinion_change")
                 {
                     change = reader.ReadElementContentAsInt();
+                }
+                else if (reader.NodeType == XmlNodeType.Element)
+                {
+                    if (badTags.ContainsKey(reader.Name))
+                        ++badTags[reader.Name];
+                    else
+                        badTags.Add(reader.Name, 1);
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "opinion_mod")
                 {
@@ -163,7 +170,7 @@ namespace CourtIntrigue
         }
 
 
-        public void LoadModifiersFromFile(string filename)
+        public void LoadModifiersFromFile(string filename, Dictionary<string, int> badTags)
         {
             using (XmlReader reader = XmlReader.Create(filename))
             {
@@ -171,23 +178,23 @@ namespace CourtIntrigue
                 {
                     if (reader.NodeType == XmlNodeType.Element && reader.Name == "prestige_mods")
                     {
-                        ReadPrestigeModifiers(reader);
+                        ReadPrestigeModifiers(reader, badTags);
                     }
                     else if (reader.NodeType == XmlNodeType.Element && reader.Name == "opinion_mods")
                     {
-                        ReadOpinionModifiers(reader);
+                        ReadOpinionModifiers(reader, badTags);
                     }
                 }
             }
         }
 
-        private void ReadOpinionModifiers(XmlReader reader)
+        private void ReadOpinionModifiers(XmlReader reader, Dictionary<string, int> badTags)
         {
             while (reader.Read())
             {
                 if (reader.NodeType == XmlNodeType.Element && reader.Name == "opinion_mod")
                 {
-                    OpinionModifier mod = ReadOpinionModifier(reader);
+                    OpinionModifier mod = ReadOpinionModifier(reader, badTags);
                     opinionModifiers.Add(mod.Identifier, mod);
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "opinion_mods")
@@ -202,13 +209,13 @@ namespace CourtIntrigue
             return opinionModifiers[identifier];
         }
 
-        private void ReadPrestigeModifiers(XmlReader reader)
+        private void ReadPrestigeModifiers(XmlReader reader, Dictionary<string, int> bagTags)
         {
             while (reader.Read())
             {
                 if (reader.NodeType == XmlNodeType.Element && reader.Name == "prestige_mod")
                 {
-                    PrestigeModifier mod = ReadPrestigeModifier(reader);
+                    PrestigeModifier mod = ReadPrestigeModifier(reader, bagTags);
                     prestigeModifiers.Add(mod);
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "prestige_mods")

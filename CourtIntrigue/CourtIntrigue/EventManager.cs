@@ -64,7 +64,7 @@ namespace CourtIntrigue
             return events[id];
         }
 
-        public void LoadEventsFromFile(string filename)
+        public void LoadEventsFromFile(string filename, Dictionary<string, int> badTags)
         {
             using (XmlReader reader = XmlReader.Create(filename))
             {
@@ -72,19 +72,19 @@ namespace CourtIntrigue
                 {
                     if (reader.NodeType == XmlNodeType.Element && reader.Name == "events")
                     {
-                        ReadEvents(reader);
+                        ReadEvents(reader, badTags);
                     }
                 }
             }
         }
 
-        private void ReadEvents(XmlReader reader)
+        private void ReadEvents(XmlReader reader, Dictionary<string, int> badTags)
         {
             while (reader.Read())
             {
                 if(reader.NodeType == XmlNodeType.Element && reader.Name == "event")
                 {
-                    Event e = ReadEvent(reader);
+                    Event e = ReadEvent(reader, badTags);
                     events.Add(e.Identifier, e);
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "events")
@@ -94,7 +94,7 @@ namespace CourtIntrigue
             }
         }
 
-        private Event ReadEvent(XmlReader reader)
+        private Event ReadEvent(XmlReader reader, Dictionary<string, int> badTags)
         {
             string identifier = null;
             string description = null;
@@ -119,15 +119,15 @@ namespace CourtIntrigue
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "requirements")
                 {
-                    actionLogic = XmlHelper.ReadLogic(reader);
+                    actionLogic = XmlHelper.ReadLogic(reader, badTags);
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "exec")
                 {
-                    dirExec = XmlHelper.ReadExecute(reader);
+                    dirExec = XmlHelper.ReadExecute(reader, badTags);
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "options")
                 {
-                    options = ReadOptions(reader);
+                    options = ReadOptions(reader, badTags);
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "parameters")
                 {
@@ -142,14 +142,14 @@ namespace CourtIntrigue
             return new Event(identifier, description, actionLogic, dirExec, options.ToArray(), parameters.ToArray());
         }
 
-        private List<EventOption> ReadOptions(XmlReader reader)
+        private List<EventOption> ReadOptions(XmlReader reader, Dictionary<string, int> badTags)
         {
             List<EventOption> options = new List<EventOption>();
             while (reader.Read())
             {
                 if (reader.NodeType == XmlNodeType.Element && reader.Name == "option")
                 {
-                    options.Add(ReadOption(reader));
+                    options.Add(ReadOption(reader, badTags));
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "options")
                 {
@@ -160,7 +160,7 @@ namespace CourtIntrigue
         }
 
 
-        private EventOption ReadOption(XmlReader reader)
+        private EventOption ReadOption(XmlReader reader, Dictionary<string, int> badTags)
         {
             string label = null;
 
@@ -176,11 +176,11 @@ namespace CourtIntrigue
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "exec")
                 {
-                    dirExec = XmlHelper.ReadExecute(reader);
+                    dirExec = XmlHelper.ReadExecute(reader, badTags);
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "requirements")
                 {
-                    requirements = XmlHelper.ReadLogic(reader);
+                    requirements = XmlHelper.ReadLogic(reader, badTags);
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "option")
                 {

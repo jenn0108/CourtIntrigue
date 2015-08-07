@@ -11,7 +11,7 @@ namespace CourtIntrigue
     {
         private Dictionary<string, Information> informations = new Dictionary<string, Information>();
 
-        public void LoadInformationsFromFile(string filename)
+        public void LoadInformationsFromFile(string filename, Dictionary<string, int> bagTags)
         {
             using (XmlReader reader = XmlReader.Create(filename))
             {
@@ -19,19 +19,19 @@ namespace CourtIntrigue
                 {
                     if (reader.NodeType == XmlNodeType.Element && reader.Name == "informations")
                     {
-                        ReadInformations(reader);
+                        ReadInformations(reader, bagTags);
                     }
                 }
             }
         }
 
-        private void ReadInformations(XmlReader reader)
+        private void ReadInformations(XmlReader reader, Dictionary<string, int> badTags)
         {
             while (reader.Read())
             {
                 if (reader.NodeType == XmlNodeType.Element && reader.Name == "information")
                 {
-                    Information info = ReadInformation(reader);
+                    Information info = ReadInformation(reader, badTags);
                     informations.Add(info.Identifier, info);
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "informations")
@@ -41,7 +41,7 @@ namespace CourtIntrigue
             }
         }
 
-        private Information ReadInformation(XmlReader reader)
+        private Information ReadInformation(XmlReader reader, Dictionary<string, int> badTags)
         {
             string identifier = null;
             string description = null;
@@ -64,11 +64,11 @@ namespace CourtIntrigue
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "on_observe")
                 {
-                    onObserve = XmlHelper.ReadExecute(reader);
+                    onObserve = XmlHelper.ReadExecute(reader, badTags);
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "on_told")
                 {
-                    onTold = XmlHelper.ReadExecute(reader);
+                    onTold = XmlHelper.ReadExecute(reader, badTags);
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "information")
                 {

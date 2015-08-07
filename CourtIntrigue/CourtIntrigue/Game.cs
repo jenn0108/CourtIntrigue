@@ -53,10 +53,12 @@ namespace CourtIntrigue
                 dynasties.Add(fam, new Dynasty(fam));
             }
 
+            Dictionary<string, int> badTags = new Dictionary<string, int>();
+
             //Go load all the xml files in our events directory.
-            foreach(var file in Directory.EnumerateFiles("Events", "*.xml"))
+            foreach (var file in Directory.EnumerateFiles("Events", "*.xml"))
             {
-                eventManager.LoadEventsFromFile(file);
+                eventManager.LoadEventsFromFile(file, badTags);
             }
 
             //Go load all the xml files in our rooms directory.
@@ -68,7 +70,7 @@ namespace CourtIntrigue
             //Go load all the xml files in our information directory.
             foreach (var file in Directory.EnumerateFiles("Informations", "*.xml"))
             {
-                infoManager.LoadInformationsFromFile(file);
+                infoManager.LoadInformationsFromFile(file, badTags);
             }
 
             //Go load all the xml files in our traits directory.
@@ -80,7 +82,12 @@ namespace CourtIntrigue
             //Go load all the xml files in our modifiers directory.
             foreach (var file in Directory.EnumerateFiles("Modifiers", "*.xml"))
             {
-                modifierManager.LoadModifiersFromFile(file);
+                modifierManager.LoadModifiersFromFile(file, badTags);
+            }
+
+            foreach (var pair in badTags)
+            {
+                Log(string.Format("Found unhandled xml tag <{0}> {1} times.", pair.Key, pair.Value));
             }
 
             CommonRooms = roomManager.GetCommonRooms();

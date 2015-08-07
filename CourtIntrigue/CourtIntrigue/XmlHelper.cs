@@ -23,7 +23,7 @@ namespace CourtIntrigue
 
     static class XmlHelper
     {
-        public static IExecute ReadExecute(XmlReader reader)
+        public static IExecute ReadExecute(XmlReader reader, Dictionary<string, int> badTags)
         {
             //How did we start? Used for determining when we're done.
             string tag = reader.Name;
@@ -40,12 +40,12 @@ namespace CourtIntrigue
                 }
                 else if (reader.NodeType == XmlNodeType.Element && (reader.Name == "everyone_in_room" || reader.Name == "any_child"))
                 {
-                    expressions.Add(ReadScopingLoop(reader));
+                    expressions.Add(ReadScopingLoop(reader ,badTags));
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "set_scope")
                 {
                     string scopeName = reader.GetAttribute("name");
-                    expressions.Add(new SetScopeExecute(scopeName, ReadExecute(reader)));
+                    expressions.Add(new SetScopeExecute(scopeName, ReadExecute(reader, badTags)));
                 }
                 else if (reader.NodeType == XmlNodeType.Element && (reader.Name == "observe_information"))
                 {
@@ -53,7 +53,7 @@ namespace CourtIntrigue
                 }
                 else if (reader.NodeType == XmlNodeType.Element && (reader.Name == "tell_information"))
                 {
-                    expressions.Add(new TellInformationExecute(ReadExecute(reader)));
+                    expressions.Add(new TellInformationExecute(ReadExecute(reader, badTags)));
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "prestige_change")
                 {
@@ -62,6 +62,13 @@ namespace CourtIntrigue
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "apply_opinion_mod")
                 {
                     expressions.Add(ReadApplyOpinionMod(reader));
+                }
+                else if (reader.NodeType == XmlNodeType.Element)
+                {
+                    if (badTags.ContainsKey(reader.Name))
+                        ++badTags[reader.Name];
+                    else
+                        badTags.Add(reader.Name, 1);
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == tag)
                 {
@@ -83,7 +90,7 @@ namespace CourtIntrigue
         }
 
 
-        public static ILogic ReadLogic(XmlReader reader)
+        public static ILogic ReadLogic(XmlReader reader, Dictionary<string, int> badTags)
         {
             //How did we start? Used for determining when we're done.
             string tag = reader.Name;
@@ -116,7 +123,14 @@ namespace CourtIntrigue
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "any_child")
                 {
-                    expressions.Add(new AnyChildLogic(ReadLogic(reader)));
+                    expressions.Add(new AnyChildLogic(ReadLogic(reader, badTags)));
+                }
+                else if (reader.NodeType == XmlNodeType.Element)
+                {
+                    if (badTags.ContainsKey(reader.Name))
+                        ++badTags[reader.Name];
+                    else
+                        badTags.Add(reader.Name, 1);
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == tag)
                 {
@@ -151,7 +165,7 @@ namespace CourtIntrigue
             throw new ArgumentException("Found unexpected type name " + typeName);
         }
 
-        private static IExecute ReadScopingLoop(XmlReader reader)
+        private static IExecute ReadScopingLoop(XmlReader reader, Dictionary<string, int> badTags)
         {
             //How did we start? Used for determining when we're done.
             string tag = reader.Name;
@@ -161,11 +175,11 @@ namespace CourtIntrigue
             {
                 if (reader.NodeType == XmlNodeType.Element && reader.Name == "requirements")
                 {
-                    requirements = ReadLogic(reader);
+                    requirements = ReadLogic(reader, badTags);
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "for_character")
                 {
-                    operation = ReadExecute(reader);
+                    operation = ReadExecute(reader, badTags);
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == tag)
                 {
