@@ -9,21 +9,15 @@ namespace CourtIntrigue
     class Dynasty
     {
         public string Name { get; private set; }
-        public int Prestige { get; private set; }
 
         public Dynasty(string name)
         {
             Name = name;
         }
 
-        public void PrestigeChange(int change)
-        {
-            Prestige += change;
-        }
-
         public override string ToString()
         {
-            return string.Format("{0} ({1})", Name, Prestige);
+            return Name;
         }
     }
 }

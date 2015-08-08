@@ -133,6 +133,18 @@ namespace CourtIntrigue
                 {
                     expressions.Add(new AgeAtMostLogic(reader.ReadElementContentAsInt()));
                 }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "prestige_rank")
+                {
+                    expressions.Add(new PrestigeRankLogic(reader.ReadElementContentAsInt()));
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "has_title_type")
+                {
+                    expressions.Add(new HasTitleTypeLogic(reader.ReadElementContentAsString()));
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "has_job")
+                {
+                    expressions.Add(new HasJobLogic(reader.ReadElementContentAsString()));
+                }
                 else if (reader.NodeType == XmlNodeType.Element)
                 {
                     if (badTags.ContainsKey(reader.Name))

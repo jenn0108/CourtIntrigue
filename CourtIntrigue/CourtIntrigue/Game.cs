@@ -150,7 +150,14 @@ namespace CourtIntrigue
                 modifierManager.EvaluatePrestigeModifiers(character);
             }
 
-            characters = characters.OrderBy(c => c.Dynasty.Prestige).ThenBy(c=>c.Age).ToList();
+            //Order all characters by prestige.  Higher prestige characters go first in the turn order.
+            characters = characters.OrderByDescending(c => c.Prestige).ThenBy(c => c.BirthDate).ToList();
+
+            //Update the prestige rank on each of the characters so it can be quickly used instead of calculated.
+            for(int i = 0; i < characters.Count; ++i)
+            {
+                characters[i].PrestigeRank = i;
+            }
 
             foreach (var character in characters)
             {

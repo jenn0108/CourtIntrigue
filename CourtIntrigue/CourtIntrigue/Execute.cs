@@ -227,7 +227,7 @@ namespace CourtIntrigue
 
         public void Execute(EventResults result, Game game, EventContext context)
         {
-            context.CurrentCharacter.Dynasty.PrestigeChange(change);
+            context.CurrentCharacter.PrestigeChange(change);
         }
     }
 }

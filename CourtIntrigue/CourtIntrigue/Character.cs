@@ -13,6 +13,8 @@ namespace CourtIntrigue
         public string Name { get; private set; }
         public int BirthDate { get; private set; }
         public int Money { get; private set; }
+        public int Prestige { get; private set; }
+        public int PrestigeRank { get; set; }
         public Dynasty Dynasty { get; private set; }
         public GenderEnum Gender { get; private set; }
         public DependentCharacter Spouse { get; private set; }
@@ -134,6 +136,11 @@ namespace CourtIntrigue
                 }
             }
             return opinion;
+        }
+
+        public void PrestigeChange(int change)
+        {
+            Prestige += change;
         }
 
         public Room BeginDay()

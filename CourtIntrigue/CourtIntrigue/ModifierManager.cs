@@ -232,7 +232,7 @@ namespace CourtIntrigue
                 if (modifier.EvaluateRequirements(character))
                 {
                     character.AddPrestigeModifier(modifier);
-                    character.Dynasty.PrestigeChange(modifier.DailyChange);
+                    character.PrestigeChange(modifier.DailyChange);
                 }
                 else
                 {

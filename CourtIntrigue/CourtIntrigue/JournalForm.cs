@@ -41,7 +41,7 @@ namespace CourtIntrigue
             else
                 opinionLabel.Text = opinion.ToString();
 
-            prestigeLabel.Text = character.Dynasty.Prestige.ToString();
+            prestigeLabel.Text = character.Prestige.ToString();
 
             StringBuilder infoBuilder = new StringBuilder();
             foreach (InformationInstance info in perspectiveChar.GetInformationAbout(character))

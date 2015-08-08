@@ -143,6 +143,52 @@ namespace CourtIntrigue
         }
     }
 
+    class PrestigeRankLogic : ILogic
+    {
+        private int prestigeRank;
+
+        public PrestigeRankLogic(int prestigeRank)
+        {
+            this.prestigeRank = prestigeRank;
+        }
+
+        public bool Evaluate(EventContext context)
+        {
+            return context.CurrentCharacter.PrestigeRank <= prestigeRank;
+        }
+    }
+
+    class HasTitleTypeLogic : ILogic
+    {
+        private string titleId;
+
+        public HasTitleTypeLogic(string titleId)
+        {
+            this.titleId = titleId;
+        }
+
+        public bool Evaluate(EventContext context)
+        {
+            //TODO: Check title
+            return false;
+        }
+    }
+
+    class HasJobLogic : ILogic
+    {
+        private string jobId;
+
+        public HasJobLogic(string jobId)
+        {
+            this.jobId = jobId;
+        }
+
+        public bool Evaluate(EventContext context)
+        {
+            return false;
+        }
+    }
+
     class TrueLogic : ILogic
     {
         public bool Evaluate(EventContext context)

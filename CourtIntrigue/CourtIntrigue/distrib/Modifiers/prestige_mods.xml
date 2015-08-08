@@ -139,6 +139,7 @@
     <description>Champions are always well regarded!</description>
     <requirements>
       <!-- Awarded to the winner of a tournament.  Held until next tournament -->
+      <false/>
     </requirements>
     <daily_change>10</daily_change>
   </prestige_mod>
