@@ -40,6 +40,8 @@
             this.informationLabel = new System.Windows.Forms.TextBox();
             this.goldLabel = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.ageLabel = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // knownCharacters
@@ -163,11 +165,33 @@
             this.label2.TabIndex = 11;
             this.label2.Text = "Gold:";
             // 
+            // ageLabel
+            // 
+            this.ageLabel.AutoSize = true;
+            this.ageLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.ageLabel.Location = new System.Drawing.Point(522, 22);
+            this.ageLabel.Name = "ageLabel";
+            this.ageLabel.Size = new System.Drawing.Size(32, 17);
+            this.ageLabel.TabIndex = 14;
+            this.ageLabel.Text = "130";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.label3.Location = new System.Drawing.Point(479, 22);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(37, 17);
+            this.label3.TabIndex = 13;
+            this.label3.Text = "Age:";
+            // 
             // JournalForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(894, 462);
+            this.Controls.Add(this.ageLabel);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.goldLabel);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.informationLabel);
@@ -202,5 +226,7 @@
         private System.Windows.Forms.TextBox informationLabel;
         private System.Windows.Forms.Label goldLabel;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label ageLabel;
+        private System.Windows.Forms.Label label3;
     }
 }

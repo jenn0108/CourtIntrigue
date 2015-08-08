@@ -125,6 +125,14 @@ namespace CourtIntrigue
                 {
                     expressions.Add(new AnyChildLogic(ReadLogic(reader, badTags)));
                 }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "age_at_least")
+                {
+                    expressions.Add(new AgeAtLeastLogic(reader.ReadElementContentAsInt()));
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "age_at_most")
+                {
+                    expressions.Add(new AgeAtMostLogic(reader.ReadElementContentAsInt()));
+                }
                 else if (reader.NodeType == XmlNodeType.Element)
                 {
                     if (badTags.ContainsKey(reader.Name))

@@ -8,7 +8,7 @@ namespace CourtIntrigue
 {
     class AICharacter : Character
     {
-        public AICharacter(string name, Dynasty dynasty, int money, Game game, GenderEnum gender, DependentCharacter spouse, List<DependentCharacter> children, Room home) : base(name, dynasty, money, game, gender, spouse, children, home)
+        public AICharacter(string name, int birthdate, Dynasty dynasty, int money, Game game, GenderEnum gender, DependentCharacter spouse, List<DependentCharacter> children, Room home) : base(name, birthdate, dynasty, money, game, gender, spouse, children, home)
         {
             CharacterLog("Created character with spouse: " + spouse.Name + " and children: " + string.Join(", ", children.Select(c => c.Name + "(" + c.Gender.ToString() + ")")));
         }

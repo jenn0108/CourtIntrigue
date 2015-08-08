@@ -11,6 +11,7 @@ namespace CourtIntrigue
         public enum GenderEnum { Female, Male };
 
         public string Name { get; private set; }
+        public int BirthDate { get; private set; }
         public int Money { get; private set; }
         public Dynasty Dynasty { get; private set; }
         public GenderEnum Gender { get; private set; }
@@ -57,9 +58,15 @@ namespace CourtIntrigue
             }
         }
 
-        public Character(string name, Dynasty dynasty, int money, Game game, GenderEnum gender, DependentCharacter spouse, List<DependentCharacter> children, Room home)
+        public int Age
+        {
+            get { return Game.TicksToYear(Game.CurrentDay - BirthDate); }
+        }
+
+        public Character(string name, int birthdate, Dynasty dynasty, int money, Game game, GenderEnum gender, DependentCharacter spouse, List<DependentCharacter> children, Room home)
         {
             Name = name;
+            BirthDate = birthdate;
             Dynasty = dynasty;
             Money = money;
             Game = game;

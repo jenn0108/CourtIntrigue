@@ -1,0 +1,84 @@
+<jobs>
+  <job>
+    <id>CHANCELLOR_JOB</id>
+    <label>Chancellor</label>
+    <description>He does stuff</description>
+    <requirements>
+      <prestige_rank>10</prestige_rank>
+    </requirements>
+  </job>
+  <job>
+    <id>CONSTABLE_JOB</id>
+    <label>Constable</label>
+    <description>He does stuff</description>
+    <requirements>
+      <prestige_rank>10</prestige_rank>
+    </requirements>
+  </job>
+  <job>
+    <id>CHAMBERLAIN_JOB</id>
+    <label>Chamberlain</label>
+    <description>He does stuff</description>
+    <requirements>
+      <prestige_rank>10</prestige_rank>
+    </requirements>
+  </job>
+  <job>
+    <id>TREASURER_JOB</id>
+    <label>Treasurer</label>
+    <description>He does stuff</description>
+    <requirements>
+      <prestige_rank>10</prestige_rank>
+    </requirements>
+  </job>
+  <job>
+    <id>BISHOP_JOB</id>
+    <label>Bishop</label>
+    <description>He does stuff</description>
+    <requirements>
+      <prestige_rank>10</prestige_rank>
+    </requirements>
+  </job>
+  <job>
+    <id>PRIEST_JOB</id>
+    <label>Priest</label>
+    <description>He does stuff</description>
+    <requirements>
+      <prestige_rank>20</prestige_rank>
+    </requirements>
+  </job>
+  <job>
+    <id>FALCONER_JOB</id>
+    <label>Falconer</label>
+    <description>He does stuff</description>
+    <requirements>
+      <prestige_rank>20</prestige_rank>
+    </requirements>
+  </job>
+  <job>
+    <id>MASTEROFHORSE_JOB</id>
+    <label>Master of the Horse</label>
+    <description>He does stuff</description>
+    <requirements>
+      <prestige_rank>20</prestige_rank>
+    </requirements>
+  </job>
+  <job>
+    <id>PAGE_JOB</id>
+    <label>Page</label>
+    <description>Trained to serve knights.</description>
+    <requirements>
+      <age_at_least>7</age_at_least>
+      <age_at_most>16</age_at_most>
+    </requirements>
+  </job>
+  <job>
+    <id>SQUIRE_JOB</id>
+    <label>Squire</label>
+    <description>Assists knights.</description>
+    <requirements>
+      <age_at_least>16</age_at_least>
+      <age_at_most>21</age_at_most>
+    </requirements>
+  </job>
+</jobs>

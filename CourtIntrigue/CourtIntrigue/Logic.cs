@@ -113,6 +113,36 @@ namespace CourtIntrigue
         }
     }
 
+    class AgeAtLeastLogic : ILogic
+    {
+        private int compareAge;
+
+        public AgeAtLeastLogic(int compareAge)
+        {
+            this.compareAge = compareAge;
+        }
+
+        public bool Evaluate(EventContext context)
+        {
+            return context.CurrentCharacter.Age >= compareAge;
+        }
+    }
+
+    class AgeAtMostLogic : ILogic
+    {
+        private int compareAge;
+
+        public AgeAtMostLogic(int compareAge)
+        {
+            this.compareAge = compareAge;
+        }
+
+        public bool Evaluate(EventContext context)
+        {
+            return context.CurrentCharacter.Age <= compareAge;
+        }
+    }
+
     class TrueLogic : ILogic
     {
         public bool Evaluate(EventContext context)

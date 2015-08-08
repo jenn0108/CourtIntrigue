@@ -72,6 +72,7 @@
     <Compile Include="Information.cs" />
     <Compile Include="InformationInstance.cs" />
     <Compile Include="InformationManager.cs" />
+    <Compile Include="Job.cs" />
     <Compile Include="JournalForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -125,10 +126,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="distrib\Events\approach.xml" />
+    <Content Include="distrib\Events\childrearing.xml" />
     <Content Include="distrib\Events\testevents.xml" />
     <Content Include="distrib\Informations\testinformations.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="distrib\Jobs\jobs.xml" />
     <Content Include="distrib\Modifiers\opinion_mods.xml" />
     <Content Include="distrib\Modifiers\prestige_mods.xml" />
     <Content Include="distrib\Names\family_names.txt" />

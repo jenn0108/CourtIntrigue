@@ -22,6 +22,7 @@ namespace CourtIntrigue
         private RoomManager roomManager;
         private InformationManager infoManager;
         private ModifierManager modifierManager;
+        private JobManager jobManager;
         private Logger debugLogger;
         public Room[] CommonRooms { get; private set; }
         public int CurrentTime { get; private set; }
@@ -40,6 +41,7 @@ namespace CourtIntrigue
             roomManager = new RoomManager();
             infoManager = new InformationManager();
             modifierManager = new ModifierManager();
+            jobManager = new JobManager();
             random = new Random();
 
             CurrentTime = 0;
@@ -83,6 +85,12 @@ namespace CourtIntrigue
             foreach (var file in Directory.EnumerateFiles("Modifiers", "*.xml"))
             {
                 modifierManager.LoadModifiersFromFile(file, badTags);
+            }
+
+            //Go load all the xml files in our jobs directory.
+            foreach (var file in Directory.EnumerateFiles("Jobs", "*.xml"))
+            {
+                jobManager.LoadJobsFromFile(file, badTags);
             }
 
             foreach (var pair in badTags)
@@ -141,6 +149,9 @@ namespace CourtIntrigue
             {
                 modifierManager.EvaluatePrestigeModifiers(character);
             }
+
+            characters = characters.OrderBy(c => c.Dynasty.Prestige).ThenBy(c=>c.Age).ToList();
+
             foreach (var character in characters)
             {
                 character.CurrentRoom = character.BeginDay();
@@ -281,12 +292,45 @@ namespace CourtIntrigue
             return dynasties[lastName];
         }
 
+        public int TicksToYear(int ticks)
+        {
+            return ticks / 200;
+        }
+
+        public int GetYearInTicks(int year)
+        {
+            return year * 40 * TICKS_PER_DAY;
+        }
+
+        public int GetAdultBirthdate()
+        {
+            //Age range [25, 50)
+            int age = GetRandom(25) + 25;
+            //Birthdates start before the start date.
+            return GetYearInTicks(-age) - GetRandom( GetYearInTicks(1) );
+        }
+
+        public int GetWifeBirthdate(int otherBirthdate)
+        {
+            //We want a range near the birthdate, mostly should be younger.
+            return otherBirthdate + GetRandom(GetYearInTicks(5) - GetYearInTicks(4));
+        }
+
+        public int GetChildBirthdate(int motherBirthdate)
+        {
+            int age = -(motherBirthdate + GetYearInTicks(16));
+            return -GetRandom(age);
+        }
+
         public AICharacter GetRandomAICharacter()
         {
+            int birthdate = GetAdultBirthdate();
+            int wifeBirthdate = GetWifeBirthdate(birthdate);
+
             Room home = roomManager.MakeUniqueRoom("ESTATE_ROOM");
             // All character have a wife for now.
             Dynasty dynasty = GetRandomDynasty();
-            DependentCharacter spouse = new DependentCharacter(GetRandomFemaleName(), dynasty, this, Character.GenderEnum.Female, home);
+            DependentCharacter spouse = new DependentCharacter(GetRandomFemaleName(), wifeBirthdate, dynasty, this, Character.GenderEnum.Female, home);
 
             // Now add a random number of children with random genders.
             List<DependentCharacter> children = new List<DependentCharacter>();
@@ -295,10 +339,10 @@ namespace CourtIntrigue
             {
                 Character.GenderEnum gender = (Character.GenderEnum) GetRandom(2);
                 string name = gender == Character.GenderEnum.Female ? GetRandomFemaleName() : GetRandomMaleName();
-                children.Add(new DependentCharacter(name, dynasty, this, gender, home));
+                children.Add(new DependentCharacter(name, GetChildBirthdate(wifeBirthdate), dynasty, this, gender, home));
             }
 
-            AICharacter character = new AICharacter(GetRandomMaleName(), dynasty, 0, this, Character.GenderEnum.Male, spouse, children, home);
+            AICharacter character = new AICharacter(GetRandomMaleName(), birthdate, dynasty, 0, this, Character.GenderEnum.Male, spouse, children, home);
             modifierManager.AssignInitialTraits(this, character, 4);
             return character;
         }
