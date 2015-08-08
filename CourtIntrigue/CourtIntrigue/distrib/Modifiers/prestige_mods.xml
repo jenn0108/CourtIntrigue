@@ -103,11 +103,11 @@
     <daily_change>5</daily_change>
   </prestige_mod>
   <prestige_mod>
-    <id>COUNT_PRESTIGE_MOD</id>
-    <label>Count</label>
-    <description>A Count is an important person.</description>
+    <id>KING_PRESTIGE_MOD</id>
+    <label>King</label>
+    <description>A King is an important person.</description>
     <requirements>
-      <has_title_type>COUNT_TITLE</has_title_type>
+      <has_title_type>KING_TITLE</has_title_type>
     </requirements>
     <daily_change>7</daily_change>
   </prestige_mod>
