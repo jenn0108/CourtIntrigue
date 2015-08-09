@@ -185,7 +185,7 @@ namespace CourtIntrigue
 
         public bool Evaluate(EventContext context)
         {
-            return false;
+            return context.CurrentCharacter.HasJob(jobId);
         }
     }
 

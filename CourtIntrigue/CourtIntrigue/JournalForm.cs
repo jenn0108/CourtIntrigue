@@ -54,7 +54,7 @@ namespace CourtIntrigue
 
             StringBuilder opModBuilder = new StringBuilder();
             opModBuilder.AppendLine("Prestige Modifiers:");
-            foreach (PrestigeModifier mod in perspectiveChar.CurrentPrestigeModifiers)
+            foreach (PrestigeModifier mod in character.CurrentPrestigeModifiers)
             {
                 opModBuilder.AppendLine(string.Format("{0} {1}", mod.DailyChange, mod.Description));
             }

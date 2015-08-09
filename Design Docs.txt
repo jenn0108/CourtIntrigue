@@ -91,3 +91,26 @@ like traits and family modifiers).  Some multiple of the initial opinion can
 be added as a first impression modifier.  So, if they have a -10 from traits,
 a -30 first impression could be added.  The first impression could slowly
 degrade over time.
+
+
+Chancellor Job
+--------------
+- Responsible for overseeing other jobs?
+- Deals with complaints (too many complains create unrest)
+
+Marshal Job
+------------
+- Collecting levies (no levies means bad things)
+
+Steward Job
+-----------
+- Collects the taxes (not enough taxes)
+- Manages the monies (bankruptcy is bad mmm'kay)
+
+Spymaster Job
+-------------
+- Collects information at King's request (failure to deliver)
+
+Bishop Job
+----------
+- keep the morality (too much public urination)

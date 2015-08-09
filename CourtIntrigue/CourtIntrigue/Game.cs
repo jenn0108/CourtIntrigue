@@ -104,6 +104,8 @@ namespace CourtIntrigue
             {
                 characters.Add(GetRandomAICharacter());
             }
+            OrderCharacters();
+            jobManager.InitializeJobs(characters, this);
             /*
             foreach (var outer in characters)
             {
@@ -150,14 +152,7 @@ namespace CourtIntrigue
                 modifierManager.EvaluatePrestigeModifiers(character);
             }
 
-            //Order all characters by prestige.  Higher prestige characters go first in the turn order.
-            characters = characters.OrderByDescending(c => c.Prestige).ThenBy(c => c.BirthDate).ToList();
-
-            //Update the prestige rank on each of the characters so it can be quickly used instead of calculated.
-            for(int i = 0; i < characters.Count; ++i)
-            {
-                characters[i].PrestigeRank = i;
-            }
+            OrderCharacters();
 
             foreach (var character in characters)
             {
@@ -242,6 +237,18 @@ namespace CourtIntrigue
         {
             OpinionModifier mod = modifierManager.GetOpinionModifierById(identifier);
             return new OpinionModifierInstance(character, mod, CurrentDay);
+        }
+
+        private void OrderCharacters()
+        {
+            //Order all characters by prestige.  Higher prestige characters go first in the turn order.
+            characters = characters.OrderByDescending(c => c.Prestige).ThenBy(c => c.BirthDate).ToList();
+
+            //Update the prestige rank on each of the characters so it can be quickly used instead of calculated.
+            for (int i = 0; i < characters.Count; ++i)
+            {
+                characters[i].PrestigeRank = i;
+            }
         }
 
         private void ExecuteAction(Character character, EventContext context, ISet<Character> finishedCharacters)

@@ -24,6 +24,7 @@ namespace CourtIntrigue
         protected List<InformationInstance> KnownInformation { get; private set; }
         protected ISet<InformationInstance> history = new HashSet<InformationInstance>();
         protected Dictionary<string, Trait> traits { get; private set; }
+        protected Dictionary<string, Job> jobs { get; private set; }
         protected ISet<PrestigeModifier> prestigeModifiers { get; private set; }
         protected Dictionary<Character, ISet<OpinionModifierInstance>> opinionModifiers = new Dictionary<Character, ISet<OpinionModifierInstance>>();
         protected Game Game { get; private set; }
@@ -78,6 +79,7 @@ namespace CourtIntrigue
             Children = children;
             KnownInformation = new List<InformationInstance>();
             traits = new Dictionary<string, Trait>();
+            jobs = new Dictionary<string, Job>();
             prestigeModifiers = new HashSet<PrestigeModifier>();
         }
 
@@ -212,6 +214,21 @@ namespace CourtIntrigue
         public bool HasInformation()
         {
             return KnownInformation.Count > 0;
+        }
+
+        public bool HasJob(string jobId)
+        {
+            return jobs.ContainsKey(jobId);
+        }
+
+        public void GiveJob(Job job)
+        {
+            jobs.Add(job.Identifier, job);
+        }
+
+        public void FireFromJob(Job job)
+        {
+            jobs.Remove(job.Identifier);
         }
 
         public void AddTrait(Trait trait)

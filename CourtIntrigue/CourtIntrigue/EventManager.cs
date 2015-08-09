@@ -58,6 +58,9 @@ namespace CourtIntrigue
 
         public Event FindEventById(string id)
         {
+            if (id == null)
+                return null;
+
             //We can just let this throw an exeception if the event isn't present
             //for the time being.  In the future, we probably want to log the fact
             //and continue.

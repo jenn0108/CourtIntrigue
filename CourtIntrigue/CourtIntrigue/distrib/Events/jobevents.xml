@@ -1,0 +1,42 @@
+<events>
+  <event>
+    <id>CHANCELLOR_ON_HIRE_EVENT</id>
+    <description>You've just been hired as the chancellor.</description>
+  </event>
+  <event>
+    <id>CHANCELLOR_ON_FIRE_EVENT</id>
+    <description>You've just been fire as the chancellor.  Aren't you stupid!</description>
+  </event>
+  <event>
+    <id>MARSHAL_ON_HIRE_EVENT</id>
+    <description>You've just been hired as the marshal.</description>
+  </event>
+  <event>
+    <id>MARSHAL_ON_FIRE_EVENT</id>
+    <description>You've just been fire as the marshal.  Aren't you stupid!</description>
+  </event>
+  <event>
+    <id>SPYMASTER_ON_HIRE_EVENT</id>
+    <description>You've just been hired as the spymaster.</description>
+  </event>
+  <event>
+    <id>SPYMASTER_ON_FIRE_EVENT</id>
+    <description>You've just been fire as the spymaster.  Aren't you stupid!</description>
+  </event>
+  <event>
+    <id>STEWARD_ON_HIRE_EVENT</id>
+    <description>You've just been hired as the steward.</description>
+  </event>
+  <event>
+    <id>STEWARD_ON_FIRE_EVENT</id>
+    <description>You've just been fire as the steward.  Aren't you stupid!</description>
+  </event>
+  <event>
+    <id>BISHOP_ON_HIRE_EVENT</id>
+    <description>You've just been hired as the bishop.</description>
+  </event>
+  <event>
+    <id>BISHOP_ON_FIRE_EVENT</id>
+    <description>You've just been fire as the bishop.  Aren't you stupid!</description>
+  </event>
+</events>

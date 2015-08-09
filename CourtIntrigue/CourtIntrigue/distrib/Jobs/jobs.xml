@@ -3,54 +3,65 @@
     <id>CHANCELLOR_JOB</id>
     <label>Chancellor</label>
     <description>He does stuff</description>
+    <unique/>
     <requirements>
       <prestige_rank>10</prestige_rank>
     </requirements>
+    <on_hire>CHANCELLOR_ON_HIRE_EVENT</on_hire>
+    <on_fire>CHANCELLOR_ON_FIRE_EVENT</on_fire>
   </job>
   <job>
-    <id>CONSTABLE_JOB</id>
-    <label>Constable</label>
+    <id>MARSHAL_JOB</id>
+    <label>Marshal</label>
     <description>He does stuff</description>
+    <unique/>
     <requirements>
       <prestige_rank>10</prestige_rank>
     </requirements>
+    <on_hire>MARSHAL_ON_HIRE_EVENT</on_hire>
+    <on_fire>MARSHAL_ON_FIRE_EVENT</on_fire>
   </job>
   <job>
-    <id>CHAMBERLAIN_JOB</id>
-    <label>Chamberlain</label>
-    <description>He does stuff</description>
+    <id>SPYMASTER_JOB</id>
+    <label>Spymaster</label>
+    <description>He spies on stuff</description>
+    <unique/>
     <requirements>
       <prestige_rank>10</prestige_rank>
     </requirements>
+    <on_hire>SPYMASTER_ON_HIRE_EVENT</on_hire>
+    <on_fire>SPYMASTER_ON_FIRE_EVENT</on_fire>
   </job>
   <job>
-    <id>TREASURER_JOB</id>
-    <label>Treasurer</label>
+    <id>STEWARD_JOB</id>
+    <label>Steward</label>
     <description>He does stuff</description>
+    <unique/>
     <requirements>
       <prestige_rank>10</prestige_rank>
     </requirements>
+    <on_hire>STEWARD_ON_HIRE_EVENT</on_hire>
+    <on_fire>STEWARD_ON_FIRE_EVENT</on_fire>
   </job>
   <job>
     <id>BISHOP_JOB</id>
     <label>Bishop</label>
     <description>He does stuff</description>
+    <unique/>
     <requirements>
       <prestige_rank>10</prestige_rank>
     </requirements>
+    <on_hire>BISHOP_ON_HIRE_EVENT</on_hire>
+    <on_fire>BISHOP_ON_FIRE_EVENT</on_fire>
   </job>
-  <job>
-    <id>PRIEST_JOB</id>
-    <label>Priest</label>
-    <description>He does stuff</description>
-    <requirements>
-      <prestige_rank>20</prestige_rank>
-    </requirements>
-  </job>
+  
+  
+  
   <job>
     <id>FALCONER_JOB</id>
     <label>Falconer</label>
     <description>He does stuff</description>
+    <unique/>
     <requirements>
       <prestige_rank>20</prestige_rank>
     </requirements>
@@ -59,10 +70,14 @@
     <id>MASTEROFHORSE_JOB</id>
     <label>Master of the Horse</label>
     <description>He does stuff</description>
+    <unique/>
     <requirements>
       <prestige_rank>20</prestige_rank>
     </requirements>
   </job>
+  
+  
+  
   <job>
     <id>PAGE_JOB</id>
     <label>Page</label>

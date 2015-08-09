@@ -20,29 +20,29 @@
     <daily_change>10</daily_change>
   </prestige_mod>
   <prestige_mod>
-    <id>CONSTABLE_PRESTIGE_MOD</id>
-    <label>Constable</label>
-    <description>The constable is a prestigeous position.</description>
+    <id>MARSHAL_PRESTIGE_MOD</id>
+    <label>Marshal</label>
+    <description>The marshal is a prestigeous position.</description>
     <requirements>
-      <has_job>CONSTABLE_JOB</has_job>
+      <has_job>MARSHAL_JOB</has_job>
     </requirements>
     <daily_change>10</daily_change>
   </prestige_mod>
   <prestige_mod>
-    <id>CHAMBERLAIN_PRESTIGE_MOD</id>
-    <label>Chamberlain</label>
-    <description>The chamberlain is a prestigeous position.</description>
+    <id>SPYMASTER_PRESTIGE_MOD</id>
+    <label>Spymaster</label>
+    <description>The spymaster is a prestigeous position.</description>
     <requirements>
-      <has_job>CHAMBERLAIN_JOB</has_job>
+      <has_job>SPYMASTER_JOB</has_job>
     </requirements>
     <daily_change>10</daily_change>
   </prestige_mod>
   <prestige_mod>
-    <id>TREASURER_PRESTIGE_MOD</id>
-    <label>Treasurer</label>
-    <description>The treasurer is a prestigeous position.</description>
+    <id>STEWARD_PRESTIGE_MOD</id>
+    <label>Steward</label>
+    <description>The steward is a prestigeous position.</description>
     <requirements>
-      <has_job>TREASURER_JOB</has_job>
+      <has_job>STEWARD_JOB</has_job>
     </requirements>
     <daily_change>10</daily_change>
   </prestige_mod>
