@@ -13,4 +13,11 @@
     <duration>5</duration>
     <opinion_change>-10</opinion_change>
   </opinion_mod>
+  <opinion_mod>
+    <id>REFUSED_TO_SPEAK_TO_OPINION_MOD</id>
+    <label>That was pretty rude</label>
+    <description>It always hurts a little when somebody doesn't want to talk to me.</description>
+    <duration>5</duration>
+    <opinion_change>-10</opinion_change>
+  </opinion_mod>
 </opinion_mods>

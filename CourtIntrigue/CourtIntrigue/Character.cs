@@ -134,7 +134,7 @@ namespace CourtIntrigue
             {
                 foreach(var mod in mods)
                 {
-                    opinion += mod.GetChange(Game.CurrentTime);
+                    opinion += mod.GetChange(Game.CurrentDay);
                 }
             }
             return opinion;
@@ -153,7 +153,7 @@ namespace CourtIntrigue
                 ISet<OpinionModifierInstance> expiredMods = new HashSet<OpinionModifierInstance>();
                 foreach(var mod in pair.Value)
                 {
-                    if(mod.IsExpired(Game.CurrentTime))
+                    if(mod.IsExpired(Game.CurrentDay))
                     {
                         expiredMods.Add(mod);
                     }

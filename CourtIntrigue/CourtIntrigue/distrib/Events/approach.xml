@@ -54,6 +54,12 @@
   <event>
     <id>APPROACH_ACTION_EVENT_2</id>
     <description>$Target.Name$ refuses to speak with you!</description>
+    <exec>
+      <apply_opinion_mod>
+        <id>REFUSED_TO_SPEAK_TO_OPINION_MOD</id>
+        <character>TARGET</character>
+      </apply_opinion_mod>
+    </exec>
   </event>
   <!-- Approach acceptance notification.
   A = ROOT, B = TARGET

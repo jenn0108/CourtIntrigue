@@ -61,7 +61,7 @@ namespace CourtIntrigue
             opModBuilder.AppendLine("Opinion Modifiers:");
             foreach (OpinionModifierInstance mod in perspectiveChar.GetOpinionModifiersAbout(character))
             {
-                opModBuilder.AppendLine(string.Format("{0} {1}", mod.GetChange(game.CurrentTime), mod.Description));
+                opModBuilder.AppendLine(string.Format("{0} {1}", mod.GetChange(game.CurrentDay), mod.Description));
             }
             debugStatsBox.Text = opModBuilder.ToString();
         }
