@@ -13,6 +13,7 @@ namespace CourtIntrigue
         public string Label { get; private set; }
         public string Description { get; private set; }
         public bool Unique { get; private set; }
+        public bool Permanent { get; private set; }
         public ILogic Requirements { get; private set; }
         public string OnHire { get; private set; }
         public string OnFire { get; private set; }
@@ -80,6 +81,7 @@ namespace CourtIntrigue
             string description = null;
             string label = null;
             bool unique = false;
+            bool permanent = false;
             ILogic requirements = Logic.TRUE;
             string onHire = null;
             string onFire = null;
@@ -100,6 +102,10 @@ namespace CourtIntrigue
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "unique")
                 {
                     unique = true;
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "permanent")
+                {
+                    permanent = true;
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "requirements")
                 {
@@ -158,6 +164,9 @@ namespace CourtIntrigue
 
                 if(oldHolder != null)
                 {
+                    if (job.Permanent)
+                        throw new InvalidOperationException("You tried to fire the king!! He chops your head off instead.");
+
                     oldHolder.FireFromJob(job);
 
                     Event fireEvent = game.GetEventById(job.OnFire);

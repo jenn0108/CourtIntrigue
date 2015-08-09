@@ -1,5 +1,13 @@
 <jobs>
   <job>
+    <id>KING_JOB</id>
+    <label>King</label>
+    <description>The ruler of all the things!!</description>
+    <unique/>
+    <permanent/>
+    <on_hire>KING_ON_HIRE_EVENT</on_hire>
+  </job>
+  <job>
     <id>CHANCELLOR_JOB</id>
     <label>Chancellor</label>
     <description>He does stuff</description>

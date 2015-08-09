@@ -106,16 +106,6 @@ namespace CourtIntrigue
             }
             OrderCharacters();
             jobManager.InitializeJobs(characters, this);
-            /*
-            foreach (var outer in characters)
-            {
-                foreach (var inner in characters)
-                {
-                    if (outer == inner)
-                        continue;
-                    Log(outer.Fullname + " opinion of " + inner.Fullname + " is " + outer.GetOpinionOf(inner));
-                }
-            }*/
 
         }
 
@@ -137,16 +127,6 @@ namespace CourtIntrigue
         public void BeginDay()
         {
             debugLogger.PrintText("Wake up");
-            foreach(var outer in characters)
-            {
-                foreach(var inner in characters)
-                {
-                    if (inner == outer)
-                        continue;
-
-                    Log(outer.Fullname + " opinion of " + inner.Fullname + " is " + outer.GetOpinionOf(inner));
-                }
-            }
             foreach (var character in characters)
             {
                 modifierManager.EvaluatePrestigeModifiers(character);

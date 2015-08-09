@@ -233,7 +233,6 @@ namespace CourtIntrigue
 
         public void AddTrait(Trait trait)
         {
-            CharacterLog(" Gained the trait: " + trait.Label);
             traits.Add(trait.Identifier, trait);
         }
 

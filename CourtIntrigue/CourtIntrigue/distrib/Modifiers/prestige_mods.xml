@@ -11,6 +11,15 @@
 
   <!-- Job Modifiers -->
   <prestige_mod>
+    <id>KING_PRESTIGE_MOD</id>
+    <label>King</label>
+    <description>You're the king.</description>
+    <requirements>
+      <has_job>KING_JOB</has_job>
+    </requirements>
+    <daily_change>20</daily_change>
+  </prestige_mod>
+  <prestige_mod>
     <id>CHANCELLOR_PRESTIGE_MOD</id>
     <label>Chancellor</label>
     <description>The chancellor is a prestigeous position.</description>

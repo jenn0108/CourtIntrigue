@@ -1,5 +1,9 @@
 <events>
   <event>
+    <id>KING_ON_HIRE_EVENT</id>
+    <description>You've just been crowned as king. Long live the king!</description>
+  </event>
+  <event>
     <id>CHANCELLOR_ON_HIRE_EVENT</id>
     <description>You've just been hired as the chancellor.</description>
   </event>
