@@ -23,9 +23,9 @@ namespace CourtIntrigue
             DailyChange = dailyChange;
         }
 
-        public bool EvaluateRequirements(Character character)
+        public bool EvaluateRequirements(Character character, Game game)
         {
-            return requirements.Evaluate(new EventContext(null, character, null));
+            return requirements.Evaluate(new EventContext(null, character, null), game);
         }
 
         public override string ToString()

@@ -144,7 +144,7 @@ namespace CourtIntrigue
             {
                 Character character = context.CurrentCharacter.Children[i];
                 context.PushScope(character);
-                if (requirements.Evaluate(context))
+                if (requirements.Evaluate(context, game))
                 {
                     operation.Execute(result, game, context);
 
@@ -172,7 +172,7 @@ namespace CourtIntrigue
             foreach (var character in context.Room.GetCharacters(context.CurrentCharacter))
             {
                 context.PushScope(character);
-                if (requirements.Evaluate(context))
+                if (requirements.Evaluate(context, game))
                 {
                     operation.Execute(result, game, context);
                 }
@@ -196,6 +196,20 @@ namespace CourtIntrigue
             context.PushScope(context.GetScopedObjectByName(scopeName));
             operation.Execute(result, game, context);
             context.PopScope();
+        }
+    }
+
+    class GiveJobExecute : IExecute
+    {
+        private string jobId;
+        public GiveJobExecute(string jobId)
+        {
+            this.jobId = jobId;
+        }
+
+        public void Execute(EventResults result, Game game, EventContext context)
+        {
+            game.GiveJobTo(game.GetJobById(jobId), context.CurrentCharacter);
         }
     }
 

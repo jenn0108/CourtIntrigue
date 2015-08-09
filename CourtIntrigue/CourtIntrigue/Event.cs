@@ -46,12 +46,12 @@ namespace CourtIntrigue
             }
         }
 
-        public EventOption[] GetAvailableOptions(EventContext context)
+        public EventOption[] GetAvailableOptions(EventContext context, Game game)
         {
             List<EventOption> options = new List<EventOption>();
             foreach (var option in Options)
             {
-                if (option.Requirements.Evaluate(context))
+                if (option.Requirements.Evaluate(context, game))
                 {
                     options.Add(option);
                 }

@@ -63,6 +63,10 @@ namespace CourtIntrigue
                 {
                     expressions.Add(ReadApplyOpinionMod(reader));
                 }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "give_job")
+                {
+                    expressions.Add(new GiveJobExecute(reader.ReadElementContentAsString()));
+                }
                 else if (reader.NodeType == XmlNodeType.Element)
                 {
                     if (badTags.ContainsKey(reader.Name))
@@ -113,6 +117,10 @@ namespace CourtIntrigue
                 {
                     expressions.Add(Logic.FALSE);
                 }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "not")
+                {
+                    expressions.Add(new NotLogic(ReadLogic(reader, badTags)));
+                }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "has_spouse")
                 {
                     expressions.Add(Logic.HAS_SPOUSE);
@@ -137,6 +145,10 @@ namespace CourtIntrigue
                 {
                     expressions.Add(new PrestigeRankLogic(reader.ReadElementContentAsInt()));
                 }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "job_requirements")
+                {
+                    expressions.Add(new JobRequirementsLogic(reader.ReadElementContentAsString()));
+                }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "has_title_type")
                 {
                     expressions.Add(new HasTitleTypeLogic(reader.ReadElementContentAsString()));
@@ -144,6 +156,15 @@ namespace CourtIntrigue
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "has_job")
                 {
                     expressions.Add(new HasJobLogic(reader.ReadElementContentAsString()));
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "test_event_options")
+                {
+                    expressions.Add(ReadTestEventOptionsLogic(reader));
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "set_scope")
+                {
+                    string scopeName = reader.GetAttribute("name");
+                    expressions.Add(new SetScopeLogic(scopeName, ReadLogic(reader, badTags)));
                 }
                 else if (reader.NodeType == XmlNodeType.Element)
                 {
@@ -340,6 +361,32 @@ namespace CourtIntrigue
                 }
             }
             return elements.ToArray();
+        }
+
+        private static ILogic ReadTestEventOptionsLogic(XmlReader reader)
+        {
+            string id = null;
+            Dictionary<string, string> parameters = new Dictionary<string, string>();
+            while (reader.Read())
+            {
+                if (reader.NodeType == XmlNodeType.Element && reader.Name == "id")
+                {
+                    id = reader.ReadElementContentAsString();
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "parameters")
+                {
+                    while (reader.MoveToNextAttribute())
+                    {
+                        parameters.Add(reader.Name, reader.Value);
+                    }
+                }
+                else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "test_event_options")
+                {
+                    break;
+                }
+            }
+
+            return new TestEventOptionsLogic(id, parameters);
         }
     }
 }

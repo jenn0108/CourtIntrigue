@@ -17,7 +17,7 @@ namespace CourtIntrigue
 
     interface ILogic
     {
-        bool Evaluate(EventContext context);
+        bool Evaluate(EventContext context, Game game);
     }
 
     class AndLogic : ILogic
@@ -27,14 +27,27 @@ namespace CourtIntrigue
         {
             subexpressions = subexps;
         }
-        public bool Evaluate(EventContext context)
+        public bool Evaluate(EventContext context, Game game)
         {
             for(int i = 0; i < subexpressions.Length; ++i)
             {
-                if (!subexpressions[i].Evaluate(context))
+                if (!subexpressions[i].Evaluate(context, game))
                     return false;
             }
             return true;
+        }
+    }
+
+    class NotLogic : ILogic
+    {
+        private ILogic logic;
+        public NotLogic(ILogic logic)
+        {
+            this.logic = logic;
+        }
+        public bool Evaluate(EventContext context, Game game)
+        {
+            return !logic.Evaluate(context, game);
         }
     }
 
@@ -45,7 +58,7 @@ namespace CourtIntrigue
         {
             identifier = lookingFor;
         }
-        public bool Evaluate(EventContext context)
+        public bool Evaluate(EventContext context, Game game)
         {
             return context.Identifer == identifier;
         }
@@ -53,7 +66,7 @@ namespace CourtIntrigue
 
     class HasInformationTestLogic : ILogic
     {
-        public bool Evaluate(EventContext context)
+        public bool Evaluate(EventContext context, Game game)
         {
             return context.CurrentCharacter.HasInformation();
         }
@@ -61,7 +74,7 @@ namespace CourtIntrigue
 
     class HasSpouseTestLogic : ILogic
     {
-        public bool Evaluate(EventContext context)
+        public bool Evaluate(EventContext context, Game game)
         {
             return context.CurrentCharacter.Spouse != null;
         }
@@ -76,7 +89,7 @@ namespace CourtIntrigue
             traitId = trait;
         }
 
-        public bool Evaluate(EventContext context)
+        public bool Evaluate(EventContext context, Game game)
         {
             return context.CurrentCharacter.HasTrait(traitId);
         }
@@ -91,7 +104,7 @@ namespace CourtIntrigue
             this.requirements = requirements;
         }
 
-        public bool Evaluate(EventContext context)
+        public bool Evaluate(EventContext context, Game game)
         {
             //No children means its never true.
             if (context.CurrentCharacter.Children.Count == 0)
@@ -101,7 +114,7 @@ namespace CourtIntrigue
             for(int i = 0; i < context.CurrentCharacter.Children.Count; ++i)
             {
                 context.PushScope(context.CurrentCharacter.Children[i]);
-                if(requirements.Evaluate(context))
+                if(requirements.Evaluate(context, game))
                 {
                     //We've found a child that meets the requirements.
                     context.PopScope();
@@ -122,7 +135,7 @@ namespace CourtIntrigue
             this.compareAge = compareAge;
         }
 
-        public bool Evaluate(EventContext context)
+        public bool Evaluate(EventContext context, Game game)
         {
             return context.CurrentCharacter.Age >= compareAge;
         }
@@ -137,7 +150,7 @@ namespace CourtIntrigue
             this.compareAge = compareAge;
         }
 
-        public bool Evaluate(EventContext context)
+        public bool Evaluate(EventContext context, Game game)
         {
             return context.CurrentCharacter.Age <= compareAge;
         }
@@ -152,7 +165,7 @@ namespace CourtIntrigue
             this.prestigeRank = prestigeRank;
         }
 
-        public bool Evaluate(EventContext context)
+        public bool Evaluate(EventContext context, Game game)
         {
             return context.CurrentCharacter.PrestigeRank <= prestigeRank;
         }
@@ -167,7 +180,7 @@ namespace CourtIntrigue
             this.titleId = titleId;
         }
 
-        public bool Evaluate(EventContext context)
+        public bool Evaluate(EventContext context, Game game)
         {
             //TODO: Check title
             return false;
@@ -183,15 +196,76 @@ namespace CourtIntrigue
             this.jobId = jobId;
         }
 
-        public bool Evaluate(EventContext context)
+        public bool Evaluate(EventContext context, Game game)
         {
             return context.CurrentCharacter.HasJob(jobId);
         }
     }
 
+    class TestEventOptionsLogic : ILogic
+    {
+        private string eventId;
+        private Dictionary<string, string> parameters;
+
+        public TestEventOptionsLogic(string eventId, Dictionary<string, string> parameters)
+        {
+            this.eventId = eventId;
+            this.parameters = parameters;
+        }
+
+
+        public bool Evaluate(EventContext context, Game game)
+        {
+            Event e = game.GetEventById(eventId);
+            if (e == null)
+                return false;
+
+            Dictionary<string, object> computedParameters = new Dictionary<string, object>();
+            foreach (var pair in parameters)
+            {
+                computedParameters.Add(pair.Key, context.GetScopedObjectByName(pair.Value));
+            }
+            EventContext newContext = new EventContext(null, context.CurrentCharacter, context.GetScopedObjectByName("ROOT") as Character, computedParameters);
+            return e.GetAvailableOptions(newContext, game).Length > 0;
+        }
+    }
+
+    class SetScopeLogic : ILogic
+    {
+        private string scopeName;
+        private ILogic logic;
+        public SetScopeLogic(string scopeName, ILogic logic)
+        {
+            this.scopeName = scopeName;
+            this.logic = logic;
+        }
+
+        public bool Evaluate(EventContext context, Game game)
+        {
+            context.PushScope(context.GetScopedObjectByName(scopeName));
+            bool result = logic.Evaluate(context, game);
+            context.PopScope();
+            return result;
+        }
+    }
+
+    class JobRequirementsLogic : ILogic
+    {
+        private string jobId;
+        public JobRequirementsLogic(string jobId)
+        {
+            this.jobId = jobId;
+        }
+
+        public bool Evaluate(EventContext context, Game game)
+        {
+            return game.GetJobById(jobId).CanPerformJob(context.CurrentCharacter, game);
+        }
+    }
+
     class TrueLogic : ILogic
     {
-        public bool Evaluate(EventContext context)
+        public bool Evaluate(EventContext context, Game game)
         {
             return true;
         }
@@ -199,7 +273,7 @@ namespace CourtIntrigue
 
     class FalseLogic : ILogic
     {
-        public bool Evaluate(EventContext context)
+        public bool Evaluate(EventContext context, Game game)
         {
             return false;
         }

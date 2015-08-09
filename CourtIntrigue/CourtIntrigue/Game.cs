@@ -111,7 +111,7 @@ namespace CourtIntrigue
 
         public string[] FindAllowableActions(Room room, Character initiator, Character target)
         {
-            return eventManager.FindAllowableActions(room, initiator, target);
+            return eventManager.FindAllowableActions(room, initiator, target, this);
         }
 
         public Event GetEventById(string id)
@@ -124,12 +124,22 @@ namespace CourtIntrigue
             return infoManager.GetInformationById(id);
         }
 
+        public Job GetJobById(string id)
+        {
+            return jobManager.GetJobById(id);
+        }
+
+        public void GiveJobTo(Job job, Character newHolder)
+        {
+            jobManager.GiveJobTo(job, newHolder, this);
+        }
+
         public void BeginDay()
         {
             debugLogger.PrintText("Wake up");
             foreach (var character in characters)
             {
-                modifierManager.EvaluatePrestigeModifiers(character);
+                modifierManager.EvaluatePrestigeModifiers(character, this);
             }
 
             OrderCharacters();
@@ -234,7 +244,7 @@ namespace CourtIntrigue
         private void ExecuteAction(Character character, EventContext context, ISet<Character> finishedCharacters)
         {
             //Find a matching event to execute.
-            Event eventToPlay = eventManager.FindEventForAction(context, random);
+            Event eventToPlay = eventManager.FindEventForAction(context, this);
             if (eventToPlay != null)
             {
                 //We pass in an event results instead of accepting a return value because we want all

@@ -225,11 +225,11 @@ namespace CourtIntrigue
             }
         }
 
-        public void EvaluatePrestigeModifiers(Character character)
+        public void EvaluatePrestigeModifiers(Character character, Game game)
         {
             foreach (var modifier in prestigeModifiers)
             {
-                if (modifier.EvaluateRequirements(character))
+                if (modifier.EvaluateRequirements(character, game))
                 {
                     character.AddPrestigeModifier(modifier);
                     character.PrestigeChange(modifier.DailyChange);

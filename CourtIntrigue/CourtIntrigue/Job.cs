@@ -18,22 +18,23 @@ namespace CourtIntrigue
         public string OnHire { get; private set; }
         public string OnFire { get; private set; }
 
-        public Job(string id, string label, string description, bool unique, ILogic requirements, string onHire, string onFire)
+        public Job(string id, string label, string description, bool unique, bool permanent, ILogic requirements, string onHire, string onFire)
         {
             Identifier = id;
             Label = label;
             Description = description;
             Unique = unique;
+            Permanent = permanent;
             Requirements = requirements;
             OnHire = onHire;
             OnFire = onFire;
         }
 
 
-        public bool CanPerformJob(Character c)
+        public bool CanPerformJob(Character c, Game game)
         {
             EventContext context = new EventContext(null, c, null);
-            return Requirements.Evaluate(context);
+            return Requirements.Evaluate(context, game);
         }
     }
 
@@ -124,7 +125,7 @@ namespace CourtIntrigue
                     break;
                 }
             }
-            return new Job(identifier, label, description, unique, requirements, onHire, onFire);
+            return new Job(identifier, label, description, unique, permanent, requirements, onHire, onFire);
         }
 
         public void InitializeJobs(List<Character> characters, Game game)
@@ -133,7 +134,7 @@ namespace CourtIntrigue
             {
                 foreach(var pair in uniqueJobs)
                 {
-                    if(pair.Value == null && pair.Key.Requirements.Evaluate(new EventContext(null, c, null)))
+                    if(pair.Value == null && pair.Key.Requirements.Evaluate(new EventContext(null, c, null), game))
                     {
                         GiveJobTo(pair.Key, c, game);
                         break;

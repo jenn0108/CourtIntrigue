@@ -59,7 +59,7 @@ namespace CourtIntrigue
 
         public override EventOption ChooseOption(EventContext context, Event e)
         {
-            EventOption[] options = e.GetAvailableOptions(context);
+            EventOption[] options = e.GetAvailableOptions(context, this.Game);
             EventOption chosen = options[Game.GetRandom(options.Length)];
             CharacterLog("Choosing " + EventHelper.ReplaceStrings(chosen.Label, context));
             return chosen;
