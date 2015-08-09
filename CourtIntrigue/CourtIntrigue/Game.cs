@@ -346,7 +346,7 @@ namespace CourtIntrigue
                 children.Add(new DependentCharacter(name, GetChildBirthdate(wifeBirthdate), dynasty, this, gender, home));
             }
 
-            AICharacter character = new AICharacter(GetRandomMaleName(), birthdate, dynasty, 0, this, Character.GenderEnum.Male, spouse, children, home);
+            AICharacter character = new AICharacter(GetRandomMaleName(), birthdate, dynasty, 100, this, Character.GenderEnum.Male, spouse, children, home);
             modifierManager.AssignInitialTraits(this, character, 4);
             return character;
         }

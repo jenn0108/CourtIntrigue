@@ -263,6 +263,34 @@ namespace CourtIntrigue
         }
     }
 
+    class TestVariableTimeLogic : ILogic
+    {
+        private string varName;
+        public TestVariableTimeLogic(string name)
+        {
+            varName = name;
+        }
+        public bool Evaluate(EventContext context, Game game)
+        {
+            return context.CurrentCharacter.GetVariable(varName) >= game.CurrentTime;
+        }
+    }
+
+    class HasGoldLogic : ILogic
+    {
+        private int gold;
+
+        public HasGoldLogic(int gold)
+        {
+            this.gold = gold;
+        }
+
+        public bool Evaluate(EventContext context, Game game)
+        {
+            return context.CurrentCharacter.Money >= gold;
+        }
+    }
+
     class TrueLogic : ILogic
     {
         public bool Evaluate(EventContext context, Game game)

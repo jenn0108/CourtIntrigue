@@ -152,4 +152,14 @@
     </requirements>
     <daily_change>10</daily_change>
   </prestige_mod>
+
+  <prestige_mod>
+    <id>WELLDRESS_PRESTIGE_MOD</id>
+    <label>Well Dressed</label>
+    <description>A well dressed man is well respected.</description>
+    <requirements>
+      <test_variable_time name="WellDressed"/>
+    </requirements>
+    <daily_change>10</daily_change>
+  </prestige_mod>
 </prestige_mods>

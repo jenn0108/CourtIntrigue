@@ -129,6 +129,7 @@
     <Content Include="distrib\Events\childrearing.xml" />
     <Content Include="distrib\Events\jobevents.xml" />
     <Content Include="distrib\Events\testevents.xml" />
+    <Content Include="distrib\Events\townevents.xml" />
     <Content Include="distrib\Informations\testinformations.xml">
       <SubType>Designer</SubType>
     </Content>

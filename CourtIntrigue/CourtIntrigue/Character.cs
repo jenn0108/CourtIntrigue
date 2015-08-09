@@ -25,6 +25,7 @@ namespace CourtIntrigue
         protected ISet<InformationInstance> history = new HashSet<InformationInstance>();
         protected Dictionary<string, Trait> traits { get; private set; }
         protected Dictionary<string, Job> jobs { get; private set; }
+        protected Dictionary<string, int> variables = new Dictionary<string, int>();
         protected ISet<PrestigeModifier> prestigeModifiers { get; private set; }
         protected Dictionary<Character, ISet<OpinionModifierInstance>> opinionModifiers = new Dictionary<Character, ISet<OpinionModifierInstance>>();
         protected Game Game { get; private set; }
@@ -273,6 +274,29 @@ namespace CourtIntrigue
             {
                 CurrentRoom.MarkBusy(this);
             }
+        }
+
+        public int GetVariable(string name)
+        {
+            int val = 0;
+            variables.TryGetValue(name, out val);
+            return val;
+        }
+
+        public void SetVariable(string name, int val)
+        {
+            if (variables.ContainsKey(name))
+                variables[name] = val;
+            else
+                variables.Add(name, val);
+        }
+
+        public void SpendGold(int gold)
+        {
+            if (Money < gold)
+                throw new InvalidOperationException("Character has insufficient gold.");
+
+            Money -= gold;
         }
 
         public override string ToString()

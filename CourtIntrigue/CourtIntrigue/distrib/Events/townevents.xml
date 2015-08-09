@@ -1,0 +1,33 @@
+<events>
+  <event>
+    <id>VISIT_TAILOR_EVENT_0</id>
+    <description>You step into the tailor's shop.</description>
+    <requirements>
+      <action_id>VISIT_TAILOR_ACTION</action_id>
+    </requirements>
+    <options>
+      <option>
+        <label>Buy yourself new clothes</label>
+        <requirements>
+          <has_gold>5</has_gold>
+        </requirements>
+        <exec>
+          <spend_gold>5</spend_gold>
+          <offset_variable_time name="WellDressed">50</offset_variable_time>
+        </exec>
+      </option>
+      <option>
+        <label>Browes the tailor services</label>
+        <exec>
+          <trigger_event>
+            <id>VISIT_TAILOR_EVENT_1</id>
+          </trigger_event>
+        </exec>
+      </option>
+    </options>
+  </event>
+  <event>
+    <id>VISIT_TAILOR_EVENT_1</id>
+    <description>A man's outfit costs 5 gold.</description>
+  </event>
+</events>

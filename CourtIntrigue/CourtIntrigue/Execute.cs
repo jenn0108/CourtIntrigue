@@ -244,4 +244,50 @@ namespace CourtIntrigue
             context.CurrentCharacter.PrestigeChange(change);
         }
     }
+
+    class SpendGoldExecute : IExecute
+    {
+        private int gold;
+        public SpendGoldExecute(int gold)
+        {
+            this.gold = gold;
+        }
+
+        public void Execute(EventResults result, Game game, EventContext context)
+        {
+            context.CurrentCharacter.SpendGold(gold);
+        }
+    }
+
+    class OffsetVariableExecute : IExecute
+    {
+        private string varName;
+        private int offset;
+        public OffsetVariableExecute(string varName, int offset)
+        {
+            this.varName = varName;
+            this.offset = offset;
+        }
+
+        public void Execute(EventResults result, Game game, EventContext context)
+        {
+            context.CurrentCharacter.SetVariable(varName, context.CurrentCharacter.GetVariable(varName) + offset);
+        }
+    }
+
+    class OffsetVariableTimeExecute : IExecute
+    {
+        private string varName;
+        private int offset;
+        public OffsetVariableTimeExecute(string varName, int offset)
+        {
+            this.varName = varName;
+            this.offset = offset;
+        }
+
+        public void Execute(EventResults result, Game game, EventContext context)
+        {
+            context.CurrentCharacter.SetVariable(varName, game.CurrentTime + offset);
+        }
+    }
 }

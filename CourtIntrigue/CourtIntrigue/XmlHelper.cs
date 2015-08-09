@@ -67,6 +67,20 @@ namespace CourtIntrigue
                 {
                     expressions.Add(new GiveJobExecute(reader.ReadElementContentAsString()));
                 }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "spend_gold")
+                {
+                    expressions.Add(new SpendGoldExecute(reader.ReadElementContentAsInt()));
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "offset_variable")
+                {
+                    string varName = reader.GetAttribute("name");
+                    expressions.Add(new OffsetVariableExecute(varName, reader.ReadElementContentAsInt()));
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "offset_variable_time")
+                {
+                    string varName = reader.GetAttribute("name");
+                    expressions.Add(new OffsetVariableTimeExecute(varName, reader.ReadElementContentAsInt()));
+                }
                 else if (reader.NodeType == XmlNodeType.Element)
                 {
                     if (badTags.ContainsKey(reader.Name))
@@ -165,6 +179,15 @@ namespace CourtIntrigue
                 {
                     string scopeName = reader.GetAttribute("name");
                     expressions.Add(new SetScopeLogic(scopeName, ReadLogic(reader, badTags)));
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "test_variable_time")
+                {
+                    string varName = reader.GetAttribute("name");
+                    expressions.Add(new TestVariableTimeLogic(varName));
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "has_gold")
+                {
+                    expressions.Add(new HasGoldLogic(reader.ReadElementContentAsInt()));
                 }
                 else if (reader.NodeType == XmlNodeType.Element)
                 {
