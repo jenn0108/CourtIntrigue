@@ -168,6 +168,8 @@ namespace CourtIntrigue
                 pair.Value.ExceptWith(expiredMods);
             }
 
+            KnownInformation = KnownInformation.Where(info => !info.IsExpired(Game.CurrentDay)).ToList();
+
             return OnBeginDay();
         }
 

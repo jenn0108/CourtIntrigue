@@ -13,11 +13,13 @@ namespace CourtIntrigue
         public string Description { get; private set; }
         public IExecute OnObserve { get; private set; }
         public IExecute OnTold { get; private set; }
+        public int Expires { get; private set; } //In days
 
-        public Information(string identifier, string description, Parameter[] parameters, IExecute onObserve, IExecute onTold)
+        public Information(string identifier, string description, int expires, Parameter[] parameters, IExecute onObserve, IExecute onTold)
         {
             Identifier = identifier;
             Description = description;
+            Expires = expires;
             Parameters = parameters;
             OnObserve = onObserve;
             OnTold = onTold;

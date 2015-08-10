@@ -7,6 +7,7 @@
     <description>
       $PeeingParty.Name$ was seen urinating in public.
     </description>
+    <expires>10</expires>
     <on_observe>
       <set_scope name="PeeingParty">
         <prestige_change>-2</prestige_change>

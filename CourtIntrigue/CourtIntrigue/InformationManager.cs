@@ -45,6 +45,7 @@ namespace CourtIntrigue
         {
             string identifier = null;
             string description = null;
+            int expires = 30 * 4 *  10;
             IExecute onObserve = Execute.NOOP;
             IExecute onTold = Execute.NOOP;
             List<Parameter> parameters = new List<Parameter>();
@@ -57,6 +58,10 @@ namespace CourtIntrigue
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "description")
                 {
                     description = reader.ReadElementContentAsString().Trim();
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "expires")
+                {
+                    expires = reader.ReadElementContentAsInt();
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "parameters")
                 {
@@ -75,7 +80,7 @@ namespace CourtIntrigue
                     break;
                 }
             }
-            return new Information(identifier, description, parameters.ToArray(), onObserve, onTold);
+            return new Information(identifier, description, expires, parameters.ToArray(), onObserve, onTold);
         }
 
 

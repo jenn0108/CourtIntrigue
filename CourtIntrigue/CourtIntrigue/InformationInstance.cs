@@ -51,6 +51,11 @@ namespace CourtIntrigue
             information.OnTold.Execute(new EventResults(), game, observeContext);
         }
 
+        public bool IsExpired(int currentDayInTicks)
+        {
+            return time + information.Expires * Game.TICKS_PER_DAY <= currentDayInTicks;
+        }
+
         public override bool Equals(object obj)
         {
             if(obj is InformationInstance)
