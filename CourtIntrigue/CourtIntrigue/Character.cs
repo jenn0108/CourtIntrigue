@@ -84,6 +84,11 @@ namespace CourtIntrigue
             prestigeModifiers = new HashSet<PrestigeModifier>();
         }
 
+        public IEnumerable<string> GetVariableNames()
+        {
+            return variables.Keys;
+        }
+
         public IEnumerable<OpinionModifierInstance> GetOpinionModifiersAbout(Character character)
         {
             ISet<OpinionModifierInstance> list;

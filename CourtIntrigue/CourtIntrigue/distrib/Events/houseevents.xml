@@ -14,7 +14,7 @@
           </not>
         </requirements>
         <exec>
-          <get_gold>20</get_gold>
+          <get_gold>100</get_gold>
           <offset_variable name="Unrest">50</offset_variable>
         </exec>
       </option>

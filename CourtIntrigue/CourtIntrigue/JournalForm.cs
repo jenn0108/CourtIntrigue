@@ -63,6 +63,10 @@ namespace CourtIntrigue
             {
                 opModBuilder.AppendLine(string.Format("{0} {1}", mod.GetChange(game.CurrentDay), mod.Description));
             }
+            foreach (String variable in character.GetVariableNames())
+            {
+                opModBuilder.AppendLine(string.Format("{0} = {1}", variable, character.GetVariable(variable)));
+            }
             debugStatsBox.Text = opModBuilder.ToString();
         }
 
