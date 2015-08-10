@@ -13,7 +13,8 @@
         </requirements>
         <exec>
           <spend_gold>5</spend_gold>
-          <offset_variable_time name="WellDressed">50</offset_variable_time>
+          <set_variable name="WellDressed">TIME</set_variable>
+          <offset_variable name="WellDressed">50</offset_variable>
         </exec>
       </option>
       <option>

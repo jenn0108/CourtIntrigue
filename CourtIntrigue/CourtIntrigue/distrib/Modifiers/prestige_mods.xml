@@ -162,4 +162,14 @@
     </requirements>
     <daily_change>10</daily_change>
   </prestige_mod>
+
+  <prestige_mod>
+    <id>FINANCIAL_DELINQUENT_PRESTIGE_MOD</id>
+    <label>Didn't pay taxes</label>
+    <description>Paying taxes is required to maintain your social standing.</description>
+    <requirements>
+      <var_eq name="TaxDelinquent">1</var_eq>
+    </requirements>
+    <daily_change>-10</daily_change>
+  </prestige_mod>
 </prestige_mods>

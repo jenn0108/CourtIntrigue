@@ -13,7 +13,7 @@
         </requirements>
         <exec>
           <get_gold>100</get_gold>
-          <offset_variable name="Unrest">50</offset_variable>
+          <offset_variable name="Unrest">20</offset_variable>
         </exec>
       </option>
       <option>
@@ -23,7 +23,7 @@
         </requirements>
         <exec>
           <prestige_change>-10</prestige_change>
-          <offset_variable name="Unrest">10</offset_variable>
+          <offset_variable name="Unrest">5</offset_variable>
         </exec>
       </option>
     </options>

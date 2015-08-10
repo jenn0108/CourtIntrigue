@@ -88,6 +88,41 @@
         </exec>
       </option>
       <option>
+        <label>Ask for taxes</label>
+        <requirements>
+          <has_job>STEWARD_JOB</has_job>
+          <set_scope name="TARGET">
+            <not>
+              <has_job>KING_JOB</has_job>
+            </not>
+          </set_scope>
+        </requirements>
+        <exec>
+          <set_scope name="TARGET">
+            <trigger_event>
+              <id>STEWARD_COLLECT_TAXES_EVENT_0</id>
+            </trigger_event>
+          </set_scope>
+        </exec>
+      </option>
+      <option>
+        <label>Pay taxes</label>
+        <requirements>
+          <set_scope name="TARGET">
+            <has_job>STEWARD_JOB</has_job>
+          </set_scope>
+          <has_gold>20</has_gold>
+          <var_eq name="TaxDelinquent">1</var_eq>
+        </requirements>
+        <exec>
+          <spend_gold>20</spend_gold>
+          <set_scope name="TARGET">
+            <get_gold>20</get_gold>
+          </set_scope>
+          <set_variable name="TaxDelinquent">0</set_variable>
+        </exec>
+      </option>
+      <option>
         <label>Tell $Target.Name$ about...</label>
         <requirements>
           <has_information/>

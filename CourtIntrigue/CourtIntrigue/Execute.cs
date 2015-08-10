@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace CourtIntrigue
 {
     class Execute
     {
         public static IExecute NOOP = new NoOpExecute();
+        public static IExecute DEBUG = new DebugExecute();
     }
 
     interface IExecute
@@ -21,6 +23,14 @@ namespace CourtIntrigue
         public void Execute(EventResults result, Game game, EventContext context)
         {
 
+        }
+    }
+
+    class DebugExecute : IExecute
+    {
+        public void Execute(EventResults result, Game game, EventContext context)
+        {
+            Debugger.Break();
         }
     }
 
@@ -273,27 +283,27 @@ namespace CourtIntrigue
         }
     }
 
-    class OffsetVariableExecute : IExecute
+    class SetVariableExecute : IExecute
     {
         private string varName;
-        private int offset;
-        public OffsetVariableExecute(string varName, int offset)
+        private string newValue;
+        public SetVariableExecute(string varName, string newValue)
         {
             this.varName = varName;
-            this.offset = offset;
+            this.newValue = newValue;
         }
 
         public void Execute(EventResults result, Game game, EventContext context)
         {
-            context.CurrentCharacter.SetVariable(varName, context.CurrentCharacter.GetVariable(varName) + offset);
+            context.CurrentCharacter.SetVariable(varName, XmlHelper.GetTestValue(context, game, newValue));
         }
     }
 
-    class OffsetVariableTimeExecute : IExecute
+    class OffsetVariableExecute : IExecute
     {
         private string varName;
-        private int offset;
-        public OffsetVariableTimeExecute(string varName, int offset)
+        private string offset;
+        public OffsetVariableExecute(string varName, string offset)
         {
             this.varName = varName;
             this.offset = offset;
@@ -301,7 +311,7 @@ namespace CourtIntrigue
 
         public void Execute(EventResults result, Game game, EventContext context)
         {
-            context.CurrentCharacter.SetVariable(varName, game.CurrentTime + offset);
+            context.CurrentCharacter.SetVariable(varName, context.CurrentCharacter.GetVariable(varName) + XmlHelper.GetTestValue(context, game, offset));
         }
     }
 }

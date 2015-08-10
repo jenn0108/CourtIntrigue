@@ -13,18 +13,6 @@ namespace CourtIntrigue
         public static ILogic FALSE = new FalseLogic();
         public static ILogic HAS_INFORMATION = new HasInformationTestLogic();
         public static ILogic HAS_SPOUSE = new HasSpouseTestLogic();
-
-        public static int GetTestValue(EventContext context, Game game, string value)
-        {
-            if (value == "TIME")
-                return game.CurrentTime;
-
-            int intValue;
-            if (int.TryParse(value, out intValue))
-                return intValue;
-
-            return context.CurrentCharacter.GetVariable(value);
-        }
     }
 
     interface ILogic
@@ -286,7 +274,7 @@ namespace CourtIntrigue
         }
         public bool Evaluate(EventContext context, Game game)
         {
-            return context.CurrentCharacter.GetVariable(varName) > Logic.GetTestValue(context, game, testValue);
+            return context.CurrentCharacter.GetVariable(varName) > XmlHelper.GetTestValue(context, game, testValue);
         }
     }
 
@@ -301,7 +289,7 @@ namespace CourtIntrigue
         }
         public bool Evaluate(EventContext context, Game game)
         {
-            return context.CurrentCharacter.GetVariable(varName) < Logic.GetTestValue(context, game, testValue);
+            return context.CurrentCharacter.GetVariable(varName) < XmlHelper.GetTestValue(context, game, testValue);
         }
     }
 
@@ -316,7 +304,7 @@ namespace CourtIntrigue
         }
         public bool Evaluate(EventContext context, Game game)
         {
-            return context.CurrentCharacter.GetVariable(varName) == Logic.GetTestValue(context, game, testValue);
+            return context.CurrentCharacter.GetVariable(varName) == XmlHelper.GetTestValue(context, game, testValue);
         }
     }
 
@@ -331,7 +319,7 @@ namespace CourtIntrigue
         }
         public bool Evaluate(EventContext context, Game game)
         {
-            return context.CurrentCharacter.GetVariable(varName) >= Logic.GetTestValue(context, game, testValue);
+            return context.CurrentCharacter.GetVariable(varName) >= XmlHelper.GetTestValue(context, game, testValue);
         }
     }
 
@@ -346,7 +334,7 @@ namespace CourtIntrigue
         }
         public bool Evaluate(EventContext context, Game game)
         {
-            return context.CurrentCharacter.GetVariable(varName) <= Logic.GetTestValue(context, game, testValue);
+            return context.CurrentCharacter.GetVariable(varName) <= XmlHelper.GetTestValue(context, game, testValue);
         }
     }
 
@@ -361,7 +349,7 @@ namespace CourtIntrigue
         }
         public bool Evaluate(EventContext context, Game game)
         {
-            return context.CurrentCharacter.GetVariable(varName) != Logic.GetTestValue(context, game, testValue);
+            return context.CurrentCharacter.GetVariable(varName) != XmlHelper.GetTestValue(context, game, testValue);
         }
     }
 

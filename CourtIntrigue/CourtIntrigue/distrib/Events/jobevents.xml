@@ -43,4 +43,32 @@
     <id>BISHOP_ON_FIRE_EVENT</id>
     <description>You've just been fire as the bishop.  Aren't you stupid!</description>
   </event>
-</events>
+  <!-- From approach event
+  ROOT = person being collected from
+  TARGET = steward -->
+  <event>
+    <id>STEWARD_COLLECT_TAXES_EVENT_0</id>
+    <description>$Target.Name$ is asking for the king's taxes.</description>
+    <options>
+      <option>
+        <label>Hand them over</label>
+        <requirements>
+          <has_gold>20</has_gold>
+        </requirements>
+        <exec>
+          <spend_gold>20</spend_gold>
+          <set_scope name="TARGET">
+            <get_gold>20</get_gold>
+          </set_scope>
+          <set_variable name="TaxDelinquent">0</set_variable>
+        </exec>
+      </option>
+      <option>
+        <label>Refuse to pay!</label>
+        <exec>
+          <set_variable name="TaxDelinquent">1</set_variable>
+        </exec>
+      </option>
+    </options>
+    </event>
+    </events>

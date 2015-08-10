@@ -75,15 +75,19 @@ namespace CourtIntrigue
                 {
                     expressions.Add(new GetGoldExecute(reader.ReadElementContentAsInt()));
                 }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "debug")
+                {
+                    expressions.Add(Execute.DEBUG);
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "set_variable")
+                {
+                    string varName = reader.GetAttribute("name");
+                    expressions.Add(new SetVariableExecute(varName, reader.ReadElementContentAsString()));
+                }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "offset_variable")
                 {
                     string varName = reader.GetAttribute("name");
-                    expressions.Add(new OffsetVariableExecute(varName, reader.ReadElementContentAsInt()));
-                }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "offset_variable_time")
-                {
-                    string varName = reader.GetAttribute("name");
-                    expressions.Add(new OffsetVariableTimeExecute(varName, reader.ReadElementContentAsInt()));
+                    expressions.Add(new OffsetVariableExecute(varName, reader.ReadElementContentAsString()));
                 }
                 else if (reader.NodeType == XmlNodeType.Element)
                 {
@@ -440,5 +444,19 @@ namespace CourtIntrigue
 
             return new TestEventOptionsLogic(id, parameters);
         }
+
+        public static int GetTestValue(EventContext context, Game game, string value)
+        {
+            if (value == "TIME")
+                return game.CurrentTime;
+
+            int intValue;
+            if (int.TryParse(value, out intValue))
+                return intValue;
+
+            return context.CurrentCharacter.GetVariable(value);
+        }
     }
+
+
 }
