@@ -299,6 +299,11 @@ namespace CourtIntrigue
             Money -= gold;
         }
 
+        internal void GetGold(int gold)
+        {
+            Money += gold;
+        }
+
         public override string ToString()
         {
             return Fullname;

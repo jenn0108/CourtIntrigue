@@ -71,6 +71,10 @@ namespace CourtIntrigue
                 {
                     expressions.Add(new SpendGoldExecute(reader.ReadElementContentAsInt()));
                 }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "get_gold")
+                {
+                    expressions.Add(new GetGoldExecute(reader.ReadElementContentAsInt()));
+                }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "offset_variable")
                 {
                     string varName = reader.GetAttribute("name");

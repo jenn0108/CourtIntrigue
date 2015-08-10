@@ -27,7 +27,7 @@
     <common>No</common>
     <characters_approachable>No</characters_approachable>
     <solo_actions>
-      <action>PUBLIC_URINATION_ACTION</action>
+      <action>COLLECT_TAXES_ACTION_ID</action>
     </solo_actions>
   </room>
 </rooms>

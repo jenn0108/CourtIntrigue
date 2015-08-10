@@ -1,0 +1,33 @@
+﻿<events>
+  <event>
+    <id>COLLECT_TAXES_EVENT_ID_0</id>
+    <description>You decide today's a good day for taxes.</description>
+    <requirements>
+      <action_id>COLLECT_TAXES_ACTION_ID</action_id>
+    </requirements>
+    <options>
+      <option>
+        <label>Head off to town to collect some taxes</label>
+        <requirements>
+          <not>
+            <test_variable_time name="Unrest"/>
+          </not>
+        </requirements>
+        <exec>
+          <get_gold>20</get_gold>
+          <offset_variable name="Unrest">50</offset_variable>
+        </exec>
+      </option>
+      <option>
+        <label>Head off to town to collect some taxes</label>
+        <requirements>
+          <test_variable_time name="Unrest"/>
+        </requirements>
+        <exec>
+          <prestige_change>-10</prestige_change>
+          <offset_variable name="Unrest">10</offset_variable>
+        </exec>
+      </option>
+    </options>
+  </event>
+</events>

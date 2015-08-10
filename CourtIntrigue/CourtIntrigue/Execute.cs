@@ -259,6 +259,20 @@ namespace CourtIntrigue
         }
     }
 
+    class GetGoldExecute : IExecute
+    {
+        private int gold;
+        public GetGoldExecute(int gold)
+        {
+            this.gold = gold;
+        }
+
+        public void Execute(EventResults result, Game game, EventContext context)
+        {
+            context.CurrentCharacter.GetGold(gold);
+        }
+    }
+
     class OffsetVariableExecute : IExecute
     {
         private string varName;
