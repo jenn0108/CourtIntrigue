@@ -28,4 +28,20 @@
       </option>
     </options>
   </event>
+  <event>
+    <id>SPEND_TIME_WITH_WIFE_EVENT_0</id>
+    <description>Spend time with $ROOT.Spouse.Name$ in bed...</description>
+    <requirements>
+      <action_id>SPEND_TIME_WITH_WIFE_ACTION_ID</action_id>
+      <has_spouse/>
+    </requirements>
+  </event>
+  <event>
+    <id>SPEND_TIME_WITH_WIFE_EVENT_1</id>
+    <description>You go riding with $ROOT.Spouse.Name$.</description>
+    <requirements>
+      <action_id>SPEND_TIME_WITH_WIFE_ACTION_ID</action_id>
+      <has_spouse/>
+    </requirements>
+  </event>
 </events>

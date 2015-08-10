@@ -28,6 +28,7 @@
     <characters_approachable>No</characters_approachable>
     <solo_actions>
       <action>COLLECT_TAXES_ACTION_ID</action>
+      <action>SPEND_TIME_WITH_WIFE_ACTION_ID</action>
     </solo_actions>
   </room>
 </rooms>
