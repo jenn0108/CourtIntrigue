@@ -184,10 +184,35 @@ namespace CourtIntrigue
                     string scopeName = reader.GetAttribute("name");
                     expressions.Add(new SetScopeLogic(scopeName, ReadLogic(reader, badTags)));
                 }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "test_variable_time")
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "var_gt")
                 {
                     string varName = reader.GetAttribute("name");
-                    expressions.Add(new TestVariableTimeLogic(varName));
+                    expressions.Add(new VariableGreaterThanLogic(varName, reader.ReadElementContentAsString()));
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "var_lt")
+                {
+                    string varName = reader.GetAttribute("name");
+                    expressions.Add(new VariableLessThanLogic(varName, reader.ReadElementContentAsString()));
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "var_eq")
+                {
+                    string varName = reader.GetAttribute("name");
+                    expressions.Add(new VariableEqualLogic(varName, reader.ReadElementContentAsString()));
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "var_ge")
+                {
+                    string varName = reader.GetAttribute("name");
+                    expressions.Add(new VariableGreaterOrEqualLogic(varName, reader.ReadElementContentAsString()));
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "var_le")
+                {
+                    string varName = reader.GetAttribute("name");
+                    expressions.Add(new VariableLessOrEqualLogic(varName, reader.ReadElementContentAsString()));
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "var_ne")
+                {
+                    string varName = reader.GetAttribute("name");
+                    expressions.Add(new VariableNotEqualLogic(varName, reader.ReadElementContentAsString()));
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "has_gold")
                 {

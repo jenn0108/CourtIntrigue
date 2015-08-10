@@ -13,6 +13,18 @@ namespace CourtIntrigue
         public static ILogic FALSE = new FalseLogic();
         public static ILogic HAS_INFORMATION = new HasInformationTestLogic();
         public static ILogic HAS_SPOUSE = new HasSpouseTestLogic();
+
+        public static int GetTestValue(EventContext context, Game game, string value)
+        {
+            if (value == "TIME")
+                return game.CurrentTime;
+
+            int intValue;
+            if (int.TryParse(value, out intValue))
+                return intValue;
+
+            return context.CurrentCharacter.GetVariable(value);
+        }
     }
 
     interface ILogic
@@ -263,16 +275,93 @@ namespace CourtIntrigue
         }
     }
 
-    class TestVariableTimeLogic : ILogic
+    class VariableGreaterThanLogic : ILogic
     {
         private string varName;
-        public TestVariableTimeLogic(string name)
+        private string testValue;
+        public VariableGreaterThanLogic(string name, string testVal)
         {
             varName = name;
+            testValue = testVal;
         }
         public bool Evaluate(EventContext context, Game game)
         {
-            return context.CurrentCharacter.GetVariable(varName) >= game.CurrentTime;
+            return context.CurrentCharacter.GetVariable(varName) > Logic.GetTestValue(context, game, testValue);
+        }
+    }
+
+    class VariableLessThanLogic : ILogic
+    {
+        private string varName;
+        private string testValue;
+        public VariableLessThanLogic(string name, string testVal)
+        {
+            varName = name;
+            testValue = testVal;
+        }
+        public bool Evaluate(EventContext context, Game game)
+        {
+            return context.CurrentCharacter.GetVariable(varName) < Logic.GetTestValue(context, game, testValue);
+        }
+    }
+
+    class VariableEqualLogic : ILogic
+    {
+        private string varName;
+        private string testValue;
+        public VariableEqualLogic(string name, string testVal)
+        {
+            varName = name;
+            testValue = testVal;
+        }
+        public bool Evaluate(EventContext context, Game game)
+        {
+            return context.CurrentCharacter.GetVariable(varName) == Logic.GetTestValue(context, game, testValue);
+        }
+    }
+
+    class VariableGreaterOrEqualLogic : ILogic
+    {
+        private string varName;
+        private string testValue;
+        public VariableGreaterOrEqualLogic(string name, string testVal)
+        {
+            varName = name;
+            testValue = testVal;
+        }
+        public bool Evaluate(EventContext context, Game game)
+        {
+            return context.CurrentCharacter.GetVariable(varName) >= Logic.GetTestValue(context, game, testValue);
+        }
+    }
+
+    class VariableLessOrEqualLogic : ILogic
+    {
+        private string varName;
+        private string testValue;
+        public VariableLessOrEqualLogic(string name, string testVal)
+        {
+            varName = name;
+            testValue = testVal;
+        }
+        public bool Evaluate(EventContext context, Game game)
+        {
+            return context.CurrentCharacter.GetVariable(varName) <= Logic.GetTestValue(context, game, testValue);
+        }
+    }
+
+    class VariableNotEqualLogic : ILogic
+    {
+        private string varName;
+        private string testValue;
+        public VariableNotEqualLogic(string name, string testVal)
+        {
+            varName = name;
+            testValue = testVal;
+        }
+        public bool Evaluate(EventContext context, Game game)
+        {
+            return context.CurrentCharacter.GetVariable(varName) != Logic.GetTestValue(context, game, testValue);
         }
     }
 

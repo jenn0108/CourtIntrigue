@@ -158,7 +158,7 @@
     <label>Well Dressed</label>
     <description>A well dressed man is well respected.</description>
     <requirements>
-      <test_variable_time name="WellDressed"/>
+      <var_gt name="WellDressed">TIME</var_gt>
     </requirements>
     <daily_change>10</daily_change>
   </prestige_mod>

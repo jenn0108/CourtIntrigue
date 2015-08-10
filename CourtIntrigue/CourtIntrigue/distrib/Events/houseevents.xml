@@ -9,9 +9,7 @@
       <option>
         <label>Head off to town to collect some taxes</label>
         <requirements>
-          <not>
-            <test_variable_time name="Unrest"/>
-          </not>
+          <var_le name="Unrest">TIME</var_le>
         </requirements>
         <exec>
           <get_gold>100</get_gold>
@@ -21,7 +19,7 @@
       <option>
         <label>Head off to town to collect some taxes</label>
         <requirements>
-          <test_variable_time name="Unrest"/>
+          <var_gt name="Unrest">TIME</var_gt>
         </requirements>
         <exec>
           <prestige_change>-10</prestige_change>
