@@ -105,10 +105,18 @@ namespace CourtIntrigue
 
         private void journalButton_Click(object sender, EventArgs e)
         {
-            JournalForm journalForm = new JournalForm(game.AllCharacters, game);
-            journalForm.TopLevel = false;
-            splitContainer2.Panel1.Controls.Add(journalForm);
-            journalForm.Show();
+            if(splitContainer2.Panel1.Controls.Count > 0 && splitContainer2.Panel1.Controls[0] is JournalForm)
+            {
+                splitContainer2.Panel1.Controls.Clear();
+            }
+            else
+            {
+                splitContainer2.Panel1.Controls.Clear();
+                JournalForm journalForm = new JournalForm(game.AllCharacters, game);
+                journalForm.TopLevel = false;
+                splitContainer2.Panel1.Controls.Add(journalForm);
+                journalForm.Show();
+            }
         }
     }
 }
