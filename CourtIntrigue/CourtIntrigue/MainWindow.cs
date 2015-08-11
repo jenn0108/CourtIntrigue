@@ -16,6 +16,7 @@ namespace CourtIntrigue
         private static int NUM_PLAYERS = 10; // Now that we have jobs we need > 6 people.
 
         Game game;
+        StringBuilder logData = new StringBuilder();
         TextBoxLogger logger;
         int dayState = 0;
 
@@ -72,7 +73,7 @@ namespace CourtIntrigue
 
             public void PrintText(string text)
             {
-                main.debugBox.AppendText(text + "\r\n");
+                main.logData.Append(text + "\r\n");
             }
         }
 
@@ -85,7 +86,6 @@ namespace CourtIntrigue
 
         private void button1_Click(object sender, EventArgs e)
         {
-            debugBox.Clear();
             dayState = 0;
             game = new Game(logger, NUM_PLAYERS, null);
             UpdateDate();
@@ -93,13 +93,10 @@ namespace CourtIntrigue
 
         private void speedStep_Click(object sender, EventArgs e)
         {
-            debugBox.Visible = false;
             for (int i=0; i<240; ++i)
             {
                 nextButton_Click(sender, e);
             }
-            debugBox.Visible = true;
-            debugBox.AppendText("\n");
 
         }
 
@@ -116,6 +113,29 @@ namespace CourtIntrigue
                 journalForm.TopLevel = false;
                 splitContainer2.Panel1.Controls.Add(journalForm);
                 journalForm.Show();
+            }
+        }
+
+        private void logButton_Click(object sender, EventArgs e)
+        {
+            if (splitContainer2.Panel1.Controls.Count > 0 && splitContainer2.Panel1.Controls[0] is TextBox)
+            {
+                splitContainer2.Panel1.Controls.Clear();
+            }
+            else
+            {
+                splitContainer2.Panel1.Controls.Clear();
+                TextBox box = new TextBox()
+                {
+                    Multiline = true,
+                    Left = 0,
+                    Top = 0,
+                    Size = splitContainer2.Panel1.Size,
+                    ScrollBars = ScrollBars.Vertical
+                };
+                splitContainer2.Panel1.Controls.Add(box);
+                box.Show();
+                box.AppendText(logData.ToString());
             }
         }
     }
