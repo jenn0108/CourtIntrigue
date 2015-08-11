@@ -33,13 +33,28 @@ namespace CourtIntrigue
             if (DirectExecute != null)
                 DirectExecute.Execute(result, game, context);
 
-            if (Options.Length > 0)
+            EventOption[] options = GetAvailableOptions(context, game);
+            if (options.Length > 0)
             {
-                //If there are options, the character must choose one.
-                EventOption chosen = context.CurrentCharacter.ChooseOption(context, this);
+                int[] willpowerCost = new int[options.Length];
+                for(int i = 0; i < options.Length; ++i)
+                {
+                    int maxCost = options[i].GetCostToTake(context.CurrentCharacter) - options[i].GetCostToAvoid(context.CurrentCharacter);
+                    for(int j = 0; j < options.Length; ++j)
+                    {
+                        if (i == j)
+                            continue;
 
+                        maxCost = Math.Max(maxCost, options[j].GetCostToAvoid(context.CurrentCharacter));
+                    }
+                    willpowerCost[i] = maxCost;
+                }
+                //If there are options, the character must choose one.
+                int chosenIndex = context.CurrentCharacter.ChooseOption(options, willpowerCost, context, this);
+                EventOption chosen = options[chosenIndex];
                 if(chosen != null && chosen.DirectExecute != null)
                 {
+                    context.CurrentCharacter.SpendWillpower(willpowerCost[chosenIndex]);
                     //Execute the option activity.
                     chosen.DirectExecute.Execute(result, game, context);
                 }
@@ -70,17 +85,67 @@ namespace CourtIntrigue
         }
     }
 
+    struct Adversion
+    {
+        public string TraitId;
+        public int Cost;
+
+        public Adversion(string traitId, int cost)
+        {
+            TraitId = traitId;
+            Cost = cost;
+        }
+    }
+
+    struct Desire
+    {
+        public string TraitId;
+        public int Cost;
+
+        public Desire(string traitId, int cost)
+        {
+            TraitId = traitId;
+            Cost = cost;
+        }
+    }
+
     class EventOption
     {
         public string Label { get; private set; }
         public IExecute DirectExecute { get; private set; }
         public ILogic Requirements { get; private set; }
+        public Adversion[] Adversions { get; private set; }
+        public Desire[] Desires { get; private set; }
 
-        public EventOption(string label, IExecute dirExec, ILogic requirements)
+        public EventOption(string label, IExecute dirExec, ILogic requirements, Adversion[] adversions, Desire[] desires)
         {
             Label = label;
             DirectExecute = dirExec;
             Requirements = requirements;
+            Adversions = adversions;
+            Desires = desires;
+        }
+
+        public int GetCostToAvoid(Character c)
+        {
+            int cost = 0;
+            foreach(var d in Desires)
+            {
+                if (c.HasTrait(d.TraitId))
+                    cost += d.Cost;
+            }
+            return cost;
+        }
+
+        public int GetCostToTake(Character c)
+        {
+            int cost = 0;
+            foreach (var a in Adversions)
+            {
+                if (c.HasTrait(a.TraitId))
+                    cost += a.Cost;
+            }
+            return cost;
         }
     }
 

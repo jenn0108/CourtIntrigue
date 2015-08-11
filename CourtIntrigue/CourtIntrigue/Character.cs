@@ -15,6 +15,7 @@ namespace CourtIntrigue
         public int Money { get; private set; }
         public int Prestige { get; private set; }
         public int PrestigeRank { get; set; }
+        public int WillPower { get; private set; }
         public Dynasty Dynasty { get; private set; }
         public GenderEnum Gender { get; private set; }
         public DependentCharacter Spouse { get; private set; }
@@ -73,6 +74,7 @@ namespace CourtIntrigue
             BirthDate = birthdate;
             Dynasty = dynasty;
             Money = money;
+            WillPower = Game.MAX_WILLPOWER;
             Game = game;
             Home = home;
             Gender = gender;
@@ -175,6 +177,9 @@ namespace CourtIntrigue
 
         public EventContext Tick()
         {
+            if (++WillPower > Game.MAX_WILLPOWER)
+                WillPower = Game.MAX_WILLPOWER;
+
             return OnTick();
         }
 
@@ -188,7 +193,7 @@ namespace CourtIntrigue
             throw new NotImplementedException();
         }
 
-        public virtual EventOption ChooseOption(EventContext action, Event e)
+        public virtual int ChooseOption(EventOption[] options, int[] willpowerCost, EventContext action, Event e)
         {
             throw new NotImplementedException();
         }
@@ -306,9 +311,20 @@ namespace CourtIntrigue
             Money -= gold;
         }
 
-        internal void GetGold(int gold)
+        public void GetGold(int gold)
         {
             Money += gold;
+        }
+
+        public void SpendWillpower(int cost)
+        {
+            if (cost > 0)
+            {
+                if (WillPower < cost)
+                    throw new InvalidOperationException("Character has insufficient willpower.");
+
+                WillPower -= cost;
+            }
         }
 
         public override string ToString()

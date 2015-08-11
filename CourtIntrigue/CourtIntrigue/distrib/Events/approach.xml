@@ -27,6 +27,10 @@
     <options>
       <option>
         <label>Refuse</label>
+        <willpower>
+          <!-- Refusing conversations is harder when you are shy -->
+          <trait_adversion type="SHY_TRAIT" cost="5"/>
+        </willpower>
         <exec>
           <set_scope name="TARGET">
             <trigger_event>
@@ -38,6 +42,10 @@
       </option>
       <option>
         <label>Accept</label>
+        <willpower>
+          <!-- Gregarious people always want to talk! -->
+          <trait_desire type="GREGARIOUS_TRAIT" cost="5"/>
+        </willpower>
         <exec>
           <set_scope name="TARGET">
             <trigger_event>

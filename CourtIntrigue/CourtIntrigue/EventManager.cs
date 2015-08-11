@@ -171,6 +171,9 @@ namespace CourtIntrigue
             IExecute dirExec = Execute.NOOP;
             ILogic requirements = Logic.TRUE;
 
+            List<Adversion> adversions = new List<Adversion>();
+            List<Desire> desires = new List<Desire>();
+
             while (reader.Read())
             {
                 if (reader.NodeType == XmlNodeType.Element && reader.Name == "label")
@@ -185,12 +188,24 @@ namespace CourtIntrigue
                 {
                     requirements = XmlHelper.ReadLogic(reader, badTags);
                 }
+                else if (reader.Name == "willpower")
+                {
+                    //Just skip it.
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "trait_adversion")
+                {
+                    adversions.Add(new Adversion(reader.GetAttribute("type"), int.Parse(reader.GetAttribute("cost"))));
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "trait_desire")
+                {
+                    desires.Add(new Desire(reader.GetAttribute("type"), int.Parse(reader.GetAttribute("cost"))));
+                }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "option")
                 {
                     break;
                 }
             }
-            return new EventOption(label, dirExec, requirements);
+            return new EventOption(label, dirExec, requirements, adversions.ToArray(), desires.ToArray());
         }
 
 

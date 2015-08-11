@@ -14,6 +14,7 @@ namespace CourtIntrigue
     class Game
     {
         public static int TICKS_PER_DAY = 5;
+        public static int MAX_WILLPOWER = 50;
         private static int MAX_CHILDREN = 3; // Small for testing purposes.
 
         private List<Character> characters = new List<Character>();

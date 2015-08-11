@@ -42,6 +42,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.ageLabel = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.willpowerLabel = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // knownCharacters
@@ -185,11 +187,33 @@
             this.label3.TabIndex = 13;
             this.label3.Text = "Age:";
             // 
+            // willpowerLabel
+            // 
+            this.willpowerLabel.AutoSize = true;
+            this.willpowerLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.willpowerLabel.Location = new System.Drawing.Point(850, 54);
+            this.willpowerLabel.Name = "willpowerLabel";
+            this.willpowerLabel.Size = new System.Drawing.Size(32, 17);
+            this.willpowerLabel.TabIndex = 16;
+            this.willpowerLabel.Text = "130";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.label4.Location = new System.Drawing.Point(776, 54);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(72, 17);
+            this.label4.TabIndex = 15;
+            this.label4.Text = "Willpower:";
+            // 
             // JournalForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(894, 462);
+            this.Controls.Add(this.willpowerLabel);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.ageLabel);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.goldLabel);
@@ -228,5 +252,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label ageLabel;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label willpowerLabel;
+        private System.Windows.Forms.Label label4;
     }
 }

@@ -57,12 +57,12 @@ namespace CourtIntrigue
             }
         }
 
-        public override EventOption ChooseOption(EventContext context, Event e)
+        public override int ChooseOption(EventOption[] options, int[] willpowerCost, EventContext context, Event e)
         {
-            EventOption[] options = e.GetAvailableOptions(context, this.Game);
-            EventOption chosen = options[Game.GetRandom(options.Length)];
+            int chosenIndex = Game.GetRandom(options.Length);
+            EventOption chosen = options[chosenIndex];
             CharacterLog("Choosing " + EventHelper.ReplaceStrings(chosen.Label, context));
-            return chosen;
+            return chosenIndex;
         }
 
         public override InformationInstance ChooseInformation()
