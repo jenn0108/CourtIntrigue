@@ -172,7 +172,19 @@ namespace CourtIntrigue
 
             KnownInformation = KnownInformation.Where(info => !info.IsExpired(Game.CurrentDay)).ToList();
 
-            return OnBeginDay();
+            Room[] rooms = Game.CommonRooms.Union(Home.Yield()).ToArray();
+
+            int index = OnBeginDay(rooms);
+            if (index == Game.CommonRooms.Length)
+            {
+                CharacterLog("Staying home");
+            }
+            else
+            {
+                Room ret = Game.CommonRooms[index];
+                CharacterLog("Going to " + ret.Name);
+            }
+            return rooms[index];
         }
 
         public EventContext Tick()
@@ -180,25 +192,45 @@ namespace CourtIntrigue
             if (++WillPower > Game.MAX_WILLPOWER)
                 WillPower = Game.MAX_WILLPOWER;
 
-            return OnTick();
+            Dictionary<Character, string[]> characterActions = new Dictionary<Character, string[]>();
+            foreach(var otherCharacter in room.GetUnoccuppiedCharacters(this))
+            {
+                string[] pairActions = Game.FindAllowableActions(room, this, otherCharacter);
+                if(pairActions != null && pairActions.Length > 0)
+                    characterActions.Add(otherCharacter, pairActions);
+            }
+
+            return OnTick(room.SoloActions, characterActions);
         }
 
-        public virtual EventContext OnTick()
+        public int ChooseOption(EventOption[] options, int[] willpowerCost, EventContext action, Event e)
+        {
+            return OnChooseOption(options, willpowerCost, action, e);
+        }
+
+        public InformationInstance ChooseInformation()
+        {
+            InformationInstance[] information = KnownInformation.ToArray();
+            int index = OnChooseInformation(information);
+            return information[index];
+        }
+
+        public virtual EventContext OnTick(string[] soloActions, Dictionary<Character, string[]> characterActions)
         {
             throw new NotImplementedException();
         }
 
-        public virtual Room OnBeginDay()
+        public virtual int OnBeginDay(Room[] rooms)
         {
             throw new NotImplementedException();
         }
 
-        public virtual int ChooseOption(EventOption[] options, int[] willpowerCost, EventContext action, Event e)
+        public virtual int OnChooseOption(EventOption[] options, int[] willpowerCost, EventContext action, Event e)
         {
             throw new NotImplementedException();
         }
 
-        public virtual InformationInstance ChooseInformation()
+        public virtual int OnChooseInformation(InformationInstance[] knownInformation)
         {
             throw new NotImplementedException();
         }

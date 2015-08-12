@@ -13,51 +13,30 @@ namespace CourtIntrigue
             CharacterLog("Created character with spouse: " + spouse.Name + " and children: " + string.Join(", ", children.Select(c => c.Name + "(" + c.Gender.ToString() + ")")));
         }
 
-        public override EventContext OnTick()
+        public override EventContext OnTick(string[] soloActions, Dictionary<Character, string[]> characterActions)
         {
-            CharacterLog("In room with: " + string.Join(", ", room.GetUnoccuppiedCharacters(this).Select(c => c.Name)));
+            CharacterLog("In room with: " + string.Join(", ", characterActions.Select(p => p.Key.Name)));
 
-            string[] actions = room.SoloActions;
-
-            if (room.PairActions.Length > 0)
+            int num = Game.GetRandom(soloActions.Length + characterActions.Count);
+            if (num < soloActions.Length)
             {
-                int num = Game.GetRandom(actions.Length + room.GetUnoccuppiedCharacters(this).Count());
-                if (num < actions.Length)
-                {
-                    return new EventContext(actions[num], this, null);
-                }
-                else
-                {
-                    Character otherCharacter = room.GetUnoccuppiedCharacters(this).ElementAt(num - actions.Length);
-                    string[] pairActions = Game.FindAllowableActions(room, this, otherCharacter);
-                    return new EventContext(pairActions[Game.GetRandom(pairActions.Length)], this, otherCharacter);
-                }
+                return new EventContext(soloActions[num], this, null);
             }
             else
             {
-                int num = Game.GetRandom(actions.Length);
-                return new EventContext(actions[num], this, null);
+                Character otherCharacter = characterActions.Keys.ElementAt(num - soloActions.Length);
+                string[] pairActions = characterActions[otherCharacter];
+                return new EventContext(pairActions[Game.GetRandom(pairActions.Length)], this, otherCharacter);
             }
 
         }
 
-        public override Room OnBeginDay()
+        public override int OnBeginDay(Room[] rooms)
         {
-            int index = Game.GetRandom(Game.CommonRooms.Length + 1);
-            if(index == Game.CommonRooms.Length)
-            {
-                CharacterLog("Staying home");
-                return Home;
-            }
-            else
-            {
-                Room ret = Game.CommonRooms[index];
-                CharacterLog("Going to " + ret.Name);
-                return ret;
-            }
+            return Game.GetRandom(rooms.Length);
         }
 
-        public override int ChooseOption(EventOption[] options, int[] willpowerCost, EventContext context, Event e)
+        public override int OnChooseOption(EventOption[] options, int[] willpowerCost, EventContext context, Event e)
         {
             int chosenIndex = Game.GetRandom(options.Length);
             EventOption chosen = options[chosenIndex];
@@ -65,9 +44,9 @@ namespace CourtIntrigue
             return chosenIndex;
         }
 
-        public override InformationInstance ChooseInformation()
+        public override int OnChooseInformation(InformationInstance[] informations)
         {
-            return KnownInformation[Game.GetRandom(KnownInformation.Count)];
+            return Game.GetRandom(informations.Length);
         }
 
     }
