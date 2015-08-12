@@ -24,7 +24,7 @@ namespace CourtIntrigue
         {
             InitializeComponent();
             logger = new TextBoxLogger(this);
-            game = new Game(logger, NUM_PLAYERS, null);
+            game = new Game(logger, NUM_PLAYERS);
             UpdateDate();
 
             if(Debugger.IsAttached)
@@ -87,7 +87,7 @@ namespace CourtIntrigue
         private void button1_Click(object sender, EventArgs e)
         {
             dayState = 0;
-            game = new Game(logger, NUM_PLAYERS, null);
+            game = new Game(logger, NUM_PLAYERS);
             UpdateDate();
         }
 

@@ -68,7 +68,7 @@ namespace CourtIntrigue
             get { return Game.TicksToYear(Game.CurrentDay - BirthDate); }
         }
 
-        public Character(string name, int birthdate, Dynasty dynasty, int money, Game game, GenderEnum gender, DependentCharacter spouse, List<DependentCharacter> children, Room home)
+        public Character(string name, int birthdate, Dynasty dynasty, int money, Game game, GenderEnum gender)
         {
             Name = name;
             BirthDate = birthdate;
@@ -76,14 +76,26 @@ namespace CourtIntrigue
             Money = money;
             WillPower = Game.MAX_WILLPOWER;
             Game = game;
-            Home = home;
             Gender = gender;
-            Spouse = spouse;
-            Children = children;
             KnownInformation = new List<InformationInstance>();
             traits = new Dictionary<string, Trait>();
             jobs = new Dictionary<string, Job>();
             prestigeModifiers = new HashSet<PrestigeModifier>();
+        }
+
+        public void AssignFamily(DependentCharacter spouse, List<DependentCharacter> children, Room home)
+        {
+            Home = home;
+            Spouse = spouse;
+            Children = children;
+            CharacterLog("Created family for " + Name + " with spouse: " + spouse.Name + " and children: " + string.Join(", ", children.Select(c => c.Name + "(" + c.Gender.ToString() + ")")));
+
+            //Assign the home to the dependents as well.
+            spouse.Home = home;
+            foreach(var c in children)
+            {
+                c.Home = home;
+            }
         }
 
         public IEnumerable<string> GetVariableNames()

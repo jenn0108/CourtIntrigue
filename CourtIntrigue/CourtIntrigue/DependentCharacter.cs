@@ -9,7 +9,7 @@ namespace CourtIntrigue
 {
     class DependentCharacter : Character
     {
-        public DependentCharacter(string name, int birthdate, Dynasty dynasty, Game game, GenderEnum gender, Room home) : base(name, birthdate, dynasty, 0, game, gender, null, new List<DependentCharacter>(), home)
+        public DependentCharacter(string name, int birthdate, Dynasty dynasty, Game game, GenderEnum gender) : base(name, birthdate, dynasty, 0, game, gender)
         {
         }
 

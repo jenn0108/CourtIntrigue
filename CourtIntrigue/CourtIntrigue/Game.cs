@@ -35,7 +35,7 @@ namespace CourtIntrigue
         private string[] familyNames;
         private Dictionary<string, Dynasty> dynasties;
 
-        public Game(Logger logger, int numCharacters, Character player)
+        public Game(Logger logger, int numCharacters)
         {
             debugLogger = logger;
             eventManager = new EventManager();
@@ -108,6 +108,14 @@ namespace CourtIntrigue
             OrderCharacters();
             jobManager.InitializeJobs(characters, this);
 
+        }
+
+        public void AddPlayer(Character player)
+        {
+            AssignFamily(player);
+            modifierManager.AssignInitialTraits(this, player, 4);
+            characters.Add(player);
+            OrderCharacters();
         }
 
         public string[] FindAllowableActions(Room room, Character initiator, Character target)
@@ -302,7 +310,7 @@ namespace CourtIntrigue
             return ticks / 200;
         }
 
-        public int GetYearInTicks(int year)
+        public static int GetYearInTicks(int year)
         {
             return year * 40 * TICKS_PER_DAY;
         }
@@ -329,27 +337,34 @@ namespace CourtIntrigue
 
         public AICharacter GetRandomAICharacter()
         {
+            Dynasty dynasty = GetRandomDynasty();
             int birthdate = GetAdultBirthdate();
-            int wifeBirthdate = GetWifeBirthdate(birthdate);
+            AICharacter character = new AICharacter(GetRandomMaleName(), birthdate, dynasty, 100, this, Character.GenderEnum.Male);
+
+            AssignFamily(character);
+            modifierManager.AssignInitialTraits(this, character, 4);
+            return character;
+        }
+
+        private void AssignFamily(Character character)
+        {
+            int wifeBirthdate = GetWifeBirthdate(character.BirthDate);
 
             Room home = roomManager.MakeUniqueRoom("ESTATE_ROOM");
             // All character have a wife for now.
-            Dynasty dynasty = GetRandomDynasty();
-            DependentCharacter spouse = new DependentCharacter(GetRandomFemaleName(), wifeBirthdate, dynasty, this, Character.GenderEnum.Female, home);
+            DependentCharacter spouse = new DependentCharacter(GetRandomFemaleName(), wifeBirthdate, character.Dynasty, this, Character.GenderEnum.Female);
 
             // Now add a random number of children with random genders.
             List<DependentCharacter> children = new List<DependentCharacter>();
             int numChildren = GetRandom(MAX_CHILDREN);
             for (int i = 0; i < numChildren; i++)
             {
-                Character.GenderEnum gender = (Character.GenderEnum) GetRandom(2);
+                Character.GenderEnum gender = (Character.GenderEnum)GetRandom(2);
                 string name = gender == Character.GenderEnum.Female ? GetRandomFemaleName() : GetRandomMaleName();
-                children.Add(new DependentCharacter(name, GetChildBirthdate(wifeBirthdate), dynasty, this, gender, home));
+                children.Add(new DependentCharacter(name, GetChildBirthdate(wifeBirthdate), character.Dynasty, this, gender));
             }
 
-            AICharacter character = new AICharacter(GetRandomMaleName(), birthdate, dynasty, 100, this, Character.GenderEnum.Male, spouse, children, home);
-            modifierManager.AssignInitialTraits(this, character, 4);
-            return character;
+            character.AssignFamily(spouse, children, home);
         }
 
         public void Log(string txt)
