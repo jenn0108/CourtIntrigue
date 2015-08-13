@@ -16,7 +16,15 @@ namespace CourtIntrigue
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainWindow());
+
+            StartWindow window = new StartWindow();
+            Application.Run(window);
+
+            if(window.StartGame)
+            {
+                MainWindow main = window.SinglePlayerGame ? new MainWindow(window.PlayerName, window.Dynasty, window.AgeInYears) : new MainWindow();
+                Application.Run(main);
+            }
         }
     }
 }

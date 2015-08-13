@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.permanentSplit = new System.Windows.Forms.SplitContainer();
+            this.logButton = new System.Windows.Forms.Button();
             this.calendarButton = new System.Windows.Forms.Button();
             this.journalButton = new System.Windows.Forms.Button();
             this.speedStep = new System.Windows.Forms.Button();
@@ -37,7 +38,6 @@
             this.dateLabel = new System.Windows.Forms.Label();
             this.nextButton = new System.Windows.Forms.Button();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.logButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.permanentSplit)).BeginInit();
             this.permanentSplit.Panel1.SuspendLayout();
             this.permanentSplit.Panel2.SuspendLayout();
@@ -69,6 +69,16 @@
             this.permanentSplit.Size = new System.Drawing.Size(1117, 640);
             this.permanentSplit.SplitterDistance = 203;
             this.permanentSplit.TabIndex = 0;
+            // 
+            // logButton
+            // 
+            this.logButton.Location = new System.Drawing.Point(30, 517);
+            this.logButton.Name = "logButton";
+            this.logButton.Size = new System.Drawing.Size(141, 33);
+            this.logButton.TabIndex = 7;
+            this.logButton.Text = "Log";
+            this.logButton.UseVisualStyleBackColor = true;
+            this.logButton.Click += new System.EventHandler(this.logButton_Click);
             // 
             // calendarButton
             // 
@@ -109,7 +119,7 @@
             this.restartButton.Text = "↻";
             this.restartButton.UseVisualStyleBackColor = true;
             this.restartButton.Visible = false;
-            this.restartButton.Click += new System.EventHandler(this.button1_Click);
+            this.restartButton.Click += new System.EventHandler(this.restartButton_Click);
             // 
             // debugButton
             // 
@@ -154,16 +164,6 @@
             this.splitContainer2.Size = new System.Drawing.Size(910, 640);
             this.splitContainer2.SplitterDistance = 500;
             this.splitContainer2.TabIndex = 0;
-            // 
-            // logButton
-            // 
-            this.logButton.Location = new System.Drawing.Point(30, 517);
-            this.logButton.Name = "logButton";
-            this.logButton.Size = new System.Drawing.Size(141, 33);
-            this.logButton.TabIndex = 7;
-            this.logButton.Text = "Log";
-            this.logButton.UseVisualStyleBackColor = true;
-            this.logButton.Click += new System.EventHandler(this.logButton_Click);
             // 
             // MainWindow
             // 

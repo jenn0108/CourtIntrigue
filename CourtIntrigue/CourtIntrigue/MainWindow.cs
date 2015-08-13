@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.Threading;
 
 namespace CourtIntrigue
 {
@@ -15,13 +16,18 @@ namespace CourtIntrigue
     {
         private static int NUM_PLAYERS = 10; // Now that we have jobs we need > 6 people.
 
+        PlayerCharacter player;
         Game game;
         StringBuilder logData = new StringBuilder();
         TextBoxLogger logger;
-        int dayState = 0;
+        Semaphore playerOptionWaiter = new Semaphore(0, 1);
+        IView currentView = null;
+        Thread gameThread;
+        int automatedCurrentStep = 0;
 
         public MainWindow()
         {
+            this.FormClosed += MainWindow_FormClosed;
             InitializeComponent();
             logger = new TextBoxLogger(this);
             game = new Game(logger, NUM_PLAYERS);
@@ -32,8 +38,42 @@ namespace CourtIntrigue
                 restartButton.Visible = true;
                 debugButton.Visible = true;
             }
+
+            speedStep.Visible = true;
+            restartButton.Visible = true;
+            nextButton.Visible = true;
         }
 
+        public MainWindow(string playerName, string playerDynasty, int age)
+        {
+            this.FormClosed += MainWindow_FormClosed;
+            InitializeComponent();
+            logger = new TextBoxLogger(this);
+            game = new Game(logger, NUM_PLAYERS);
+
+            player = new PlayerCharacter(this, playerName, -Game.GetYearInTicks(age), new Dynasty(playerDynasty), 500, game, Character.GenderEnum.Male);
+            game.AddPlayer(player);
+            UpdateDate();
+
+            if (Debugger.IsAttached)
+            {
+                restartButton.Visible = true;
+                debugButton.Visible = true;
+            }
+            speedStep.Visible = false;
+            restartButton.Visible = false;
+            nextButton.Visible = false;
+
+            gameThread = new Thread(GameThread);
+            gameThread.Start();
+        }
+
+        private void MainWindow_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            //We need to stop the game thread or we'll never actually quit.
+            if(gameThread != null)
+                gameThread.Abort();
+        }
 
         public void UpdateDate()
         {
@@ -44,22 +84,6 @@ namespace CourtIntrigue
             string[] seasons = new string[] { "Winter", "Spring", "Summer", "Fall" };
             string[] ticks = new string[] { "Early Morning", "Morning", "Afternoon", "Late Afternoon", "Evening" };
             dateLabel.Text = string.Format("{0}, Day {1} of {2}, Year {3}", ticks[tick], day+1, seasons[season], year+1);
-        }
-
-        private void nextButton_Click(object sender, EventArgs e)
-        {
-            UpdateDate();
-            //There is one day start followed by 5 action ticks.
-            //We'll loop through them as the user clicks the button.
-            if ((dayState % 6) == 0)
-            {
-                game.BeginDay();
-            }
-            else
-            {
-                game.Tick();
-            }
-            ++dayState;
         }
 
         class TextBoxLogger : Logger
@@ -84,10 +108,23 @@ namespace CourtIntrigue
             Debugger.Break();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void restartButton_Click(object sender, EventArgs e)
         {
-            dayState = 0;
             game = new Game(logger, NUM_PLAYERS);
+            UpdateDate();
+        }
+
+        private void nextButton_Click(object sender, EventArgs e)
+        {
+            if((automatedCurrentStep % 6) == 0)
+            {
+                game.BeginDay();
+            }
+            else
+            {
+                game.Tick();
+            }
+            ++automatedCurrentStep;
             UpdateDate();
         }
 
@@ -97,7 +134,6 @@ namespace CourtIntrigue
             {
                 nextButton_Click(sender, e);
             }
-
         }
 
         private void journalButton_Click(object sender, EventArgs e)
@@ -137,6 +173,39 @@ namespace CourtIntrigue
                 box.Show();
                 box.AppendText(logData.ToString());
             }
+        }
+
+        private void GameThread()
+        {
+            //We just cycle through the days forever.
+            int dayState = 0;
+            while(true)
+            {
+                //There is one day start followed by 5 action ticks.
+                //We'll loop through them as the user clicks the button.
+                if ((dayState % 6) == 0)
+                {
+                    game.BeginDay();
+                }
+                else
+                {
+                    game.Tick();
+                }
+                ++dayState;
+            }
+        }
+
+        private void ShowView()
+        {
+            UpdateDate();
+            currentView.Display(splitContainer2.Panel1, splitContainer2.Panel2, playerOptionWaiter);
+        }
+
+        internal void LaunchView(IView view)
+        {
+            currentView = view;
+            Invoke( (MethodInvoker)ShowView);
+            playerOptionWaiter.WaitOne();
         }
     }
 }
