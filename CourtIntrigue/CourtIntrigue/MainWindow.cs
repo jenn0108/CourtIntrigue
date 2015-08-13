@@ -140,12 +140,12 @@ namespace CourtIntrigue
         {
             if(splitContainer2.Panel1.Controls.Count > 0 && splitContainer2.Panel1.Controls[0] is JournalForm)
             {
-                splitContainer2.Panel1.Controls.Clear();
+                ClearScreen();
             }
             else
             {
                 splitContainer2.Panel1.Controls.Clear();
-                JournalForm journalForm = new JournalForm(game.AllCharacters, game);
+                JournalForm journalForm = new JournalForm(game.AllCharacters, game, player);
                 journalForm.TopLevel = false;
                 splitContainer2.Panel1.Controls.Add(journalForm);
                 journalForm.Show();
@@ -156,7 +156,7 @@ namespace CourtIntrigue
         {
             if (splitContainer2.Panel1.Controls.Count > 0 && splitContainer2.Panel1.Controls[0] is TextBox)
             {
-                splitContainer2.Panel1.Controls.Clear();
+                ClearScreen();
             }
             else
             {
@@ -192,6 +192,18 @@ namespace CourtIntrigue
                     game.Tick();
                 }
                 ++dayState;
+            }
+        }
+
+        private void ClearScreen()
+        {
+            if (currentView != null)
+            {
+                ShowView();
+            }
+            else
+            {
+                splitContainer2.Panel1.Controls.Clear();
             }
         }
 

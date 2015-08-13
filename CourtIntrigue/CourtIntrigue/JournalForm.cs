@@ -14,21 +14,31 @@ namespace CourtIntrigue
     {
         private Character[] characters;
         private Game game;
+        private Character fixedPerspective;
 
-        public JournalForm(Character[] characters, Game game)
+        public JournalForm(Character[] characters, Game game, Character fixedPerspective)
         {
             InitializeComponent();
             this.game = game;
             this.characters = characters;
+            this.fixedPerspective = fixedPerspective;
             knownCharacters.Items.AddRange(characters);
-            debugPerspectiveBox.Items.AddRange(characters);
             knownCharacters.SelectedIndex = 0;
-            debugPerspectiveBox.SelectedIndex = 0;
+
+            if(fixedPerspective != null)
+            {
+                debugPerspectiveBox.Visible = false;
+            }
+            else
+            {
+                debugPerspectiveBox.Items.AddRange(characters);
+                debugPerspectiveBox.SelectedIndex = 0;
+            }
         }
 
         private void UpdateCharacterInformation(Character character)
         {
-            Character perspectiveChar = debugPerspectiveBox.SelectedItem as Character;
+            Character perspectiveChar = fixedPerspective == null ? debugPerspectiveBox.SelectedItem as Character : fixedPerspective;
             if (perspectiveChar == null || character == null)
                 return;
 
