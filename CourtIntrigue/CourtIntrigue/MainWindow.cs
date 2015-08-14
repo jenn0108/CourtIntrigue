@@ -83,7 +83,7 @@ namespace CourtIntrigue
             int year = game.CurrentTime / 200;
             string[] seasons = new string[] { "Winter", "Spring", "Summer", "Fall" };
             string[] ticks = new string[] { "Early Morning", "Morning", "Afternoon", "Late Afternoon", "Evening" };
-            dateLabel.Text = string.Format("{0}, Day {1} of {2}, Year {3}", ticks[tick], day+1, seasons[season], year+1);
+            dateLabel.Text = string.Format("{0}, Day {1} of {2}, Year {3}\n{4}", ticks[tick], day+1, seasons[season], year+1, game.CurrentTime);
         }
 
         class TextBoxLogger : Logger
