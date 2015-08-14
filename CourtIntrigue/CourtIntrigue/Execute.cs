@@ -209,6 +209,31 @@ namespace CourtIntrigue
         }
     }
 
+    class IfExecute : IExecute
+    {
+        private ILogic requirements;
+        private IExecute thenExecute;
+        private IExecute elseExecute;
+        public IfExecute(ILogic requirements, IExecute thenExecute, IExecute elseExecute)
+        {
+            this.requirements = requirements;
+            this.thenExecute = thenExecute;
+            this.elseExecute = elseExecute;
+        }
+
+        public void Execute(EventResults result, Game game, EventContext context)
+        {
+            if(requirements.Evaluate(context, game))
+            {
+                thenExecute.Execute(result, game, context);
+            }
+            else
+            {
+                elseExecute.Execute(result, game, context);
+            }
+        }
+    }
+
     class GiveJobExecute : IExecute
     {
         private string jobId;

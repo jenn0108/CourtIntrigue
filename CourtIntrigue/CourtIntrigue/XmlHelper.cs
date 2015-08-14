@@ -79,6 +79,10 @@ namespace CourtIntrigue
                 {
                     expressions.Add(Execute.DEBUG);
                 }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "if")
+                {
+                    expressions.Add(ReadIfExecute(reader, badTags));
+                }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "set_variable")
                 {
                     string varName = reader.GetAttribute("name");
@@ -443,6 +447,34 @@ namespace CourtIntrigue
             }
 
             return new TestEventOptionsLogic(id, parameters);
+        }
+
+        private static IExecute ReadIfExecute(XmlReader reader, Dictionary<string, int> badTags)
+        {
+            ILogic requirements = Logic.TRUE;
+            IExecute thenExecute = Execute.NOOP;
+            IExecute elseExecute = Execute.NOOP;
+            while (reader.Read())
+            {
+                if (reader.NodeType == XmlNodeType.Element && reader.Name == "requirements")
+                {
+                    requirements = ReadLogic(reader, badTags);
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "then")
+                {
+                    thenExecute = ReadExecute(reader, badTags);
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "else")
+                {
+                    elseExecute = ReadExecute(reader, badTags);
+                }
+                else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "if")
+                {
+                    break;
+                }
+            }
+
+            return new IfExecute(requirements, thenExecute, elseExecute);
         }
 
         public static int GetTestValue(EventContext context, Game game, string value)
