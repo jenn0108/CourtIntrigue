@@ -27,4 +27,43 @@
       </apply_opinion_mod>
     </on_told>
   </information>
+  
+  <information>
+    <id>GAVE_TAXES_TO_STEWARD_INFORMATION</id>
+    <parameters>
+      <parameter type="character">TaxPayer</parameter>
+    </parameters>
+    <description>
+      $TaxPayer.Name$ paid the King's taxes.
+    </description>
+    <expires>10</expires>
+    <on_observe>
+      <if>
+        <requirements>
+          <has_job>KING_JOB</has_job>
+        </requirements>
+        <then>
+          <apply_opinion_mod>
+            <id>PAID_KINGS_TAXES_OPINION_MOD</id>
+            <character>TaxPayer</character>
+          </apply_opinion_mod>
+          <offset_variable name="ExpectedTaxes">1</offset_variable>
+        </then>
+      </if>
+    </on_observe>
+    <on_told>
+      <if>
+        <requirements>
+          <has_job>KING_JOB</has_job>
+        </requirements>
+        <then>
+          <apply_opinion_mod>
+            <id>PAID_KINGS_TAXES_OPINION_MOD</id>
+            <character>TaxPayer</character>
+          </apply_opinion_mod>
+          <offset_variable name="ExpectedTaxes">1</offset_variable>
+        </then>
+      </if>
+    </on_told>
+  </information>
 </informations>

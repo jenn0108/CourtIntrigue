@@ -20,4 +20,11 @@
     <duration>5</duration>
     <opinion_change>-10</opinion_change>
   </opinion_mod>
+  <opinion_mod>
+    <id>PAID_KINGS_TAXES_OPINION_MOD</id>
+    <label>Paid Taxes</label>
+    <description>Paid his taxes.</description>
+    <duration>20</duration>
+    <opinion_change>20</opinion_change>
+  </opinion_mod>
 </opinion_mods>

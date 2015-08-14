@@ -126,8 +126,37 @@
           <spend_gold>20</spend_gold>
           <set_scope name="TARGET">
             <get_gold>20</get_gold>
+            <offset_variable name="TaxesCollected">1</offset_variable>
           </set_scope>
           <set_variable name="TaxDelinquent">0</set_variable>
+          <everyone_in_room>
+            <for_character>
+              <observe_information>
+                <id>GAVE_TAXES_TO_STEWARD_INFORMATION</id>
+                <parameters TaxPayer="ROOT"/>
+                <chance>50</chance>
+              </observe_information>
+            </for_character>
+          </everyone_in_room>
+        </exec>
+      </option>
+      <option>
+        <label>Remit taxes to the King</label>
+        <requirements>
+          <has_job>STEWARD_JOB</has_job>
+          <set_scope name="TARGET">
+            <has_job>KING_JOB</has_job>
+          </set_scope>
+          <has_gold>100</has_gold>
+          <var_ge name="TaxesCollected">5</var_ge>
+        </requirements>
+        <exec>
+          <spend_gold>100</spend_gold>
+          <set_scope name="TARGET">
+            <get_gold>100</get_gold>
+            <offset_variable name="TaxesReceived">50</offset_variable>
+          </set_scope>
+          <offset_variable name="TaxesCollected">-5</offset_variable>
         </exec>
       </option>
       <option>

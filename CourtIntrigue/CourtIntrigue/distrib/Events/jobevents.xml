@@ -59,8 +59,18 @@
           <spend_gold>20</spend_gold>
           <set_scope name="TARGET">
             <get_gold>20</get_gold>
+            <offset_variable name="TaxesCollected">1</offset_variable>
           </set_scope>
           <set_variable name="TaxDelinquent">0</set_variable>
+          <everyone_in_room>
+            <for_character>
+              <observe_information>
+                <id>GAVE_TAXES_TO_STEWARD_INFORMATION</id>
+                <parameters TaxPayer="ROOT"/>
+                <chance>50</chance>
+              </observe_information>
+            </for_character>
+          </everyone_in_room>
         </exec>
       </option>
       <option>
@@ -70,5 +80,5 @@
         </exec>
       </option>
     </options>
-    </event>
-    </events>
+  </event>
+</events>

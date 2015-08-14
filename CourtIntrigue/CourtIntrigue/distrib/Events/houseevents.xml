@@ -4,6 +4,10 @@
     <description>You decide today's a good day for taxes.</description>
     <requirements>
       <action_id>COLLECT_TAXES_ACTION_ID</action_id>
+      <!-- The King collects taxes through the Steward -->
+      <not>
+        <has_job>KING_JOB</has_job>
+      </not>
     </requirements>
     <options>
       <option>
