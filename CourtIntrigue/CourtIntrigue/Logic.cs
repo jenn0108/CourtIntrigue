@@ -38,6 +38,24 @@ namespace CourtIntrigue
         }
     }
 
+    class OrLogic : ILogic
+    {
+        private ILogic[] subexpressions;
+        public OrLogic(ILogic[] subexps)
+        {
+            subexpressions = subexps;
+        }
+        public bool Evaluate(EventContext context, Game game)
+        {
+            for (int i = 0; i < subexpressions.Length; ++i)
+            {
+                if (subexpressions[i].Evaluate(context, game))
+                    return true;
+            }
+            return false;
+        }
+    }
+
     class NotLogic : ILogic
     {
         private ILogic logic;

@@ -147,6 +147,16 @@ namespace CourtIntrigue
                 {
                     expressions.Add(new NotLogic(ReadLogic(reader, badTags)));
                 }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "and")
+                {
+                    //ReadLogic will just and whatever it finds.
+                    expressions.Add(ReadLogic(reader, badTags));
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "or")
+                {
+                    //ReadLogic will just and whatever it finds.
+                    expressions.Add(ReadOrLogic(reader, badTags));
+                }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "has_spouse")
                 {
                     expressions.Add(Logic.HAS_SPOUSE);
@@ -247,7 +257,14 @@ namespace CourtIntrigue
             if (expressions.Count == 1)
                 return expressions[0];
             else if (expressions.Count == 0)
+            {
+                //An empty and is evaluated to false.
+                if (tag == "and")
+                    return Logic.FALSE;
+
+                //These are expected to be requirements
                 return Logic.TRUE;
+            }
             else
                 return new AndLogic(expressions.ToArray());
         }
@@ -264,6 +281,34 @@ namespace CourtIntrigue
             }
 
             throw new ArgumentException("Found unexpected type name " + typeName);
+        }
+
+        private static ILogic ReadOrLogic(XmlReader reader, Dictionary<string, int> badTags)
+        {
+            List<ILogic> expressions = new List<ILogic>();
+            while (reader.Read())
+            {
+                if (reader.NodeType == XmlNodeType.Element)
+                {
+                    expressions.Add(ReadLogic(reader, badTags));
+                }
+                else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "or")
+                {
+                    break;
+                }
+            }
+
+            //Now that we've got all our expressions, there are a few special cases.
+            //If we've only got a single expression, there's no point in or-ing them, so
+            //we can just return that expression.
+            //If there are no expressions, we should always be false
+            //Otherwise, we'll just return an or of the expressions we have.
+            if (expressions.Count == 1)
+                return expressions[0];
+            else if (expressions.Count == 0)
+                return Logic.FALSE;
+            else
+                return new OrLogic(expressions.ToArray());
         }
 
         private static IExecute ReadScopingLoop(XmlReader reader, Dictionary<string, int> badTags)
