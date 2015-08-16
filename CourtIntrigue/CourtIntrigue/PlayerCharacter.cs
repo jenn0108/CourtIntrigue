@@ -43,7 +43,7 @@ namespace CourtIntrigue
 
         public override int OnChooseOption(EventOption[] options, int[] willpowerCost, EventContext context, Event e)
         {
-            string[] texts = options.Select(op => op.Label).ToArray();
+            string[] texts = options.Select(op => EventHelper.ReplaceStrings(op.Label, context)).ToArray();
             bool[] enabled = willpowerCost.Select(cost => cost <= WillPower).ToArray();
             TextTopBottomButton view = new TextTopBottomButton(e.CreateActionDescription(context), texts, enabled);
             main.LaunchView(view);
