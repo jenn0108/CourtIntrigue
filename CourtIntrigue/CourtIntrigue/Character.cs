@@ -204,20 +204,22 @@ namespace CourtIntrigue
             if (++WillPower > Game.MAX_WILLPOWER)
                 WillPower = Game.MAX_WILLPOWER;
 
-            Dictionary<Character, string[]> characterActions = new Dictionary<Character, string[]>();
+            Dictionary<Character, Action[]> characterActions = new Dictionary<Character, Action[]>();
             foreach(var otherCharacter in room.GetUnoccuppiedCharacters(this))
             {
-                string[] pairActions = Game.FindAllowableActions(room, this, otherCharacter);
+                Action[] pairActions = Game.FindAllowableActions(room, this, otherCharacter);
                 if(pairActions != null && pairActions.Length > 0)
                     characterActions.Add(otherCharacter, pairActions);
             }
 
-            return OnTick(room.SoloActions, characterActions);
+            Action[] soloActions = Game.GetActionsById(room.SoloActions);
+
+            return OnTick(soloActions, characterActions);
         }
 
-        public int ChooseOption(EventOption[] options, int[] willpowerCost, EventContext action, Event e)
+        public int ChooseOption(EventOption[] options, int[] willpowerCost, EventContext context, Event e)
         {
-            return OnChooseOption(options, willpowerCost, action, e);
+            return OnChooseOption(options, willpowerCost, context, e);
         }
 
         public InformationInstance ChooseInformation()
@@ -227,7 +229,7 @@ namespace CourtIntrigue
             return information[index];
         }
 
-        public virtual EventContext OnTick(string[] soloActions, Dictionary<Character, string[]> characterActions)
+        public virtual EventContext OnTick(Action[] soloActions, Dictionary<Character, Action[]> characterActions)
         {
             throw new NotImplementedException();
         }
@@ -237,7 +239,7 @@ namespace CourtIntrigue
             throw new NotImplementedException();
         }
 
-        public virtual int OnChooseOption(EventOption[] options, int[] willpowerCost, EventContext action, Event e)
+        public virtual int OnChooseOption(EventOption[] options, int[] willpowerCost, EventContext context, Event e)
         {
             throw new NotImplementedException();
         }

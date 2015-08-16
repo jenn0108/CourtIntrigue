@@ -1,0 +1,26 @@
+<actions>
+  <action>
+    <id>PUBLIC_URINATION_ACTION</id>
+    <label>Go for a tinkle...</label>
+  </action>
+  <action>
+    <id>APPROACH_ACTION</id>
+    <label>Speak with...</label>
+  </action>
+  <action>
+    <id>COLLECT_TAXES_ACTION_ID</id>
+    <label>Collect taxes...</label>
+  </action>
+  <action>
+    <id>SPEND_TIME_WITH_WIFE_ACTION_ID</id>
+    <label>Spent time with your wife...</label>
+  </action>
+  <action>
+    <id>EAVESDROP_ACTION</id>
+    <label>See if you can hear anything interesting...</label>
+  </action>
+  <action>
+    <id>VISIT_TAILOR_ACTION</id>
+    <label>Visit the tailor...</label>
+  </action>
+</actions>

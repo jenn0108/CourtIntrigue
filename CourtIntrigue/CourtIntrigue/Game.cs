@@ -64,6 +64,12 @@ namespace CourtIntrigue
                 eventManager.LoadEventsFromFile(file, badTags);
             }
 
+            //Go load all the xml files in our actions directory.
+            foreach (var file in Directory.EnumerateFiles("Actions", "*.xml"))
+            {
+                eventManager.LoadActionsFromFile(file, badTags);
+            }
+
             //Go load all the xml files in our rooms directory.
             foreach (var file in Directory.EnumerateFiles("Rooms", "*.xml"))
             {
@@ -118,9 +124,14 @@ namespace CourtIntrigue
             OrderCharacters();
         }
 
-        public string[] FindAllowableActions(Room room, Character initiator, Character target)
+        public Action[] FindAllowableActions(Room room, Character initiator, Character target)
         {
             return eventManager.FindAllowableActions(room, initiator, target, this);
+        }
+
+        public Action[] GetActionsById(string[] ids)
+        {
+            return eventManager.GetActionsById(ids);
         }
 
         public Event GetEventById(string id)
@@ -193,25 +204,25 @@ namespace CourtIntrigue
                 }
 
                 //Give the character their turn.
-                EventContext action = character.Tick();
+                EventContext actionContext = character.Tick();
 
-                if (action.Target == null)
+                if (actionContext.Target == null)
                 {
-                    debugLogger.PrintText(character.Name + " chose " + action.Identifer);
+                    debugLogger.PrintText(character.Name + " chose " + actionContext.Identifer);
 
                     //This character has chosen a solo action.  Queue it up and move on.
-                    soloActions.Add(character, action);
+                    soloActions.Add(character, actionContext);
                     continue;
                 }
                 else
                 {
-                    debugLogger.PrintText(character.Name + " chose " + action.Identifer + " with " + action.Target.Name);
+                    debugLogger.PrintText(character.Name + " chose " + actionContext.Identifer + " with " + actionContext.Target.Name);
 
                     //This character is unavailable for interaction because he is busy.
                     character.MarkBusy();
                 }
                 
-                ExecuteAction(character, action, finishedCharacters);
+                ExecuteAction(character, actionContext, finishedCharacters);
 
             }
 

@@ -12,6 +12,7 @@ namespace CourtIntrigue
     {
         //I'm not sure if we actually want to store events by id.
         private Dictionary<string, Event> events = new Dictionary<string, Event>();
+        private Dictionary<string, Action> actions = new Dictionary<string, Action>();
 
         public Event FindEventForAction(EventContext context, Game game)
         {
@@ -33,23 +34,28 @@ namespace CourtIntrigue
             return okToRun[game.GetRandom(okToRun.Count)];
         }
 
-        public string[] FindAllowableActions(Room room, Character initiator, Character target, Game game)
+        public Action[] FindAllowableActions(Room room, Character initiator, Character target, Game game)
         {
-            List<string> actions = new List<string>();
+            List<Action> actions = new List<Action>();
             foreach(var actionId in room.PairActions)
             {
-                EventContext action = new EventContext(actionId, initiator, target);
+                EventContext context = new EventContext(actionId, initiator, target);
                 foreach (var pair in events)
                 {
-                    if (pair.Value.ActionRequirements.Evaluate(action, game))
+                    if (pair.Value.ActionRequirements.Evaluate(context, game))
                     {
-                        actions.Add(actionId);
+                        actions.Add(this.actions[actionId]);
                         break;
                     }
                 }
             }
 
             return actions.ToArray();
+        }
+
+        public Action[] GetActionsById(string[] ids)
+        {
+            return ids.Select(id => actions[id]).ToArray();
         }
 
         public Event FindEventById(string id)
@@ -61,6 +67,20 @@ namespace CourtIntrigue
             //for the time being.  In the future, we probably want to log the fact
             //and continue.
             return events[id];
+        }
+
+        public void LoadActionsFromFile(string filename, Dictionary<string, int> badTags)
+        {
+            using (XmlReader reader = XmlReader.Create(filename))
+            {
+                while (reader.Read())
+                {
+                    if (reader.NodeType == XmlNodeType.Element && reader.Name == "actions")
+                    {
+                        ReadActions(reader, badTags);
+                    }
+                }
+            }
         }
 
         public void LoadEventsFromFile(string filename, Dictionary<string, int> badTags)
@@ -87,6 +107,22 @@ namespace CourtIntrigue
                     events.Add(e.Identifier, e);
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "events")
+                {
+                    break;
+                }
+            }
+        }
+
+        private void ReadActions(XmlReader reader, Dictionary<string, int> badTags)
+        {
+            while (reader.Read())
+            {
+                if (reader.NodeType == XmlNodeType.Element && reader.Name == "action")
+                {
+                    Action a = ReadAction(reader, badTags);
+                    actions.Add(a.Identifier, a);
+                }
+                else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "actions")
                 {
                     break;
                 }
@@ -139,6 +175,28 @@ namespace CourtIntrigue
                 }
             }
             return new Event(identifier, description, actionLogic, dirExec, options.ToArray(), parameters.ToArray());
+        }
+
+        private Action ReadAction(XmlReader reader, Dictionary<string, int> badTags)
+        {
+            string identifier = null;
+            string label = null;
+            while (reader.Read())
+            {
+                if (reader.NodeType == XmlNodeType.Element && reader.Name == "id")
+                {
+                    identifier = reader.ReadElementContentAsString();
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "label")
+                {
+                    label = reader.ReadElementContentAsString();
+                }
+                else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "action")
+                {
+                    break;
+                }
+            }
+            return new Action(identifier, label);
         }
 
         private List<EventOption> ReadOptions(XmlReader reader, Dictionary<string, int> badTags)
@@ -206,5 +264,17 @@ namespace CourtIntrigue
 
 
         
+    }
+
+    class Action
+    {
+        public string Identifier { get; private set; }
+        public string Label { get; private set; }
+
+        public Action(string id, string label)
+        {
+            Identifier = id;
+            Label = label;
+        }
     }
 }

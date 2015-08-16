@@ -22,25 +22,25 @@ namespace CourtIntrigue
             return view.SelectedIndex;
         }
 
-        public override EventContext OnTick(string[] soloActions, Dictionary<Character, string[]> characterActions)
+        public override EventContext OnTick(Action[] soloActions, Dictionary<Character, Action[]> characterActions)
         {
             Character[] characters = characterActions.Keys.ToArray();
-            BothButton view = new BothButton(characters.Select(c => c.Fullname).ToArray(), soloActions);
+            BothButton view = new BothButton(characters.Select(c => c.Fullname).ToArray(), soloActions.Select(a => a.Label).ToArray());
             main.LaunchView(view);
 
             if (!view.SelectedTop)
-                return new EventContext(soloActions[view.SelectedIndex], this, null);
+                return new EventContext(soloActions[view.SelectedIndex].Identifier, this, null);
 
             //Player selected a character.
-            TextTopBottomButton secondView = new TextTopBottomButton("What would you like to do with " + characters[view.SelectedIndex].Fullname, characterActions[characters[view.SelectedIndex]]);
+            TextTopBottomButton secondView = new TextTopBottomButton("What would you like to do with " + characters[view.SelectedIndex].Fullname, characterActions[characters[view.SelectedIndex]].Select(a => a.Label).ToArray());
             main.LaunchView(secondView);
-            return new EventContext(characterActions[characters[view.SelectedIndex]][secondView.SelectedIndex], this, characters[view.SelectedIndex]);
+            return new EventContext(characterActions[characters[view.SelectedIndex]][secondView.SelectedIndex].Identifier, this, characters[view.SelectedIndex]);
         }
 
-        public override int OnChooseOption(EventOption[] options, int[] willpowerCost, EventContext action, Event e)
+        public override int OnChooseOption(EventOption[] options, int[] willpowerCost, EventContext context, Event e)
         {
             string[] texts = options.Select(op => op.Label).ToArray();
-            TextTopBottomButton view = new TextTopBottomButton(e.CreateActionDescription(action), texts);
+            TextTopBottomButton view = new TextTopBottomButton(e.CreateActionDescription(context), texts);
             main.LaunchView(view);
             return view.SelectedIndex;
         }
