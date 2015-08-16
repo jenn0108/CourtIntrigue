@@ -61,5 +61,10 @@ namespace CourtIntrigue
             return Game.GetRandom(informations.Length);
         }
 
+        public override void OnLearnInformation(InformationInstance info)
+        {
+            //Don't care
+        }
+
     }
 }

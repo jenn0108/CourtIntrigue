@@ -249,6 +249,11 @@ namespace CourtIntrigue
             throw new NotImplementedException();
         }
 
+        public virtual void OnLearnInformation(InformationInstance info)
+        {
+            throw new NotImplementedException();
+        }
+
         public void AddHistory(InformationInstance info)
         {
             history.Add(info);
@@ -267,6 +272,9 @@ namespace CourtIntrigue
                 return false;
 
             KnownInformation.Add(info);
+
+            //We've just learned an info.
+            OnLearnInformation(info);
             return true;
         }
 

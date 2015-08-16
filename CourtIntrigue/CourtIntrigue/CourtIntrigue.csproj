@@ -88,6 +88,12 @@
     </Compile>
     <Compile Include="Game.cs" />
     <Compile Include="ModifierManager.cs" />
+    <Compile Include="Notificator.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Notificator.Designer.cs">
+      <DependentUpon>Notificator.cs</DependentUpon>
+    </Compile>
     <Compile Include="OpinionModifier.cs" />
     <Compile Include="OpinionModifierInstance.cs" />
     <Compile Include="PlayerCharacter.cs" />
@@ -109,6 +115,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Notificator.resx">
+      <DependentUpon>Notificator.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

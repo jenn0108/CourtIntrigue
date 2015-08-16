@@ -8,16 +8,20 @@ namespace CourtIntrigue
 {
     class PlayerCharacter : Character
     {
+
         private MainWindow main;
+        private Notificator notificator;
 
         public PlayerCharacter(MainWindow main, string name, int birthdate, Dynasty dynasty, int money, Game game, GenderEnum gender) : base(name, birthdate, dynasty, money, game, gender)
         {
             this.main = main;
+            notificator = new Notificator();
+            notificator.Show();
         }
         
         public override int OnBeginDay(Room[] rooms)
         {
-            TextTopBottomButton view = new TextTopBottomButton("A new day greets you!", rooms.Select(r => r.Name).ToArray(), null);
+            TextTopBottomButton view = new TextTopBottomButton("A new day greets you!", rooms.Select(r => r.Name).ToArray(), null, notificator);
             main.LaunchView(view);
             return view.SelectedIndex;
         }
@@ -27,7 +31,7 @@ namespace CourtIntrigue
             Character[] allCharacters = CurrentRoom.GetCharacters(this).ToArray();
             bool[] characterEnables = allCharacters.Select(c => characterActions.ContainsKey(c)).ToArray();
             Character[] characters = characterActions.Keys.ToArray();
-            BothButton view = new BothButton(allCharacters.Select(c => c.Fullname).ToArray(), characterEnables, soloActions.Select(a => a.Label).ToArray(), null);
+            BothButton view = new BothButton(allCharacters.Select(c => c.Fullname).ToArray(), characterEnables, soloActions.Select(a => a.Label).ToArray(), null, notificator);
             main.LaunchView(view);
 
             if (!view.SelectedTop)
@@ -36,7 +40,7 @@ namespace CourtIntrigue
             Character selectedCharacter = allCharacters[view.SelectedIndex];
 
             //Player selected a character.
-            TextTopBottomButton secondView = new TextTopBottomButton("What would you like to do with " + selectedCharacter.Fullname, characterActions[selectedCharacter].Select(a => a.Label).ToArray(), null);
+            TextTopBottomButton secondView = new TextTopBottomButton("What would you like to do with " + selectedCharacter.Fullname, characterActions[selectedCharacter].Select(a => a.Label).ToArray(), null, notificator);
             main.LaunchView(secondView);
             return new EventContext(characterActions[selectedCharacter][secondView.SelectedIndex].Identifier, this, selectedCharacter);
         }
@@ -45,7 +49,7 @@ namespace CourtIntrigue
         {
             string[] texts = options.Select(op => EventHelper.ReplaceStrings(op.Label, context)).ToArray();
             bool[] enabled = willpowerCost.Select(cost => cost <= WillPower).ToArray();
-            TextTopBottomButton view = new TextTopBottomButton(e.CreateActionDescription(context), texts, enabled);
+            TextTopBottomButton view = new TextTopBottomButton(e.CreateActionDescription(context), texts, enabled, notificator);
             main.LaunchView(view);
             return view.SelectedIndex;
         }
@@ -53,9 +57,14 @@ namespace CourtIntrigue
         public override int OnChooseInformation(InformationInstance[] informations)
         {
             string[] texts = informations.Select(info => info.Description).ToArray();
-            TextTopBottomButton view = new TextTopBottomButton("Choose an information...", texts, null);
+            TextTopBottomButton view = new TextTopBottomButton("Choose an information...", texts, null, notificator);
             main.LaunchView(view);
             return view.SelectedIndex;
+        }
+
+        public override void OnLearnInformation(InformationInstance info)
+        {
+            notificator.AddNotification(info);
         }
 
     }

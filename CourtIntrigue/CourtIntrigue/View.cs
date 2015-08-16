@@ -8,6 +8,11 @@ using System.Threading;
 
 namespace CourtIntrigue
 {
+    static class View
+    {
+        public static int NOTIFICATOR_SIZE = 200;
+    }
+
     interface IView
     {
         void Display(Panel top, Panel bottom, Semaphore mutex);
@@ -21,15 +26,17 @@ namespace CourtIntrigue
         private Panel top;
         private Panel bottom;
         private Semaphore mutex;
+        private Notificator notificator;
 
         public int SelectedIndex { get; private set; }
 
-        public TextTopBottomButton(string text, string[] buttons, bool[] buttonEnable)
+        public TextTopBottomButton(string text, string[] buttons, bool[] buttonEnable, Notificator notificator)
         {
             upperText = text;
             lowerButtons = buttons;
             lowerButtonEnable = buttonEnable;
             SelectedIndex = -1;
+            this.notificator = notificator;
         }
 
         public void Display(Panel top, Panel bottom, Semaphore mutex)
@@ -39,7 +46,12 @@ namespace CourtIntrigue
             this.mutex = mutex;
             top.Controls.Clear();
             bottom.Controls.Clear();
-            top.Controls.Add(new Label() { Text = upperText, Size = top.Size });
+            top.Controls.Add(new Label() { Text = upperText, Size = new System.Drawing.Size(top.Width- View.NOTIFICATOR_SIZE, top.Height) });
+
+            notificator.Left = top.Width - View.NOTIFICATOR_SIZE;
+            notificator.Top = 0;
+            notificator.Size = new System.Drawing.Size(View.NOTIFICATOR_SIZE, top.Height);
+            top.Controls.Add(notificator);
 
             TableLayoutPanel tlp = new TableLayoutPanel()
             {
@@ -82,16 +94,18 @@ namespace CourtIntrigue
         private Panel top;
         private Panel bottom;
         private Semaphore mutex;
+        private Notificator notificator;
 
         public int SelectedIndex { get; private set; }
         public bool SelectedTop { get; private set; }
 
-        public BothButton(string[] topButtons, bool[] topButtonEnables, string[] bottomButtons, bool[] bottomButtonEnables)
+        public BothButton(string[] topButtons, bool[] topButtonEnables, string[] bottomButtons, bool[] bottomButtonEnables, Notificator notificator)
         {
             upperButtons = topButtons;
             upperButtonEnables = topButtonEnables;
             lowerButtons = bottomButtons;
             lowerButtonEnables = bottomButtonEnables;
+            this.notificator = notificator;
             SelectedIndex = -1;
         }
 
@@ -105,7 +119,9 @@ namespace CourtIntrigue
 
             TableLayoutPanel upperTlp = new TableLayoutPanel()
             {
-                Dock = DockStyle.Fill,
+                Left = 0,
+                Top = 0,
+                Size = new System.Drawing.Size(top.Width- View.NOTIFICATOR_SIZE, top.Height),
                 ColumnCount = 1,
                 RowCount = upperButtons.Length
             };
@@ -124,6 +140,10 @@ namespace CourtIntrigue
                 upperTlp.Controls.Add(button, 0, i);
             }
             top.Controls.Add(upperTlp);
+            notificator.Left = top.Width - View.NOTIFICATOR_SIZE;
+            notificator.Top = 0;
+            notificator.Size = new System.Drawing.Size(View.NOTIFICATOR_SIZE, top.Height);
+            top.Controls.Add(notificator);
 
             TableLayoutPanel lowerTlp = new TableLayoutPanel()
             {
