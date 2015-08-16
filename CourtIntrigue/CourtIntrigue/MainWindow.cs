@@ -42,6 +42,7 @@ namespace CourtIntrigue
             speedStep.Visible = true;
             restartButton.Visible = true;
             nextButton.Visible = true;
+            playerStatusStrip.Visible = false;
         }
 
         public MainWindow(string playerName, string playerDynasty, int age)
@@ -54,6 +55,7 @@ namespace CourtIntrigue
             player = new PlayerCharacter(this, playerName, -Game.GetYearInTicks(age), new Dynasty(playerDynasty), 500, game, Character.GenderEnum.Male);
             game.AddPlayer(player);
             UpdateDate();
+            UpdateStatus();
 
             if (Debugger.IsAttached)
             {
@@ -63,6 +65,7 @@ namespace CourtIntrigue
             speedStep.Visible = false;
             restartButton.Visible = false;
             nextButton.Visible = false;
+            playerStatusStrip.Visible = true;
 
             gameThread = new Thread(GameThread);
             gameThread.Start();
@@ -84,6 +87,29 @@ namespace CourtIntrigue
             string[] seasons = new string[] { "Winter", "Spring", "Summer", "Fall" };
             string[] ticks = new string[] { "Early Morning", "Morning", "Afternoon", "Late Afternoon", "Evening" };
             dateLabel.Text = string.Format("{0}, Day {1} of {2}, Year {3}\n{4}", ticks[tick], day+1, seasons[season], year+1, game.CurrentTime);
+        }
+
+        public void UpdateStatus()
+        {
+            playerNameLabel.Text = player.Fullname;
+            playerNameLabel.ToolTipText = string.Format("You are {0} of house {1}", player.Name, player.Dynasty.Name);
+
+            prestigeLabel.Text = player.Prestige.ToString();
+            StringBuilder tooltipBuilder = new StringBuilder();
+            tooltipBuilder.AppendLine("Prestige");
+            foreach (var mod in player.CurrentPrestigeModifiers)
+            {
+                tooltipBuilder.Append('(');
+                if (mod.DailyChange > 0)
+                    tooltipBuilder.Append('+');
+                tooltipBuilder.Append(mod.DailyChange);
+                tooltipBuilder.Append(") ");
+                tooltipBuilder.AppendLine(mod.Description);
+            }
+            prestigeLabel.ToolTipText = tooltipBuilder.ToString();
+
+            goldLabel.Text = player.Money.ToString();
+            goldLabel.ToolTipText = string.Format("You have {0} gold", player.Money);
         }
 
         class TextBoxLogger : Logger
@@ -210,6 +236,7 @@ namespace CourtIntrigue
         private void ShowView()
         {
             UpdateDate();
+            UpdateStatus();
             currentView.Display(splitContainer2.Panel1, splitContainer2.Panel2, playerOptionWaiter);
         }
 

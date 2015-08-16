@@ -38,12 +38,17 @@
             this.dateLabel = new System.Windows.Forms.Label();
             this.nextButton = new System.Windows.Forms.Button();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.playerStatusStrip = new System.Windows.Forms.StatusStrip();
+            this.prestigeLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.goldLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.playerNameLabel = new System.Windows.Forms.ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)(this.permanentSplit)).BeginInit();
             this.permanentSplit.Panel1.SuspendLayout();
             this.permanentSplit.Panel2.SuspendLayout();
             this.permanentSplit.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.SuspendLayout();
+            this.playerStatusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // permanentSplit
@@ -65,6 +70,7 @@
             // 
             // permanentSplit.Panel2
             // 
+            this.permanentSplit.Panel2.Controls.Add(this.playerStatusStrip);
             this.permanentSplit.Panel2.Controls.Add(this.splitContainer2);
             this.permanentSplit.Size = new System.Drawing.Size(1117, 640);
             this.permanentSplit.SplitterDistance = 203;
@@ -153,17 +159,55 @@
             // 
             // splitContainer2
             // 
-            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitContainer2.Location = new System.Drawing.Point(0, 22);
             this.splitContainer2.Name = "splitContainer2";
             this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // splitContainer2.Panel1
             // 
             this.splitContainer2.Panel1.BackColor = System.Drawing.SystemColors.Control;
-            this.splitContainer2.Size = new System.Drawing.Size(910, 640);
-            this.splitContainer2.SplitterDistance = 500;
+            this.splitContainer2.Size = new System.Drawing.Size(910, 600);
+            this.splitContainer2.SplitterDistance = 468;
             this.splitContainer2.TabIndex = 0;
+            // 
+            // playerStatusStrip
+            // 
+            this.playerStatusStrip.BackColor = System.Drawing.Color.Transparent;
+            this.playerStatusStrip.Dock = System.Windows.Forms.DockStyle.Top;
+            this.playerStatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.playerNameLabel,
+            this.prestigeLabel,
+            this.goldLabel});
+            this.playerStatusStrip.Location = new System.Drawing.Point(0, 0);
+            this.playerStatusStrip.Name = "playerStatusStrip";
+            this.playerStatusStrip.ShowItemToolTips = true;
+            this.playerStatusStrip.Size = new System.Drawing.Size(910, 22);
+            this.playerStatusStrip.SizingGrip = false;
+            this.playerStatusStrip.TabIndex = 1;
+            this.playerStatusStrip.Text = "statusStrip1";
+            // 
+            // prestigeLabel
+            // 
+            this.prestigeLabel.AutoSize = false;
+            this.prestigeLabel.Name = "prestigeLabel";
+            this.prestigeLabel.Size = new System.Drawing.Size(100, 17);
+            this.prestigeLabel.Text = "0";
+            this.prestigeLabel.ToolTipText = "Prestige";
+            // 
+            // goldLabel
+            // 
+            this.goldLabel.AutoSize = false;
+            this.goldLabel.Name = "goldLabel";
+            this.goldLabel.Size = new System.Drawing.Size(100, 17);
+            this.goldLabel.Text = "100";
+            // 
+            // playerNameLabel
+            // 
+            this.playerNameLabel.Name = "playerNameLabel";
+            this.playerNameLabel.Size = new System.Drawing.Size(74, 17);
+            this.playerNameLabel.Text = "Player Name";
             // 
             // MainWindow
             // 
@@ -176,10 +220,13 @@
             this.permanentSplit.Panel1.ResumeLayout(false);
             this.permanentSplit.Panel1.PerformLayout();
             this.permanentSplit.Panel2.ResumeLayout(false);
+            this.permanentSplit.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.permanentSplit)).EndInit();
             this.permanentSplit.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
+            this.playerStatusStrip.ResumeLayout(false);
+            this.playerStatusStrip.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -196,6 +243,10 @@
         private System.Windows.Forms.Button calendarButton;
         private System.Windows.Forms.Button journalButton;
         private System.Windows.Forms.Button logButton;
+        private System.Windows.Forms.StatusStrip playerStatusStrip;
+        private System.Windows.Forms.ToolStripStatusLabel prestigeLabel;
+        private System.Windows.Forms.ToolStripStatusLabel goldLabel;
+        private System.Windows.Forms.ToolStripStatusLabel playerNameLabel;
     }
 }
 
