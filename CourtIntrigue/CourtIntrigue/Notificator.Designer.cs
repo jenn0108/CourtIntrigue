@@ -34,11 +34,12 @@
             // 
             // table
             // 
+            this.table.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.table.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.table.BackColor = System.Drawing.Color.Transparent;
             this.table.ColumnCount = 2;
             this.table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 75.45454F));
             this.table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 24.54545F));
-            this.table.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.table.Location = new System.Drawing.Point(0, 31);
             this.table.Name = "table";
             this.table.RowCount = 1;

@@ -17,6 +17,18 @@ namespace CourtIntrigue
         public Notificator()
         {
             InitializeComponent();
+            table.CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;
+            SizeChanged += Notificator_SizeChanged;
+
+            Notificator_SizeChanged(this, EventArgs.Empty);
+            GenerateTable();
+        }
+
+        private void Notificator_SizeChanged(object sender, EventArgs e)
+        {
+            table.Left = 0;
+            table.Top = 31;
+            table.Size = new Size(ClientSize.Width, ClientSize.Height - 31);
         }
 
         public void AddNotification(InformationInstance info)
@@ -46,6 +58,7 @@ namespace CourtIntrigue
                 table.Controls.Add(closeButton, 1, i);
                 table.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             }
+            table.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
         }
     }
 }
