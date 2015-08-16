@@ -2,46 +2,260 @@
   <event>
     <id>KING_ON_HIRE_EVENT</id>
     <description>You've just been crowned as king. Long live the king!</description>
+    <options>
+      <option>
+        <label>OK</label>
+      </option>
+    </options>
   </event>
   <event>
     <id>CHANCELLOR_ON_HIRE_EVENT</id>
     <description>You've just been hired as the chancellor.</description>
+    <options>
+      <option>
+        <label>OK</label>
+      </option>
+    </options>
   </event>
   <event>
     <id>CHANCELLOR_ON_FIRE_EVENT</id>
     <description>You've just been fired as the chancellor.  Aren't you stupid!</description>
+    <options>
+      <option>
+        <label>OK</label>
+      </option>
+    </options>
   </event>
   <event>
     <id>MARSHAL_ON_HIRE_EVENT</id>
     <description>You've just been hired as the marshal.</description>
+    <options>
+      <option>
+        <label>OK</label>
+      </option>
+    </options>
   </event>
   <event>
     <id>MARSHAL_ON_FIRE_EVENT</id>
     <description>You've just been fired as the marshal.  Aren't you stupid!</description>
+    <options>
+      <option>
+        <label>OK</label>
+      </option>
+    </options>
   </event>
   <event>
     <id>SPYMASTER_ON_HIRE_EVENT</id>
     <description>You've just been hired as the spymaster.</description>
+    <options>
+      <option>
+        <label>OK</label>
+      </option>
+    </options>
   </event>
   <event>
     <id>SPYMASTER_ON_FIRE_EVENT</id>
     <description>You've just been fired as the spymaster.  Aren't you stupid!</description>
+    <options>
+      <option>
+        <label>OK</label>
+      </option>
+    </options>
   </event>
   <event>
     <id>STEWARD_ON_HIRE_EVENT</id>
     <description>You've just been hired as the steward.</description>
+    <options>
+      <option>
+        <label>OK</label>
+      </option>
+    </options>
   </event>
   <event>
     <id>STEWARD_ON_FIRE_EVENT</id>
     <description>You've just been fired as the steward.  Aren't you stupid!</description>
+    <options>
+      <option>
+        <label>OK</label>
+      </option>
+    </options>
   </event>
   <event>
     <id>BISHOP_ON_HIRE_EVENT</id>
     <description>You've just been hired as the bishop.</description>
+    <options>
+      <option>
+        <label>OK</label>
+      </option>
+    </options>
   </event>
   <event>
     <id>BISHOP_ON_FIRE_EVENT</id>
     <description>You've just been fired as the bishop.  Aren't you stupid!</description>
+    <options>
+      <option>
+        <label>OK</label>
+      </option>
+    </options>
+  </event>
+  <event>
+    <id>MASTEROFHORSE_ON_HIRE_EVENT</id>
+    <description>You've just been hired as the master of the horse.</description>
+    <options>
+      <option>
+        <label>OK</label>
+      </option>
+    </options>
+  </event>
+  <event>
+    <id>MASTEROFHORSE_ON_FIRE_EVENT</id>
+    <description>You've just been fired as the master of the horse.  Aren't you stupid!</description>
+    <options>
+      <option>
+        <label>OK</label>
+      </option>
+    </options>
+  </event>
+  <event>
+    <id>FALCONER_ON_HIRE_EVENT</id>
+    <description>You've just been hired as the falconer.</description>
+    <options>
+      <option>
+        <label>OK</label>
+      </option>
+    </options>
+  </event>
+  <event>
+    <id>FALCONER_ON_FIRE_EVENT</id>
+    <description>You've just been fired as the falconer.  Aren't you stupid!</description>
+    <options>
+      <option>
+        <label>OK</label>
+      </option>
+    </options>
+  </event>
+  <!-- King is choosing a job to give to someone
+  A = King = ROOT B = Candidate -->
+  <event>
+    <id>KING_APPROACH_GIVE_JOB_0</id>
+    <description>What job would you like to give to $Candidate.Name$?</description>
+    <parameters>
+      <parameter type="character">Candidate</parameter>
+    </parameters>
+    <options>
+      <option>
+        <label>Make them the Chancellor.</label>
+        <requirements>
+          <set_scope name="Candidate">
+            <not>
+              <has_job>CHANCELLOR_JOB</has_job>
+            </not>
+            <job_requirements>CHANCELLOR_JOB</job_requirements>
+          </set_scope>
+        </requirements>
+        <exec>
+          <set_scope name="Candidate">
+            <give_job>CHANCELLOR_JOB</give_job>
+          </set_scope>
+        </exec>
+      </option>
+      <option>
+        <label>Make them the Marshal.</label>
+        <requirements>
+          <set_scope name="Candidate">
+            <not>
+              <has_job>MARSHAL_JOB</has_job>
+            </not>
+            <job_requirements>MARSHAL_JOB</job_requirements>
+          </set_scope>
+        </requirements>
+        <exec>
+          <set_scope name="Candidate">
+            <give_job>MARSHAL_JOB</give_job>
+          </set_scope>
+        </exec>
+      </option>
+      <option>
+        <label>Make them the Spymaster.</label>
+        <requirements>
+          <set_scope name="Candidate">
+            <not>
+              <has_job>SPYMASTER_JOB</has_job>
+            </not>
+            <job_requirements>SPYMASTER_JOB</job_requirements>
+          </set_scope>
+        </requirements>
+        <exec>
+          <set_scope name="Candidate">
+            <give_job>SPYMASTER_JOB</give_job>
+          </set_scope>
+        </exec>
+      </option>
+      <option>
+        <label>Make them the Steward.</label>
+        <requirements>
+          <set_scope name="Candidate">
+            <not>
+              <has_job>STEWARD_JOB</has_job>
+            </not>
+            <job_requirements>STEWARD_JOB</job_requirements>
+          </set_scope>
+        </requirements>
+        <exec>
+          <set_scope name="Candidate">
+            <give_job>STEWARD_JOB</give_job>
+          </set_scope>
+        </exec>
+      </option>
+      <option>
+        <label>Make them the Bishop.</label>
+        <requirements>
+          <set_scope name="Candidate">
+            <not>
+              <has_job>BISHOP_JOB</has_job>
+            </not>
+            <job_requirements>BISHOP_JOB</job_requirements>
+          </set_scope>
+        </requirements>
+        <exec>
+          <set_scope name="Candidate">
+            <give_job>BISHOP_JOB</give_job>
+          </set_scope>
+        </exec>
+      </option>
+      <option>
+        <label>Make them the Falconer.</label>
+        <requirements>
+          <set_scope name="Candidate">
+            <not>
+              <has_job>FALCONER_JOB</has_job>
+            </not>
+            <job_requirements>FALCONER_JOB</job_requirements>
+          </set_scope>
+        </requirements>
+        <exec>
+          <set_scope name="Candidate">
+            <give_job>FALCONER_JOB</give_job>
+          </set_scope>
+        </exec>
+      </option>
+      <option>
+        <label>Make them the Master of the Horse.</label>
+        <requirements>
+          <set_scope name="Candidate">
+            <not>
+              <has_job>MASTEROFHORSE_JOB</has_job>
+            </not>
+            <job_requirements>MASTEROFHORSE_JOB</job_requirements>
+          </set_scope>
+        </requirements>
+        <exec>
+          <set_scope name="Candidate">
+            <give_job>MASTEROFHORSE_JOB</give_job>
+          </set_scope>
+        </exec>
+      </option>
+    </options>
   </event>
   <!-- From approach event
   ROOT = person being collected from
@@ -80,9 +294,11 @@
         <label>Refuse to pay!</label>
         <exec>
           <set_variable name="TaxDelinquent">1</set_variable>
-          <trigger_event>
-            <id>STEWARD_NOTIFY_REFUSED_TO_PAY_TAXES_EVENT</id>
-          </trigger_event>
+          <set_scope name="TARGET">
+            <trigger_event>
+              <id>STEWARD_NOTIFY_REFUSED_TO_PAY_TAXES_EVENT</id>
+            </trigger_event>
+          </set_scope>
         </exec>
       </option>
     </options>
