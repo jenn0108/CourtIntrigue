@@ -17,7 +17,6 @@ namespace CourtIntrigue
         public Notificator()
         {
             InitializeComponent();
-            table.CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;
             SizeChanged += Notificator_SizeChanged;
 
             Notificator_SizeChanged(this, EventArgs.Empty);
