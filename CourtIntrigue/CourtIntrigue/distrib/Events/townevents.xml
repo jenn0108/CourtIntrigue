@@ -15,6 +15,9 @@
           <spend_gold>5</spend_gold>
           <set_variable name="WellDressed">TIME</set_variable>
           <offset_variable name="WellDressed">50</offset_variable>
+          <trigger_event>
+            <id>VISIT_TAILOR_BOUGHT_SELF_CLOTHES_EVENT</id>
+          </trigger_event>
         </exec>
       </option>
       <option>
@@ -30,5 +33,19 @@
   <event>
     <id>VISIT_TAILOR_EVENT_1</id>
     <description>A man's outfit costs 5 gold.</description>
+    <options>
+      <option>
+        <label>OK</label>
+      </option>
+    </options>
+  </event>
+  <event>
+    <id>VISIT_TAILOR_BOUGHT_SELF_CLOTHES_EVENT</id>
+    <description>You bought yourself a swanky new outfit!</description>
+    <options>
+      <option>
+        <label>OK</label>
+      </option>
+    </options>
   </event>
 </events>

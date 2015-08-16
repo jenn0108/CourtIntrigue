@@ -18,6 +18,9 @@
               </observe_information>
             </for_character>
           </everyone_in_room>
+          <trigger_event>
+            <id>PUBLIC_URINATION_EVENT_1</id>
+          </trigger_event>
         </exec>
       </option>
       <option>
@@ -32,7 +35,19 @@
               </observe_information>
             </for_character>
           </everyone_in_room>
+          <trigger_event>
+            <id>PUBLIC_URINATION_EVENT_1</id>
+          </trigger_event>
         </exec>
+      </option>
+    </options>
+  </event>
+  <event>
+    <id>PUBLIC_URINATION_EVENT_1</id>
+    <description>That was a good tinkle...</description>
+    <options>
+      <option>
+        <label>OK</label>
       </option>
     </options>
   </event>

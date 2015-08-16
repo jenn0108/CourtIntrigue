@@ -9,7 +9,7 @@
   </event>
   <event>
     <id>CHANCELLOR_ON_FIRE_EVENT</id>
-    <description>You've just been fire as the chancellor.  Aren't you stupid!</description>
+    <description>You've just been fired as the chancellor.  Aren't you stupid!</description>
   </event>
   <event>
     <id>MARSHAL_ON_HIRE_EVENT</id>
@@ -17,7 +17,7 @@
   </event>
   <event>
     <id>MARSHAL_ON_FIRE_EVENT</id>
-    <description>You've just been fire as the marshal.  Aren't you stupid!</description>
+    <description>You've just been fired as the marshal.  Aren't you stupid!</description>
   </event>
   <event>
     <id>SPYMASTER_ON_HIRE_EVENT</id>
@@ -25,7 +25,7 @@
   </event>
   <event>
     <id>SPYMASTER_ON_FIRE_EVENT</id>
-    <description>You've just been fire as the spymaster.  Aren't you stupid!</description>
+    <description>You've just been fired as the spymaster.  Aren't you stupid!</description>
   </event>
   <event>
     <id>STEWARD_ON_HIRE_EVENT</id>
@@ -33,7 +33,7 @@
   </event>
   <event>
     <id>STEWARD_ON_FIRE_EVENT</id>
-    <description>You've just been fire as the steward.  Aren't you stupid!</description>
+    <description>You've just been fired as the steward.  Aren't you stupid!</description>
   </event>
   <event>
     <id>BISHOP_ON_HIRE_EVENT</id>
@@ -41,7 +41,7 @@
   </event>
   <event>
     <id>BISHOP_ON_FIRE_EVENT</id>
-    <description>You've just been fire as the bishop.  Aren't you stupid!</description>
+    <description>You've just been fired as the bishop.  Aren't you stupid!</description>
   </event>
   <!-- From approach event
   ROOT = person being collected from
@@ -60,6 +60,9 @@
           <set_scope name="TARGET">
             <get_gold>20</get_gold>
             <offset_variable name="TaxesCollected">1</offset_variable>
+            <trigger_event>
+              <id>STEWARD_NOTIFY_TAXES_PAID_EVENT</id>
+            </trigger_event>
           </set_scope>
           <set_variable name="TaxDelinquent">0</set_variable>
           <everyone_in_room>
@@ -77,7 +80,46 @@
         <label>Refuse to pay!</label>
         <exec>
           <set_variable name="TaxDelinquent">1</set_variable>
+          <trigger_event>
+            <id>STEWARD_NOTIFY_REFUSED_TO_PAY_TAXES_EVENT</id>
+          </trigger_event>
         </exec>
+      </option>
+    </options>
+  </event>
+  <event>
+    <id>STEWARD_GIVEN_OUTSTANDING_TAXES_EVENT</id>
+    <description>$Target.Name$ wants to pay their outstanding taxes</description>
+    <options>
+      <option>
+        <label>OK</label>
+      </option>
+    </options>
+  </event>
+  <event>
+    <id>KING_GIVEN_TAXES_FROM_STEWARD_EVENT</id>
+    <description>$Target.Name$, your steward, hands you the taxes they've collected</description>
+    <options>
+      <option>
+        <label>OK</label>
+      </option>
+    </options>
+  </event>
+  <event>
+    <id>STEWARD_NOTIFY_TAXES_PAID_EVENT</id>
+    <description>$Target.Name$ hands over the taxes</description>
+    <options>
+      <option>
+        <label>OK</label>
+      </option>
+    </options>
+  </event>
+  <event>
+    <id>STEWARD_NOTIFY_REFUSED_TO_PAY_TAXES_EVENT</id>
+    <description>$Target.Name$ refused to pay!</description>
+    <options>
+      <option>
+        <label>OK</label>
       </option>
     </options>
   </event>

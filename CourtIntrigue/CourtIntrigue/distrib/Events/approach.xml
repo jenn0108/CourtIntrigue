@@ -10,13 +10,18 @@
     <requirements>
       <action_id>APPROACH_ACTION</action_id>
     </requirements>
-    <exec>
-      <set_scope name="TARGET">
-        <trigger_event>
-          <id>APPROACH_ACTION_EVENT_1</id>
-        </trigger_event>
-      </set_scope>
-    </exec>
+    <options>
+      <option>
+        <label>OK</label>
+        <exec>
+          <set_scope name="TARGET">
+            <trigger_event>
+              <id>APPROACH_ACTION_EVENT_1</id>
+            </trigger_event>
+          </set_scope>
+        </exec>
+      </option>
+    </options>
   </event>
   <!-- Approach notification event.
   B = ROOT, A = TARGET.
@@ -62,12 +67,17 @@
   <event>
     <id>APPROACH_ACTION_EVENT_2</id>
     <description>$Target.Name$ refuses to speak with you!</description>
-    <exec>
-      <apply_opinion_mod>
-        <id>REFUSED_TO_SPEAK_TO_OPINION_MOD</id>
-        <character>TARGET</character>
-      </apply_opinion_mod>
-    </exec>
+    <options>
+      <option>
+        <label>What a jerk...</label>
+        <exec>
+          <apply_opinion_mod>
+            <id>REFUSED_TO_SPEAK_TO_OPINION_MOD</id>
+            <character>TARGET</character>
+          </apply_opinion_mod>
+        </exec>
+      </option>
+    </options>
   </event>
   <!-- Approach acceptance notification.
   A = ROOT, B = TARGET
@@ -78,6 +88,13 @@
     <options>
       <option>
         <label>Weather</label>
+        <exec>
+          <set_scope name="TARGET">
+            <trigger_event>
+              <id>APPROACH_ACTION_WEATHER</id>
+            </trigger_event>
+          </set_scope>
+        </exec>
       </option>
       <option>
         <label>Hire for a job...</label>
@@ -127,6 +144,9 @@
           <set_scope name="TARGET">
             <get_gold>20</get_gold>
             <offset_variable name="TaxesCollected">1</offset_variable>
+            <trigger_event>
+              <id>STEWARD_GIVEN_OUTSTANDING_TAXES_EVENT</id>
+            </trigger_event>
           </set_scope>
           <set_variable name="TaxDelinquent">0</set_variable>
           <everyone_in_room>
@@ -155,6 +175,9 @@
           <set_scope name="TARGET">
             <get_gold>100</get_gold>
             <offset_variable name="TaxesReceived">50</offset_variable>
+            <trigger_event>
+              <id>KING_GIVEN_TAXES_FROM_STEWARD_EVENT</id>
+            </trigger_event>
           </set_scope>
           <offset_variable name="TaxesCollected">-5</offset_variable>
         </exec>
@@ -186,6 +209,23 @@
     <parameters>
       <parameter type="information">NewInformation</parameter>
     </parameters>
+    <options>
+      <option>
+        <label>OK</label>
+      </option>
+    </options>
+  </event>
+  <!-- Talking about weather.
+  B = ROOT, A = TARGET
+  A has just decided to talk about weather.-->
+  <event>
+    <id>APPROACH_ACTION_WEATHER</id>
+    <description>You chat about the weather with $Target.Name$.</description>
+    <options>
+      <option>
+        <label>OK</label>
+      </option>
+    </options>
   </event>
   <!-- King is choosing a job to give to someone
   A = King = ROOT B = Candidate -->

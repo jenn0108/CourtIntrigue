@@ -18,6 +18,9 @@
         <exec>
           <get_gold>100</get_gold>
           <offset_variable name="Unrest">20</offset_variable>
+          <trigger_event>
+            <id>COLLECT_TAXES_SUCCESS_EVENT</id>
+          </trigger_event>
         </exec>
       </option>
       <option>
@@ -28,7 +31,28 @@
         <exec>
           <prestige_change>-10</prestige_change>
           <offset_variable name="Unrest">5</offset_variable>
+          <trigger_event>
+            <id>COLLECT_TAXES_FAILURE_EVENT</id>
+          </trigger_event>
         </exec>
+      </option>
+    </options>
+  </event>
+  <event>
+    <id>COLLECT_TAXES_SUCCESS_EVENT</id>
+    <description>You collect some taxes from your lowly peasants</description>
+    <options>
+      <option>
+        <label>OK</label>
+      </option>
+    </options>
+  </event>
+  <event>
+    <id>COLLECT_TAXES_FAILURE_EVENT</id>
+    <description>The angry peasants chase you out of town!</description>
+    <options>
+      <option>
+        <label>OK</label>
       </option>
     </options>
   </event>
@@ -39,6 +63,11 @@
       <action_id>SPEND_TIME_WITH_WIFE_ACTION_ID</action_id>
       <has_spouse/>
     </requirements>
+    <options>
+      <option>
+        <label>OK</label>
+      </option>
+    </options>
   </event>
   <event>
     <id>SPEND_TIME_WITH_WIFE_EVENT_1</id>
@@ -47,5 +76,10 @@
       <action_id>SPEND_TIME_WITH_WIFE_ACTION_ID</action_id>
       <has_spouse/>
     </requirements>
+    <options>
+      <option>
+        <label>OK</label>
+      </option>
+    </options>
   </event>
 </events>
