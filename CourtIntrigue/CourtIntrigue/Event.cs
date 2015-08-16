@@ -23,6 +23,9 @@ namespace CourtIntrigue
             DirectExecute = dirExec;
             Options = options;
             Parameters = parameters;
+
+            if (Options.Length == 0)
+                throw new EventIncorrectException("Events must have at least one option or else they look weird");
         }
 
         public void Execute(EventResults result, Game game, EventContext context)

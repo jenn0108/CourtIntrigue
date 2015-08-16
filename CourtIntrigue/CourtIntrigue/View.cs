@@ -17,16 +17,18 @@ namespace CourtIntrigue
     {
         private string upperText;
         private string[] lowerButtons;
+        private bool[] lowerButtonEnable;
         private Panel top;
         private Panel bottom;
         private Semaphore mutex;
 
         public int SelectedIndex { get; private set; }
 
-        public TextTopBottomButton(string text, string[] buttons)
+        public TextTopBottomButton(string text, string[] buttons, bool[] buttonEnable)
         {
             upperText = text;
             lowerButtons = buttons;
+            lowerButtonEnable = buttonEnable;
             SelectedIndex = -1;
         }
 
@@ -54,6 +56,7 @@ namespace CourtIntrigue
                     AutoSize = true,
                     AutoSizeMode = AutoSizeMode.GrowAndShrink,
                     AutoEllipsis = false,
+                    Enabled = lowerButtonEnable == null ? true : lowerButtonEnable[i]
                 };
                 button.Click += Button_Click;
                 tlp.Controls.Add(button, i, 0);
@@ -74,6 +77,8 @@ namespace CourtIntrigue
     {
         private string[] upperButtons;
         private string[] lowerButtons;
+        private bool[] upperButtonEnables;
+        private bool[] lowerButtonEnables;
         private Panel top;
         private Panel bottom;
         private Semaphore mutex;
@@ -81,10 +86,12 @@ namespace CourtIntrigue
         public int SelectedIndex { get; private set; }
         public bool SelectedTop { get; private set; }
 
-        public BothButton(string[] topButtons, string[] bottomButtons)
+        public BothButton(string[] topButtons, bool[] topButtonEnables, string[] bottomButtons, bool[] bottomButtonEnables)
         {
             upperButtons = topButtons;
+            upperButtonEnables = topButtonEnables;
             lowerButtons = bottomButtons;
+            lowerButtonEnables = bottomButtonEnables;
             SelectedIndex = -1;
         }
 
@@ -110,7 +117,8 @@ namespace CourtIntrigue
                     Tag = i,
                     AutoSize = true,
                     AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                    AutoEllipsis = false
+                    AutoEllipsis = false,
+                    Enabled = upperButtonEnables == null ? true : upperButtonEnables[i]
                 };
                 button.Click += TopButton_Click;
                 upperTlp.Controls.Add(button, 0, i);
@@ -131,7 +139,8 @@ namespace CourtIntrigue
                     Tag = i,
                     AutoSize = true,
                     AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                    AutoEllipsis = false
+                    AutoEllipsis = false,
+                    Enabled = lowerButtonEnables == null ? true : lowerButtonEnables[i]
                 };
                 button.Click += BottomButton_Click;
                 lowerTlp.Controls.Add(button, i, 0);

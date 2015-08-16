@@ -277,4 +277,12 @@ namespace CourtIntrigue
             Label = label;
         }
     }
+
+    class EventIncorrectException : Exception
+    {
+        public EventIncorrectException(string reason) : base(reason)
+        {
+
+        }
+    }
 }
