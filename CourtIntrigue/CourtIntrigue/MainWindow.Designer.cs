@@ -54,6 +54,7 @@
             // permanentSplit
             // 
             this.permanentSplit.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.permanentSplit.IsSplitterFixed = true;
             this.permanentSplit.Location = new System.Drawing.Point(0, 0);
             this.permanentSplit.Name = "permanentSplit";
             // 
@@ -161,6 +162,7 @@
             // 
             this.splitContainer2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitContainer2.IsSplitterFixed = true;
             this.splitContainer2.Location = new System.Drawing.Point(0, 22);
             this.splitContainer2.Name = "splitContainer2";
             this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
@@ -168,8 +170,8 @@
             // splitContainer2.Panel1
             // 
             this.splitContainer2.Panel1.BackColor = System.Drawing.SystemColors.Control;
-            this.splitContainer2.Size = new System.Drawing.Size(910, 600);
-            this.splitContainer2.SplitterDistance = 468;
+            this.splitContainer2.Size = new System.Drawing.Size(910, 615);
+            this.splitContainer2.SplitterDistance = 550;
             this.splitContainer2.TabIndex = 0;
             // 
             // playerStatusStrip
@@ -215,7 +217,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1117, 640);
             this.Controls.Add(this.permanentSplit);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "MainWindow";
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Form1";
             this.permanentSplit.Panel1.ResumeLayout(false);
             this.permanentSplit.Panel1.PerformLayout();

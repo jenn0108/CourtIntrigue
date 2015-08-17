@@ -61,6 +61,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CharacterHeadshot.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CharacterHeadshot.Designer.cs">
+      <DependentUpon>CharacterHeadshot.cs</DependentUpon>
+    </Compile>
     <Compile Include="EventContext.cs" />
     <Compile Include="AICharacter.cs" />
     <Compile Include="Character.cs" />
@@ -110,6 +116,9 @@
     <Compile Include="Trait.cs" />
     <Compile Include="View.cs" />
     <Compile Include="XmlHelper.cs" />
+    <EmbeddedResource Include="CharacterHeadshot.resx">
+      <DependentUpon>CharacterHeadshot.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="JournalForm.resx">
       <DependentUpon>JournalForm.cs</DependentUpon>
     </EmbeddedResource>
