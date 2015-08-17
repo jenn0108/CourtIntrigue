@@ -31,7 +31,7 @@ namespace CourtIntrigue
             Character[] allCharacters = CurrentRoom.GetCharacters(this).ToArray();
             bool[] characterEnables = allCharacters.Select(c => characterActions.ContainsKey(c)).ToArray();
             Character[] characters = characterActions.Keys.ToArray();
-            BothButton view = new BothButton(allCharacters.Select(c => c.Fullname).ToArray(), characterEnables, soloActions.Select(a => a.Label).ToArray(), null, notificator);
+            BothButton view = new BothButton(this, allCharacters, characterEnables, soloActions.Select(a => a.Label).ToArray(), null, notificator);
             main.LaunchView(view);
 
             if (!view.SelectedTop)

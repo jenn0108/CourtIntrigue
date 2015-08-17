@@ -87,7 +87,7 @@ namespace CourtIntrigue
 
     class BothButton : IView
     {
-        private string[] upperButtons;
+        private Character[] upperButtons;
         private string[] lowerButtons;
         private bool[] upperButtonEnables;
         private bool[] lowerButtonEnables;
@@ -95,12 +95,14 @@ namespace CourtIntrigue
         private Panel bottom;
         private Semaphore mutex;
         private Notificator notificator;
+        private Character perspectiveCharacter;
 
         public int SelectedIndex { get; private set; }
         public bool SelectedTop { get; private set; }
 
-        public BothButton(string[] topButtons, bool[] topButtonEnables, string[] bottomButtons, bool[] bottomButtonEnables, Notificator notificator)
+        public BothButton(Character perspective, Character[] topButtons, bool[] topButtonEnables, string[] bottomButtons, bool[] bottomButtonEnables, Notificator notificator)
         {
+            perspectiveCharacter = perspective;
             upperButtons = topButtons;
             upperButtonEnables = topButtonEnables;
             lowerButtons = bottomButtons;
@@ -122,22 +124,26 @@ namespace CourtIntrigue
                 Left = 0,
                 Top = 0,
                 Size = new System.Drawing.Size(top.Width- View.NOTIFICATOR_SIZE, top.Height),
-                ColumnCount = 1,
-                RowCount = upperButtons.Length
+                ColumnCount = (int)Math.Floor((top.Width - View.NOTIFICATOR_SIZE) /150.0),
+                RowCount = (int)Math.Floor(top.Height/150.0)
             };
+            int c = 0;
+            int r = 0;
             for (int i = 0; i < upperButtons.Length; ++i)
             {
-                Button button = new Button()
+                CharacterHeadshot button = new CharacterHeadshot(upperButtons[i], perspectiveCharacter)
                 {
-                    Text = upperButtons[i],
                     Tag = i,
-                    AutoSize = true,
-                    AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                    AutoEllipsis = false,
-                    Enabled = upperButtonEnables == null ? true : upperButtonEnables[i]
+                    Active = upperButtonEnables == null ? true : upperButtonEnables[i]
                 };
-                button.Click += TopButton_Click;
-                upperTlp.Controls.Add(button, 0, i);
+                button.SelectCharacter += TopButton_Click;
+                upperTlp.Controls.Add(button, c, r);
+                ++c;
+                if (c > upperTlp.ColumnCount)
+                {
+                    ++r;
+                    c = 0;
+                }
             }
             top.Controls.Add(upperTlp);
             notificator.Left = top.Width - View.NOTIFICATOR_SIZE;
@@ -171,7 +177,7 @@ namespace CourtIntrigue
         private void TopButton_Click(object sender, EventArgs e)
         {
             SelectedTop = true;
-            SelectedIndex = (int)(sender as Button).Tag;
+            SelectedIndex = (int)(sender as Control).Tag;
             top.Controls.Clear();
             bottom.Controls.Clear();
             mutex.Release();
