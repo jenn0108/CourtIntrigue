@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -24,6 +25,7 @@ namespace CourtIntrigue
         private InformationManager infoManager;
         private ModifierManager modifierManager;
         private JobManager jobManager;
+        private CharacterVisualizationManager cvManager;
         private Logger debugLogger;
         public Room[] CommonRooms { get; private set; }
         public int CurrentTime { get; private set; }
@@ -43,6 +45,7 @@ namespace CourtIntrigue
             infoManager = new InformationManager();
             modifierManager = new ModifierManager();
             jobManager = new JobManager();
+            cvManager = new CharacterVisualizationManager();
             random = new Random();
 
             CurrentTime = 0;
@@ -100,6 +103,8 @@ namespace CourtIntrigue
                 jobManager.LoadJobsFromFile(file, badTags);
             }
 
+            cvManager.LoadFromDirectory("Graphics/Portraits");
+
             foreach (var pair in badTags)
             {
                 Log(string.Format("Found unhandled xml tag <{0}> {1} times.", pair.Key, pair.Value));
@@ -114,6 +119,11 @@ namespace CourtIntrigue
             OrderCharacters();
             jobManager.InitializeJobs(characters, this);
 
+        }
+
+        public Bitmap GetPortrait(DNA dna)
+        {
+            return cvManager.ComposeFace(dna);
         }
 
         public void AddPlayer(Character player)
@@ -413,7 +423,7 @@ namespace CourtIntrigue
                 children.Add(new DependentCharacter(name, GetChildBirthdate(wifeBirthdate), character.Dynasty, this, gender));
             }
 
-            character.AssignFamily(spouse, children, home);
+            character.AssignFamily(spouse, children, home, cvManager.CreateRandomDNA(this));
         }
 
         public void Log(string txt)

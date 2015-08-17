@@ -21,7 +21,7 @@ namespace CourtIntrigue
         
         public override int OnBeginDay(Room[] rooms)
         {
-            TextTopBottomButton view = new TextTopBottomButton("A new day greets you!", rooms.Select(r => r.Name).ToArray(), null, notificator);
+            TextTopBottomButton view = new TextTopBottomButton(null, this, "A new day greets you!", rooms.Select(r => r.Name).ToArray(), null, notificator);
             main.LaunchView(view);
             return view.SelectedIndex;
         }
@@ -40,7 +40,7 @@ namespace CourtIntrigue
             Character selectedCharacter = allCharacters[view.SelectedIndex];
 
             //Player selected a character.
-            TextTopBottomButton secondView = new TextTopBottomButton("What would you like to do with " + selectedCharacter.Fullname, characterActions[selectedCharacter].Select(a => a.Label).ToArray(), null, notificator);
+            TextTopBottomButton secondView = new TextTopBottomButton(null, this, "What would you like to do with " + selectedCharacter.Fullname, characterActions[selectedCharacter].Select(a => a.Label).ToArray(), null, notificator);
             main.LaunchView(secondView);
             return new EventContext(characterActions[selectedCharacter][secondView.SelectedIndex].Identifier, this, selectedCharacter);
         }
@@ -49,7 +49,7 @@ namespace CourtIntrigue
         {
             string[] texts = options.Select(op => EventHelper.ReplaceStrings(op.Label, context)).ToArray();
             bool[] enabled = willpowerCost.Select(cost => cost <= WillPower).ToArray();
-            TextTopBottomButton view = new TextTopBottomButton(e.CreateActionDescription(context), texts, enabled, notificator);
+            TextTopBottomButton view = new TextTopBottomButton(context.Target, this, e.CreateActionDescription(context), texts, enabled, notificator);
             main.LaunchView(view);
             return view.SelectedIndex;
         }
@@ -57,7 +57,7 @@ namespace CourtIntrigue
         public override int OnChooseInformation(InformationInstance[] informations)
         {
             string[] texts = informations.Select(info => info.Description).ToArray();
-            TextTopBottomButton view = new TextTopBottomButton("Choose an information...", texts, null, notificator);
+            TextTopBottomButton view = new TextTopBottomButton(null, this, "Choose an information...", texts, null, notificator);
             main.LaunchView(view);
             return view.SelectedIndex;
         }

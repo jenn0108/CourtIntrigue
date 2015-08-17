@@ -38,6 +38,8 @@ namespace CourtIntrigue
             this.perspectiveCharacter = perspectiveCharacter;
             InitializeComponent();
 
+            portrait.Image = targetCharacter.GetPortrait();
+
             nameLabel.Text = targetCharacter.Fullname;
             prestigeBox.Text = targetCharacter.Prestige.ToString();
             SetLabelOpinion(perspectiveOfTarget, perspectiveCharacter.GetOpinionOf(targetCharacter), string.Format("{0} opinion of {1}", perspectiveCharacter.Fullname, targetCharacter.Fullname));

@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace CourtIntrigue
 {
     class Character
     {
         public enum GenderEnum { Female, Male };
-
+        public DNA DNA { get; private set; }
         public string Name { get; private set; }
         public int BirthDate { get; private set; }
         public int Money { get; private set; }
@@ -83,8 +84,9 @@ namespace CourtIntrigue
             prestigeModifiers = new HashSet<PrestigeModifier>();
         }
 
-        public void AssignFamily(DependentCharacter spouse, List<DependentCharacter> children, Room home)
+        public void AssignFamily(DependentCharacter spouse, List<DependentCharacter> children, Room home, DNA dna)
         {
+            DNA = dna;
             Home = home;
             Spouse = spouse;
             Children = children;
@@ -101,6 +103,11 @@ namespace CourtIntrigue
         public IEnumerable<string> GetVariableNames()
         {
             return variables.Keys;
+        }
+
+        public Bitmap GetPortrait()
+        {
+            return Game.GetPortrait(DNA);
         }
 
         public IEnumerable<OpinionModifierInstance> GetOpinionModifiersAbout(Character character)

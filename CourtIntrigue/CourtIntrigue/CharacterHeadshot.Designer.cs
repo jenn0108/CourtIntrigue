@@ -29,23 +29,23 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.portrait = new System.Windows.Forms.PictureBox();
             this.nameLabel = new System.Windows.Forms.Label();
             this.prestigeBox = new System.Windows.Forms.Label();
             this.perspectiveOfTarget = new System.Windows.Forms.Label();
             this.targetOfPerspective = new System.Windows.Forms.Label();
             this.actionButton = new System.Windows.Forms.Button();
             this.mainTooltip = new System.Windows.Forms.ToolTip(this.components);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.portrait)).BeginInit();
             this.SuspendLayout();
             // 
-            // pictureBox1
+            // portrait
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(0, 19);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(96, 96);
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
+            this.portrait.Location = new System.Drawing.Point(0, 19);
+            this.portrait.Name = "portrait";
+            this.portrait.Size = new System.Drawing.Size(96, 96);
+            this.portrait.TabIndex = 0;
+            this.portrait.TabStop = false;
             // 
             // nameLabel
             // 
@@ -111,16 +111,16 @@
             this.Controls.Add(this.perspectiveOfTarget);
             this.Controls.Add(this.prestigeBox);
             this.Controls.Add(this.nameLabel);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.portrait);
             this.Name = "CharacterHeadshot";
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.portrait)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox portrait;
         private System.Windows.Forms.Label nameLabel;
         private System.Windows.Forms.Label prestigeBox;
         private System.Windows.Forms.Label perspectiveOfTarget;

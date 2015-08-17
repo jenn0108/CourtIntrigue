@@ -27,11 +27,15 @@ namespace CourtIntrigue
         private Panel bottom;
         private Semaphore mutex;
         private Notificator notificator;
+        private Character target;
+        private Character perspective;
 
         public int SelectedIndex { get; private set; }
 
-        public TextTopBottomButton(string text, string[] buttons, bool[] buttonEnable, Notificator notificator)
+        public TextTopBottomButton(Character target, Character perspective, string text, string[] buttons, bool[] buttonEnable, Notificator notificator)
         {
+            this.target = target;
+            this.perspective = perspective;
             upperText = text;
             lowerButtons = buttons;
             lowerButtonEnable = buttonEnable;
@@ -46,7 +50,14 @@ namespace CourtIntrigue
             this.mutex = mutex;
             top.Controls.Clear();
             bottom.Controls.Clear();
-            top.Controls.Add(new Label() { Text = upperText, Size = new System.Drawing.Size(top.Width- View.NOTIFICATOR_SIZE, top.Height) });
+
+            Label label = new Label() { Text = upperText, Size = new System.Drawing.Size(top.Width - View.NOTIFICATOR_SIZE, top.Height) };
+            top.Controls.Add(label);
+            if (target != null)
+            {
+                top.Controls.Add(new CharacterHeadshot(target, perspective) { Active = false });
+                label.Left = 160;
+            }
 
             notificator.Left = top.Width - View.NOTIFICATOR_SIZE;
             notificator.Top = 0;
