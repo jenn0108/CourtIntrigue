@@ -9,15 +9,11 @@
       <option>
         <label>Pee in a ditch</label>
         <exec>
-          <everyone_in_room>
-            <for_character>
-              <observe_information>
-                <id>PUBLIC_URINATION_SIGHTING_INFORMATION</id>
-                <parameters PeeingParty="ROOT"/>
-                <chance>20</chance>
-              </observe_information>
-            </for_character>
-          </everyone_in_room>
+          <observe_information>
+            <id>PUBLIC_URINATION_SIGHTING_INFORMATION</id>
+            <parameters PeeingParty="ROOT"/>
+            <chance>20</chance>
+          </observe_information>
           <trigger_event>
             <id>PUBLIC_URINATION_EVENT_1</id>
           </trigger_event>
@@ -26,15 +22,11 @@
       <option>
         <label>Pee in an alley</label>
         <exec>
-          <everyone_in_room>
-            <for_character>
-              <observe_information>
-                <id>PUBLIC_URINATION_SIGHTING_INFORMATION</id>
-                <parameters PeeingParty="ROOT"/>
-                <chance>5</chance>
-              </observe_information>
-            </for_character>
-          </everyone_in_room>
+          <observe_information>
+            <id>PUBLIC_URINATION_SIGHTING_INFORMATION</id>
+            <parameters PeeingParty="ROOT"/>
+            <chance>5</chance>
+          </observe_information>
           <trigger_event>
             <id>PUBLIC_URINATION_EVENT_1</id>
           </trigger_event>

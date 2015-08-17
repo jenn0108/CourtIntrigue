@@ -95,21 +95,12 @@ namespace CourtIntrigue
 
         public void Execute(EventResults result, Game game, EventContext context)
         {
-            if (game.GetRandom(100) < chance)
+            Dictionary<string, object> computedParameters = new Dictionary<string, object>();
+            foreach (var pair in parameters)
             {
-                Information information = game.GetInformationById(informationId);
-                Dictionary<string, object> computedParameters = new Dictionary<string, object>();
-                foreach (var pair in parameters)
-                {
-                    computedParameters.Add(pair.Key, context.GetScopedObjectByName(pair.Value));
-                }
-                InformationInstance newInfo = new InformationInstance(information, computedParameters, game.CurrentDay);
-                if(context.CurrentCharacter.AddInformation(newInfo))
-                {
-                    game.Log(context.CurrentCharacter.Name + " learned an information.");
-                    newInfo.ExecuteOnObserve(context.CurrentCharacter, game, context.Room);
-                }
+                computedParameters.Add(pair.Key, context.GetScopedObjectByName(pair.Value));
             }
+            result.AddObservableInfo(informationId, computedParameters, chance);
         }
     }
 

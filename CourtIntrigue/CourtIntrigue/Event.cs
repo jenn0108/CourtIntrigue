@@ -152,9 +152,27 @@ namespace CourtIntrigue
         }
     }
 
+    struct ObservableInformation
+    {
+        public string Identifier;
+        public Dictionary<string, object> Parameters;
+        public int Chance;
+    }
+
     class EventResults
     {
         public bool TargetGetsTurn { get; private set; }
+
+        private List<ObservableInformation> information = new List<ObservableInformation>();
+        public IEnumerable<ObservableInformation> ObservableInformation
+        {
+            get { return information; }
+        }
+        public bool HasInformation
+        {
+            get { return information.Count > 0; }
+        }
+
         public EventResults()
         {
             TargetGetsTurn = false;
@@ -163,6 +181,17 @@ namespace CourtIntrigue
         public void GiveTargetTurn()
         {
             TargetGetsTurn = true;
+        }
+
+        public void AddObservableInfo(string infoId, Dictionary<string, object> parameters, int chance)
+        {
+            ObservableInformation info = new CourtIntrigue.ObservableInformation()
+            {
+                Identifier = infoId,
+                Parameters = parameters,
+                Chance = chance
+            };
+            information.Add(info);
         }
     }
 }

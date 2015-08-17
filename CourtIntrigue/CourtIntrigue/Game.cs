@@ -182,6 +182,9 @@ namespace CourtIntrigue
                 room.ResetUnoccupied();
             }
 
+            //Keep track of the information that is observable in each room.  We'll give each character a go at it later.
+            Dictionary<Room, List<ObservableInformation>> observableInformationByRoom = new Dictionary<Room, List<ObservableInformation>>();
+
             //If a character accepts a conversion (or other pair action), he may have his turn
             //consumed.  We need to keep track of which characters should have their turns
             //skipped because of this.
@@ -222,7 +225,7 @@ namespace CourtIntrigue
                     character.MarkBusy();
                 }
                 
-                ExecuteAction(character, actionContext, finishedCharacters);
+                ExecuteAction(character, actionContext, finishedCharacters, observableInformationByRoom);
 
             }
 
@@ -235,7 +238,30 @@ namespace CourtIntrigue
                 if (finishedCharacters.Contains(pair.Key))
                     continue;
 
-                ExecuteAction(pair.Key, pair.Value, finishedCharacters);
+                ExecuteAction(pair.Key, pair.Value, finishedCharacters, observableInformationByRoom);
+            }
+
+            //Now that all the action has happened, we can give each character a chance to observe the information.
+            foreach(var character in characters)
+            {
+                //First off, is there any information to observe in this character's room?
+                List<ObservableInformation> infos = null;
+                if (!observableInformationByRoom.TryGetValue(character.CurrentRoom, out infos))
+                    continue;
+
+                foreach(var info in infos)
+                {
+                    if(random.Next(100) < info.Chance)
+                    {
+                        Information information = GetInformationById(info.Identifier);
+                        InformationInstance newInfo = new InformationInstance(information, info.Parameters, CurrentDay);
+                        if (character.AddInformation(newInfo))
+                        {
+                            Log(character.Name + " learned an information.");
+                            newInfo.ExecuteOnObserve(character, this, character.CurrentRoom);
+                        }
+                    }
+                }
             }
 
             debugLogger.PrintText("End tick");
@@ -261,7 +287,7 @@ namespace CourtIntrigue
             }
         }
 
-        private void ExecuteAction(Character character, EventContext context, ISet<Character> finishedCharacters)
+        private void ExecuteAction(Character character, EventContext context, ISet<Character> finishedCharacters, Dictionary<Room, List<ObservableInformation>> informations)
         {
             //Find a matching event to execute.
             Event eventToPlay = eventManager.FindEventForAction(context, this);
@@ -280,6 +306,18 @@ namespace CourtIntrigue
                     //get their normal action.
                     finishedCharacters.Add(context.Target);
                     context.Target.MarkBusy();
+                }
+
+                if(results.HasInformation)
+                {
+                    //Add any information to the list of things that characters in the room might observe.
+                    List<ObservableInformation> infos = null;
+                    if (!informations.TryGetValue(character.CurrentRoom, out infos))
+                    {
+                        infos = new List<ObservableInformation>();
+                        informations.Add(character.CurrentRoom, infos);
+                    }
+                    infos.AddRange(results.ObservableInformation);
                 }
             }
 
