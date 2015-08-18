@@ -37,7 +37,11 @@
           <trait_adversion type="SHY_TRAIT" cost="5"/>
         </willpower>
         <exec>
+          <!-- Event refusing costs some observation ability -->
+          <multiply_observe_chance>0.8</multiply_observe_chance>
           <set_scope name="TARGET">
+            <!-- The initiator suffers from the same decrease -->
+            <multiply_observe_chance>0.8</multiply_observe_chance>
             <trigger_event>
               <id>APPROACH_ACTION_EVENT_2</id>
             </trigger_event>
@@ -52,7 +56,11 @@
           <trait_desire type="GREGARIOUS_TRAIT" cost="5"/>
         </willpower>
         <exec>
+          <!-- An actual conversation drastically decreases your ability to overhear things -->
+          <multiply_observe_chance>0.1</multiply_observe_chance>
           <set_scope name="TARGET">
+            <!-- An actual conversation drastically decreases your ability to overhear things -->
+            <multiply_observe_chance>0.1</multiply_observe_chance>
             <trigger_event>
               <id>APPROACH_ACTION_EVENT_3</id>
             </trigger_event>
@@ -185,7 +193,7 @@
         </requirements>
         <exec>
           <set_scope name="TARGET">
-            <tell_information>
+            <tell_information overhear="5">
               <trigger_event>
                 <id>APPROACH_ACTION_EVENT_4</id>
                 <parameters NewInformation="TOP"/>

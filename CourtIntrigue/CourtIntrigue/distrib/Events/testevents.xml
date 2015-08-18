@@ -9,6 +9,7 @@
       <option>
         <label>Pee in a ditch</label>
         <exec>
+          <multiply_observe_chance>0.75</multiply_observe_chance>
           <observe_information>
             <id>PUBLIC_URINATION_SIGHTING_INFORMATION</id>
             <parameters PeeingParty="ROOT"/>
@@ -22,6 +23,8 @@
       <option>
         <label>Pee in an alley</label>
         <exec>
+          <!-- It's hard to see things from an alley -->
+          <multiply_observe_chance>0.2</multiply_observe_chance>
           <observe_information>
             <id>PUBLIC_URINATION_SIGHTING_INFORMATION</id>
             <parameters PeeingParty="ROOT"/>
@@ -45,13 +48,16 @@
   </event>
   <event>
     <id>EAVESDROP_ACTION_0</id>
-    <description>You need to drop some eaves!</description>
+    <description>You wander around trying to pick up useful tidbits of information.</description>
     <requirements>
       <action_id>EAVESDROP_ACTION</action_id>
     </requirements>
     <options>
       <option>
-        <label>Go look for some eaves!</label>
+        <label>Listen carefully...</label>
+        <exec>
+          <multiply_observe_chance>5.0</multiply_observe_chance>
+        </exec>
       </option>
     </options>
   </event>

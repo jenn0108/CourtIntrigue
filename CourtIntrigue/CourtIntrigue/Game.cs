@@ -261,14 +261,16 @@ namespace CourtIntrigue
 
                 foreach(var info in infos)
                 {
-                    if(random.Next(100) < info.Chance)
+                    if(random.Next(100) < info.Chance * character.ObserveModifier)
                     {
-                        Information information = GetInformationById(info.Identifier);
-                        InformationInstance newInfo = new InformationInstance(information, info.Parameters, CurrentDay);
-                        if (character.AddInformation(newInfo))
+                        if (character.AddInformation(info.Info))
                         {
                             Log(character.Name + " learned an information.");
-                            newInfo.ExecuteOnObserve(character, this, character.CurrentRoom);
+
+                            if (info.Teller == null)
+                                info.Info.ExecuteOnObserve(character, this, character.CurrentRoom);
+                            else
+                                info.Info.ExecuteOnTold(character, info.Teller, this, character.CurrentRoom);
                         }
                     }
                 }

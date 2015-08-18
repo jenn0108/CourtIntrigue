@@ -154,14 +154,15 @@ namespace CourtIntrigue
 
     struct ObservableInformation
     {
-        public string Identifier;
-        public Dictionary<string, object> Parameters;
+        public InformationInstance Info;
         public int Chance;
+        public Character Teller;
     }
 
     class EventResults
     {
         public bool TargetGetsTurn { get; private set; }
+        public double ObserveModifier { get; set; }
 
         private List<ObservableInformation> information = new List<ObservableInformation>();
         public IEnumerable<ObservableInformation> ObservableInformation
@@ -176,6 +177,7 @@ namespace CourtIntrigue
         public EventResults()
         {
             TargetGetsTurn = false;
+            ObserveModifier = 1.0;
         }
 
         public void GiveTargetTurn()
@@ -183,13 +185,13 @@ namespace CourtIntrigue
             TargetGetsTurn = true;
         }
 
-        public void AddObservableInfo(string infoId, Dictionary<string, object> parameters, int chance)
+        public void AddObservableInfo(InformationInstance ii, int chance, Character teller)
         {
-            ObservableInformation info = new CourtIntrigue.ObservableInformation()
+            ObservableInformation info = new ObservableInformation()
             {
-                Identifier = infoId,
-                Parameters = parameters,
-                Chance = chance
+                Info = ii,
+                Chance = chance,
+                Teller = teller
             };
             information.Add(info);
         }

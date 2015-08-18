@@ -100,16 +100,18 @@ namespace CourtIntrigue
             {
                 computedParameters.Add(pair.Key, context.GetScopedObjectByName(pair.Value));
             }
-            result.AddObservableInfo(informationId, computedParameters, chance);
+            result.AddObservableInfo(new InformationInstance(game.GetInformationById(informationId), computedParameters, game.CurrentTime), chance, null);
         }
     }
 
     class TellInformationExecute : IExecute
     {
-        public IExecute operation;
-        public TellInformationExecute(IExecute operation)
+        private IExecute operation;
+        private int overhearChance;
+        public TellInformationExecute(IExecute operation, int overhearChance)
         {
             this.operation = operation;
+            this.overhearChance = overhearChance;
         }
         public void Execute(EventResults result, Game game, EventContext context)
         {
@@ -120,7 +122,9 @@ namespace CourtIntrigue
             operation.Execute(result, game, context);
             context.PopScope();
 
-            if(isNewInformation)
+            result.AddObservableInfo(informationInstance, overhearChance, tellingCharacter);
+
+            if (isNewInformation)
             {
                 game.Log(context.CurrentCharacter.Name + " learned an information.");
                 informationInstance.ExecuteOnTold(context.CurrentCharacter, tellingCharacter, game, context.Room);
@@ -328,6 +332,20 @@ namespace CourtIntrigue
         public void Execute(EventResults result, Game game, EventContext context)
         {
             context.CurrentCharacter.SetVariable(varName, context.CurrentCharacter.GetVariable(varName) + XmlHelper.GetTestValue(context, game, offset));
+        }
+    }
+
+    class MultiplyOvserveChanceExecute : IExecute
+    {
+        private double multiplier;
+        public MultiplyOvserveChanceExecute(double multiplier)
+        {
+            this.multiplier = multiplier;
+        }
+
+        public void Execute(EventResults result, Game game, EventContext context)
+        {
+            context.CurrentCharacter.MultiplyObserveModifier(multiplier);
         }
     }
 }

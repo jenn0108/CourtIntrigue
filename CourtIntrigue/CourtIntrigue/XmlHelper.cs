@@ -53,7 +53,8 @@ namespace CourtIntrigue
                 }
                 else if (reader.NodeType == XmlNodeType.Element && (reader.Name == "tell_information"))
                 {
-                    expressions.Add(new TellInformationExecute(ReadExecute(reader, badTags)));
+                    int overhearChance = int.Parse(reader.GetAttribute("overhear"));
+                    expressions.Add(new TellInformationExecute(ReadExecute(reader, badTags), overhearChance));
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "prestige_change")
                 {
@@ -74,6 +75,10 @@ namespace CourtIntrigue
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "get_gold")
                 {
                     expressions.Add(new GetGoldExecute(reader.ReadElementContentAsInt()));
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "multiply_observe_chance")
+                {
+                    expressions.Add(new MultiplyOvserveChanceExecute(reader.ReadElementContentAsDouble()));
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "debug")
                 {

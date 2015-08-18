@@ -16,6 +16,7 @@ namespace CourtIntrigue
         public int Money { get; private set; }
         public int Prestige { get; private set; }
         public int PrestigeRank { get; set; }
+        public double ObserveModifier { get; private set; }
         public int WillPower { get; private set; }
         public Dynasty Dynasty { get; private set; }
         public GenderEnum Gender { get; private set; }
@@ -208,6 +209,11 @@ namespace CourtIntrigue
 
         public EventContext Tick()
         {
+            //A Character's observe modifier is always reset to 1 at the start of a tick.
+            //Many events will change this.  Remember that information is doled out at the
+            //end of the tick
+            ObserveModifier = 1.0;
+
             if (++WillPower > Game.MAX_WILLPOWER)
                 WillPower = Game.MAX_WILLPOWER;
 
@@ -386,6 +392,11 @@ namespace CourtIntrigue
 
                 WillPower -= cost;
             }
+        }
+
+        public void MultiplyObserveModifier(double multiplier)
+        {
+            ObserveModifier *= multiplier;
         }
 
         public override string ToString()
