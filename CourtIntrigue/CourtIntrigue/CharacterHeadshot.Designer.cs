@@ -113,6 +113,7 @@
             this.Controls.Add(this.nameLabel);
             this.Controls.Add(this.portrait);
             this.Name = "CharacterHeadshot";
+            this.Size = new System.Drawing.Size(148, 148);
             ((System.ComponentModel.ISupportInitialize)(this.portrait)).EndInit();
             this.ResumeLayout(false);
 

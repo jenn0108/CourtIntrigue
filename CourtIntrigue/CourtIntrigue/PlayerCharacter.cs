@@ -40,7 +40,7 @@ namespace CourtIntrigue
             Character selectedCharacter = allCharacters[view.SelectedIndex];
 
             //Player selected a character.
-            TextTopBottomButton secondView = new TextTopBottomButton(null, this, "What would you like to do with " + selectedCharacter.Fullname, characterActions[selectedCharacter].Select(a => a.Label).ToArray(), null, notificator);
+            TextTopBottomButton secondView = new TextTopBottomButton(selectedCharacter, this, "What would you like to do with " + selectedCharacter.Fullname, characterActions[selectedCharacter].Select(a => a.Label).ToArray(), null, notificator);
             main.LaunchView(secondView);
             return new EventContext(characterActions[selectedCharacter][secondView.SelectedIndex].Identifier, this, selectedCharacter);
         }

@@ -42,17 +42,12 @@ namespace CourtIntrigue
             if (perspectiveChar == null || character == null)
                 return;
 
-            nameLabel.Text = character.Fullname;
+            headshot.TargetCharacter = character;
+            headshot.PerspectiveCharacter = perspectiveChar;
+            
             goldLabel.Text = character.Money.ToString();
             ageLabel.Text = character.Age.ToString();
             willpowerLabel.Text = character.WillPower.ToString();
-            int opinion = character.GetOpinionOf(perspectiveChar);
-            if (opinion > 0)
-                opinionLabel.Text = "+" + opinion;
-            else
-                opinionLabel.Text = opinion.ToString();
-
-            prestigeLabel.Text = character.Prestige.ToString();
 
             StringBuilder infoBuilder = new StringBuilder();
             foreach (InformationInstance info in perspectiveChar.GetInformationAbout(character))

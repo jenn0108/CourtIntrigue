@@ -55,7 +55,7 @@ namespace CourtIntrigue
             top.Controls.Add(label);
             if (target != null)
             {
-                top.Controls.Add(new CharacterHeadshot(target, perspective) { Active = false });
+                top.Controls.Add(new CharacterHeadshot() { TargetCharacter = target, PerspectiveCharacter = perspective, Active = false, Interaction = false });
                 label.Left = 160;
             }
 
@@ -142,10 +142,12 @@ namespace CourtIntrigue
             int r = 0;
             for (int i = 0; i < upperButtons.Length; ++i)
             {
-                CharacterHeadshot button = new CharacterHeadshot(upperButtons[i], perspectiveCharacter)
+                CharacterHeadshot button = new CharacterHeadshot()
                 {
                     Tag = i,
-                    Active = upperButtonEnables == null ? true : upperButtonEnables[i]
+                    Active = upperButtonEnables == null ? true : upperButtonEnables[i],
+                    TargetCharacter = upperButtons[i],
+                    PerspectiveCharacter = perspectiveCharacter
                 };
                 button.SelectCharacter += TopButton_Click;
                 upperTlp.Controls.Add(button, c, r);
