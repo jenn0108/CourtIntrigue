@@ -14,7 +14,7 @@ namespace CourtIntrigue
 {
     public partial class MainWindow : Form
     {
-        private static int NUM_PLAYERS = 10; // Now that we have jobs we need > 6 people.
+        private static int NUM_PLAYERS = 30; // Now that we have jobs we need > 6 people.
 
         PlayerCharacter player;
         Game game;
