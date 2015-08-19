@@ -51,7 +51,7 @@ namespace CourtIntrigue
             top.Controls.Clear();
             bottom.Controls.Clear();
 
-            Label label = new Label() { Text = upperText, Size = new System.Drawing.Size(top.Width - View.NOTIFICATOR_SIZE, top.Height) };
+            Label label = new Label() { Text = upperText, Size = new System.Drawing.Size(top.Width - View.NOTIFICATOR_SIZE - 160, top.Height) };
             top.Controls.Add(label);
             if (target != null)
             {
