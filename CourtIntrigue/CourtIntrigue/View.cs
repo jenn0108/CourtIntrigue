@@ -64,11 +64,9 @@ namespace CourtIntrigue
             notificator.Size = new System.Drawing.Size(View.NOTIFICATOR_SIZE, top.Height);
             top.Controls.Add(notificator);
 
-            TableLayoutPanel tlp = new TableLayoutPanel()
+            FlowLayoutPanel flp = new FlowLayoutPanel()
             {
-                Dock = DockStyle.Fill,
-                ColumnCount = lowerButtons.Length,
-                RowCount = 1
+                Dock = DockStyle.Fill
             };
             for (int i = 0; i < lowerButtons.Length; ++i)
             {
@@ -82,9 +80,9 @@ namespace CourtIntrigue
                     Enabled = lowerButtonEnable == null ? true : lowerButtonEnable[i]
                 };
                 button.Click += Button_Click;
-                tlp.Controls.Add(button, i, 0);
+                flp.Controls.Add(button);
             }
-            bottom.Controls.Add(tlp);
+            bottom.Controls.Add(flp);
         }
 
         private void Button_Click(object sender, EventArgs e)
