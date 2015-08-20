@@ -103,7 +103,7 @@ namespace CourtIntrigue
                 jobManager.LoadJobsFromFile(file, badTags);
             }
 
-            cvManager.LoadFromDirectory("Graphics/Portraits");
+            cvManager.LoadFromDirectory("Graphics/Portraits_2");
 
             foreach (var pair in badTags)
             {
