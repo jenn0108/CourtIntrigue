@@ -15,15 +15,17 @@ namespace CourtIntrigue
         public int Nose { get; private set; }
         public int Eyes { get; private set; }
         public int Eyebrows { get; private set; }
+        public int Ears { get; private set; }
         public int Hair { get; private set; }
 
-        public DNA(int face, int mouth, int nose, int eyes, int eyebrows, int hair)
+        public DNA(int face, int mouth, int nose, int eyes, int eyebrows, int ears, int hair)
         {
             Face = face;
             Mouth = mouth;
             Nose = nose;
             Eyes = eyes;
             Eyebrows = eyebrows;
+            Ears = ears;
             Hair = hair;
         }
     }
@@ -35,6 +37,7 @@ namespace CourtIntrigue
         private Bitmap[] noseImages;
         private Bitmap[] eyeImages;
         private Bitmap[] eyebrowImages;
+        private Bitmap[] earImages;
         private Bitmap[] hairImages;
 
         public void LoadFromDirectory(string path)
@@ -44,13 +47,14 @@ namespace CourtIntrigue
             noseImages = LoadParts(path, "nose_*.png");
             eyeImages = LoadParts(path, "eyes_*.png");
             eyebrowImages = LoadParts(path, "eyebrows_*.png");
+            earImages = LoadParts(path, "ears_*.png");
             hairImages = LoadParts(path, "hair_*.png");
         }
 
         public DNA CreateRandomDNA(Game game)
         {
             return new DNA(game.GetRandom(faceImages.Length), game.GetRandom(mouthImages.Length), game.GetRandom(noseImages.Length),
-                game.GetRandom(eyeImages.Length), game.GetRandom(eyebrowImages.Length), game.GetRandom(hairImages.Length));
+                game.GetRandom(eyeImages.Length), game.GetRandom(eyebrowImages.Length), game.GetRandom(earImages.Length), game.GetRandom(hairImages.Length));
         }
 
         public Bitmap ComposeFace(DNA dna)
@@ -63,6 +67,7 @@ namespace CourtIntrigue
                 G.DrawImage(noseImages[dna.Nose], 0, 0);
                 G.DrawImage(eyeImages[dna.Eyes], 0, 0);
                 G.DrawImage(eyebrowImages[dna.Eyebrows], 0, 0);
+                G.DrawImage(earImages[dna.Ears], 0, 0);
                 G.DrawImage(hairImages[dna.Hair], 0, 0);
             }
             return output;
