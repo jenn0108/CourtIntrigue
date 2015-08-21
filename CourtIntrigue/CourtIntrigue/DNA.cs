@@ -57,6 +57,8 @@ namespace CourtIntrigue
         private Color[] eyeColors = { Color.FromArgb(0, 165, 255), Color.FromArgb(122, 205, 255), Color.FromArgb(0, 20, 213), Color.FromArgb(39, 153, 92), Color.FromArgb(0, 109, 46), Color.FromArgb(159, 183, 166), Color.FromArgb(153, 92, 39), Color.FromArgb(51, 31, 13), Color.Black };
         private Color[] hairColors = { Color.FromArgb(229, 195, 94), Color.FromArgb(217, 97, 45), Color.FromArgb(84, 53, 37), Color.Black };
 
+        private Dictionary<DNA, Bitmap> cache = new Dictionary<DNA, Bitmap>();
+
         public void LoadFromDirectory(string path)
         {
             faceImages = LoadParts(path, "base_*.png");
@@ -70,24 +72,32 @@ namespace CourtIntrigue
 
         public DNA CreateRandomDNA(Game game)
         {
-            return new DNA(game.GetRandom(faceImages.Length), game.GetRandom(mouthImages.Length), game.GetRandom(noseImages.Length),
+            DNA dna = new DNA(game.GetRandom(faceImages.Length), game.GetRandom(mouthImages.Length), game.GetRandom(noseImages.Length),
                 game.GetRandom(eyeImages.Length), game.GetRandom(eyebrowImages.Length), game.GetRandom(earImages.Length), game.GetRandom(hairImages.Length),
                 game.GetRandom(skinColors.Length), game.GetRandom(eyeColors.Length), game.GetRandom(hairColors.Length));
+            ComposeFace(dna);
+            return dna;
         }
 
         public Bitmap ComposeFace(DNA dna)
         {
-            Bitmap output = new Bitmap(96, 96);
-            using (Graphics G = Graphics.FromImage(output))
+            Bitmap output;
+            if(!cache.TryGetValue(dna, out output))
             {
-                G.DrawImage(replaceColors(faceImages[dna.Face], dna), 0, 0);
-                G.DrawImage(replaceColors(mouthImages[dna.Mouth], dna), 0, 0);
-                G.DrawImage(replaceColors(noseImages[dna.Nose], dna), 0, 0);
-                G.DrawImage(replaceColors(eyeImages[dna.Eyes], dna), 0, 0);
-                G.DrawImage(replaceColors(eyebrowImages[dna.Eyebrows], dna), 0, 0);
-                G.DrawImage(replaceColors(earImages[dna.Ears], dna), 0, 0);
-                G.DrawImage(replaceColors(hairImages[dna.Hair], dna), 0, 0);
+                output = new Bitmap(96, 96);
+                using (Graphics G = Graphics.FromImage(output))
+                {
+                    G.DrawImage(replaceColors(faceImages[dna.Face], dna), 0, 0);
+                    G.DrawImage(replaceColors(mouthImages[dna.Mouth], dna), 0, 0);
+                    G.DrawImage(replaceColors(noseImages[dna.Nose], dna), 0, 0);
+                    G.DrawImage(replaceColors(eyeImages[dna.Eyes], dna), 0, 0);
+                    G.DrawImage(replaceColors(eyebrowImages[dna.Eyebrows], dna), 0, 0);
+                    G.DrawImage(replaceColors(earImages[dna.Ears], dna), 0, 0);
+                    G.DrawImage(replaceColors(hairImages[dna.Hair], dna), 0, 0);
+                }
+                cache.Add(dna, output);
             }
+            
             return output;
         }
 
