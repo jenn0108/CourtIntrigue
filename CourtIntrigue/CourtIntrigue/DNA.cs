@@ -92,13 +92,13 @@ namespace CourtIntrigue
                 output = new Bitmap(96, 96);
                 using (Graphics G = Graphics.FromImage(output))
                 {
-                    G.DrawImage(replaceColors(faceImages[dna.Face], dna), 0, 0);
-                    G.DrawImage(replaceColors(mouthImages[dna.Mouth], dna), 0, 0);
-                    G.DrawImage(replaceColors(noseImages[dna.Nose], dna), 0, 0);
-                    G.DrawImage(replaceColors(eyeImages[dna.Eyes], dna), 0, 0);
-                    G.DrawImage(replaceColors(eyebrowImages[dna.Eyebrows], dna), 0, 0);
-                    G.DrawImage(replaceColors(earImages[dna.Ears], dna), 0, 0);
-                    G.DrawImage(replaceColors(hairImages[dna.Hair], dna), 0, 0);
+                    G.DrawImage(ReplaceColors(faceImages[dna.Face], dna), 0, 0);
+                    G.DrawImage(ReplaceColors(mouthImages[dna.Mouth], dna), 0, 0);
+                    G.DrawImage(ReplaceColors(noseImages[dna.Nose], dna), 0, 0);
+                    G.DrawImage(ReplaceColors(eyeImages[dna.Eyes], dna), 0, 0);
+                    G.DrawImage(ReplaceColors(eyebrowImages[dna.Eyebrows], dna), 0, 0);
+                    G.DrawImage(ReplaceColors(earImages[dna.Ears], dna), 0, 0);
+                    G.DrawImage(ReplaceColors(hairImages[dna.Hair], dna), 0, 0);
                 }
                 cache.Add(dna, output);
             }
@@ -111,8 +111,7 @@ namespace CourtIntrigue
             return Directory.EnumerateFiles(path, pattern).OrderBy(file => file).Select(file => (Bitmap)Bitmap.FromFile(file)).ToArray();
         }
 
-        // Good enough for nowm, but we should probably take out
-        // and all of the boring border colors (grey, white, etc.).
+        // Good enough for now.
         private static Color[]  GetShirtColors()
         {
             List<Color> colors = new List<Color>();
@@ -120,8 +119,6 @@ namespace CourtIntrigue
             // that gets only the Color properties.
             foreach (PropertyInfo property in typeof(Color).GetProperties(BindingFlags.Static | BindingFlags.DeclaredOnly | BindingFlags.Public)) {
                 Color color = (Color)property.GetValue(null);
-                if (color == SKIN_PIXEL || color == HAIR_PIXEL || color == EYE_PIXEL || color == SHIRT_PIXEL || color.A < 255)
-                    continue;
                 colors.Add(color);
             }
             return colors.ToArray();
@@ -130,7 +127,7 @@ namespace CourtIntrigue
         // Returns a new bitmap created by copying originalImage and replacing all
         // HAIR_PIXEL, SKIN_PIXEL and EYE_PIXEL colors found with the appropriate
         // color from the DNA.
-        private Bitmap replaceColors(Bitmap originalImage, DNA dna)
+        private Bitmap ReplaceColors(Bitmap originalImage, DNA dna)
         {
             Bitmap result = new Bitmap(originalImage);
             for (int x = 0; x < result.Width; x++)
