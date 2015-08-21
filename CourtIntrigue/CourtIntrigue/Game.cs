@@ -281,6 +281,11 @@ namespace CourtIntrigue
             ++CurrentTime;
         }
 
+        public OpinionModifier GetOpinionModifier(string identifier)
+        {
+            return modifierManager.GetOpinionModifierById(identifier);
+        }
+
         public OpinionModifierInstance CreateOpinionModifier(string identifier, Character character)
         {
             OpinionModifier mod = modifierManager.GetOpinionModifierById(identifier);

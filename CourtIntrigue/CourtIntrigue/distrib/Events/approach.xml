@@ -187,15 +187,62 @@
         </exec>
       </option>
       <option>
-        <label>Tell $Target.Name$ about...</label>
+        <label>Speak about someone positively</label>
+        <exec>
+          <choose_character name="ABOUT">
+            <set_scope name="ROOT">
+              <trigger_event>
+                <id>POSITIVE_TALK_EVENT</id>
+                <parameters To="TARGET" About="ABOUT"/>
+              </trigger_event>
+            </set_scope>
+          </choose_character>
+        </exec>
+      </option>
+      <option>
+        <label>Speak about someone negatively</label>
+        <exec>
+          <choose_character name="ABOUT">
+            <set_scope name="ROOT">
+              <trigger_event>
+                <id>NEGATIVE_TALK_EVENT</id>
+                <parameters To="TARGET" About="ABOUT"/>
+              </trigger_event>
+            </set_scope>
+          </choose_character>
+        </exec>
+      </option>
+    </options>
+  </event>
+  <event>
+    <id>POSITIVE_TALK_EVENT</id>
+    <description>What would you like to say about $About.Name$</description>
+    <parameters>
+      <parameter type="character">To</parameter>
+      <parameter type="character">About</parameter>
+    </parameters>
+    <options>
+      <option>
+        <label>Say nice things about $About.Name$</label>
+        <exec>
+          <set_scope name="To">
+            <trigger_event>
+              <id>SAY_NICE_THINGS</id>
+              <parameters About="About"/>
+            </trigger_event>
+          </set_scope>
+        </exec>
+      </option>
+      <option>
+        <label>Tell information about $About.Name$</label>
         <requirements>
-          <has_information/>
+          <has_information about="About" type="POSITIVE"/>
         </requirements>
         <exec>
-          <set_scope name="TARGET">
-            <tell_information overhear="5">
+          <set_scope name="To">
+            <tell_information overhear="5" type="POSITIVE" about="About">
               <trigger_event>
-                <id>APPROACH_ACTION_EVENT_4</id>
+                <id>LEARNED_INFOMATION_EVENT</id>
                 <parameters NewInformation="TOP"/>
               </trigger_event>
             </tell_information>
@@ -204,11 +251,208 @@
       </option>
     </options>
   </event>
+  <event>
+    <id>NEGATIVE_TALK_EVENT</id>
+    <description>What would you like to say about $About.Name$</description>
+    <parameters>
+      <parameter type="character">To</parameter>
+      <parameter type="character">About</parameter>
+    </parameters>
+    <options>
+      <option>
+        <label>Say nasty things about $About.Name$</label>
+        <exec>
+          <set_scope name="To">
+            <trigger_event>
+              <id>SAY_MEAN_THINGS</id>
+              <parameters About="About"/>
+            </trigger_event>
+          </set_scope>
+        </exec>
+      </option>
+      <option>
+        <label>Tell information about $About.Name$</label>
+        <requirements>
+          <has_information about="About" type="NEGATIVE"/>
+        </requirements>
+        <exec>
+          <set_scope name="To">
+            <tell_information overhear="5" type="NEGATIVE" about="About">
+              <trigger_event>
+                <id>LEARNED_INFOMATION_EVENT</id>
+                <parameters NewInformation="TOP"/>
+              </trigger_event>
+            </tell_information>
+          </set_scope>
+        </exec>
+      </option>
+    </options>
+  </event>
+  <!-- Initiating character just said nice things about.
+  A = ROOT, B = TARGET
+  A has just told B nice things about "About".-->
+  <event>
+    <id>SAY_NICE_THINGS</id>
+    <description>$TARGET.Name$ says nice things about $About.Name$</description>
+    <parameters>
+      <parameter type="character">About</parameter>
+    </parameters>
+    <options>
+      <option>
+        <label>Agree</label>
+        <exec>
+          <apply_opinion_mod>
+            <id>AGREE_THIRD_PARTY</id>
+            <character>TARGET</character>
+          </apply_opinion_mod>
+          <set_scope name="TARGET">
+            <trigger_event>
+              <id>AGREE_NICE_THINGS</id>
+              <parameters About="About"/>
+            </trigger_event>
+          </set_scope>
+        </exec>
+      </option>
+      <option>
+        <label>Disagree</label>
+        <exec>
+          <apply_opinion_mod>
+            <id>DISAGREE_THIRD_PARTY</id>
+            <character>TARGET</character>
+          </apply_opinion_mod>
+          <set_scope name="TARGET">
+            <trigger_event>
+              <id>DISAGREE_NICE_THINGS</id>
+              <parameters About="About"/>
+            </trigger_event>
+          </set_scope>
+        </exec>
+      </option>
+    </options>
+  </event>
+  <!-- Initiating character just said mean things about.
+  A = ROOT, B = TARGET
+  A has just told B nice things about "About".-->
+  <event>
+    <id>SAY_MEAN_THINGS</id>
+    <description>$TARGET.Name$ says mean things about $About.Name$</description>
+    <parameters>
+      <parameter type="character">About</parameter>
+    </parameters>
+    <options>
+      <option>
+        <label>Agree</label>
+        <exec>
+          <apply_opinion_mod>
+            <id>AGREE_THIRD_PARTY</id>
+            <character>TARGET</character>
+          </apply_opinion_mod>
+          <set_scope name="TARGET">
+            <trigger_event>
+              <id>AGREE_MEAN_THINGS</id>
+              <parameters About="About"/>
+            </trigger_event>
+          </set_scope>
+        </exec>
+      </option>
+      <option>
+        <label>Disagree</label>
+        <exec>
+          <apply_opinion_mod>
+            <id>DISAGREE_THIRD_PARTY</id>
+            <character>TARGET</character>
+          </apply_opinion_mod>
+          <set_scope name="TARGET">
+            <trigger_event>
+              <id>DISAGREE_MEAN_THINGS</id>
+              <parameters About="About"/>
+            </trigger_event>
+          </set_scope>
+        </exec>
+      </option>
+    </options>
+  </event>
+  <!-- Initiating character just said nice things about.
+  A = TARGET, B = ROOT
+  A agrees with nice things B said about "About".-->
+  <event>
+    <id>AGREE_NICE_THINGS</id>
+    <description>$TARGET.Name$ agrees with the nice things you said about $About.Name$</description>
+    <parameters>
+      <parameter type="character">About</parameter>
+    </parameters>
+    <options>
+      <option>
+        <label>OK</label>
+        <apply_opinion_mod>
+          <id>AGREE_THIRD_PARTY</id>
+          <character>TARGET</character>
+        </apply_opinion_mod>
+      </option>
+    </options>
+  </event>
+  <!-- Initiating character just said nice things about.
+  A = TARGET, B = ROOT
+  A agress with nice things B said about "About".-->
+  <event>
+    <id>DISAGREE_NICE_THINGS</id>
+    <description>$TARGET.Name$ disagrees with the nice things you said about $About.Name$</description>
+    <parameters>
+      <parameter type="character">About</parameter>
+    </parameters>
+    <options>
+      <option>
+        <label>OK</label>
+        <apply_opinion_mod>
+          <id>DISAGREE_THIRD_PARTY</id>
+          <character>TARGET</character>
+        </apply_opinion_mod>
+      </option>
+    </options>
+  </event>
+  <!-- Initiating character just said mean things about.
+  A = TARGET, B = ROOT
+  A agrees with nice things B said about "About".-->
+  <event>
+    <id>AGREE_MEAN_THINGS</id>
+    <description>$TARGET.Name$ agrees with the mean things you said about $About.Name$</description>
+    <parameters>
+      <parameter type="character">About</parameter>
+    </parameters>
+    <options>
+      <option>
+        <label>OK</label>
+        <apply_opinion_mod>
+          <id>AGREE_THIRD_PARTY</id>
+          <character>TARGET</character>
+        </apply_opinion_mod>
+      </option>
+    </options>
+  </event>
+  <!-- Initiating character just said mean things about.
+  A = TARGET, B = ROOT
+  A agress with nice things B said about "About".-->
+  <event>
+    <id>DISAGREE_MEAN_THINGS</id>
+    <description>$TARGET.Name$ disagrees with the mean things you said about $About.Name$</description>
+    <parameters>
+      <parameter type="character">About</parameter>
+    </parameters>
+    <options>
+      <option>
+        <label>OK</label>
+        <apply_opinion_mod>
+          <id>DISAGREE_THIRD_PARTY</id>
+          <character>TARGET</character>
+        </apply_opinion_mod>
+      </option>
+    </options>
+  </event>
   <!-- Recieving information.
   B = ROOT, A = TARGET
   A has just told B a piece of information.-->
   <event>
-    <id>APPROACH_ACTION_EVENT_4</id>
+    <id>LEARNED_INFOMATION_EVENT</id>
     <description>You learn $NewInformation.Description$</description>
     <parameters>
       <parameter type="information">NewInformation</parameter>

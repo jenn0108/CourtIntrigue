@@ -40,7 +40,7 @@ namespace CourtIntrigue
             Character selectedCharacter = allCharacters[view.SelectedIndex];
 
             //Player selected a character.
-            TextTopBottomButton secondView = new TextTopBottomButton(selectedCharacter, this, "What would you like to do with " + selectedCharacter.Fullname, characterActions[selectedCharacter].Select(a => a.Label).ToArray(), null, notificator);
+            TextTopBottomButton secondView = new TextTopBottomButton(new Character[] { selectedCharacter }, this, "What would you like to do with " + selectedCharacter.Fullname, characterActions[selectedCharacter].Select(a => a.Label).ToArray(), null, notificator);
             main.LaunchView(secondView);
             return new EventContext(characterActions[selectedCharacter][secondView.SelectedIndex].Identifier, this, selectedCharacter);
         }
@@ -49,7 +49,7 @@ namespace CourtIntrigue
         {
             string[] texts = options.Select(op => EventHelper.ReplaceStrings(op.Label, context)).ToArray();
             bool[] enabled = willpowerCost.Select(cost => cost <= WillPower).ToArray();
-            TextTopBottomButton view = new TextTopBottomButton(context.Target, this, e.CreateActionDescription(context), texts, enabled, notificator);
+            TextTopBottomButton view = new TextTopBottomButton(context.GetCharacters(), this, e.CreateActionDescription(context), texts, enabled, notificator);
             main.LaunchView(view);
             return view.SelectedIndex;
         }
@@ -58,6 +58,13 @@ namespace CourtIntrigue
         {
             string[] texts = informations.Select(info => info.Description).ToArray();
             TextTopBottomButton view = new TextTopBottomButton(null, this, "Choose an information...", texts, null, notificator);
+            main.LaunchView(view);
+            return view.SelectedIndex;
+        }
+
+        public override int OnChooseCharacter(Character[] characters)
+        {
+            SelectCharacterView view = new SelectCharacterView(this, characters, null, "Choose a character", notificator);
             main.LaunchView(view);
             return view.SelectedIndex;
         }

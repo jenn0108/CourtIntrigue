@@ -77,6 +77,24 @@ namespace CourtIntrigue
             }
             return parameters[name];
         }
+
+        public Character[] GetCharacters()
+        {
+            List<Character> characters = new List<Character>();
+            if (Target != null)
+                characters.Add(Target);
+            for(int i = scopes.Count-1; i > 1; --i)
+            {
+                if (scopes[i].Value is Character)
+                    characters.Add(scopes[i].Value as Character);
+            }
+            foreach(var pair in parameters)
+            {
+                if (pair.Value is Character)
+                    characters.Add(pair.Value as Character);
+            }
+            return characters.ToArray();
+        }
     }
 
 

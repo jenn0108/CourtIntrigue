@@ -6,6 +6,14 @@ using System.Threading.Tasks;
 
 namespace CourtIntrigue
 {
+
+    enum InformationType
+    {
+        Positive,
+        Negative,
+        Neutral
+    }
+
     class InformationInstance
     {
         private Dictionary<string, object> parameters;
@@ -49,6 +57,14 @@ namespace CourtIntrigue
             //default scope in the on_observe we are about to run.
             EventContext observeContext = new EventContext("", currentCharacter, tellingCharacter, parameters);
             information.OnTold.Execute(new EventResults(), game, observeContext);
+        }
+
+        public double EvaluateOnTold(Character currentCharacter, Character tellingCharacter, Game game)
+        {
+            //The current character is the root of the new context so that they will be the
+            //default scope in the on_observe we are about to run.
+            EventContext observeContext = new EventContext("", currentCharacter, tellingCharacter, parameters);
+            return information.OnTold.Evaluate(game, observeContext, currentCharacter.GetWeights());
         }
 
         public bool IsExpired(int currentDayInTicks)

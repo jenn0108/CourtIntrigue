@@ -13,9 +13,52 @@ namespace CourtIntrigue
         public static IExecute DEBUG = new DebugExecute();
     }
 
+    class Weights
+    {
+        private Character perspective;
+
+        public Weights(Character perspective)
+        {
+            this.perspective = perspective;
+        }
+
+        public double MeasureGold(Character currentCharacter, int gold)
+        {
+            if (perspective == currentCharacter)
+                return gold * 1.0;
+            else
+                return 0.0;
+        }
+
+        public double MeasurePrestige(Character currentCharacter, int change)
+        {
+            if (perspective == currentCharacter)
+                return change * 100.0;
+            else
+                return 0.0;
+        }
+
+        public double MeasureOpinion(Character charWithOpinion, Character opinionOf, OpinionModifier mod)
+        {
+            if (perspective == opinionOf)
+                return mod.Change * 1.0;
+            else
+                return 0.0;
+        }
+
+        public double MeasureJob(Character currentCharacter, Job job)
+        {
+            if (perspective == currentCharacter)
+                return 1000.0; //Jobs are great.  Really we should measure prestige modifiers since jobs can give you one.
+            else
+                return 0.0;
+        }
+    }
+
     interface IExecute
     {
         void Execute(EventResults result, Game game, EventContext context);
+        double Evaluate(Game game, EventContext context, Weights weights);
     }
 
     class NoOpExecute : IExecute
@@ -24,13 +67,24 @@ namespace CourtIntrigue
         {
 
         }
+
+        public double Evaluate(Game game, EventContext context, Weights weights)
+        {
+            return 0.0;
+        }
     }
+
 
     class DebugExecute : IExecute
     {
         public void Execute(EventResults result, Game game, EventContext context)
         {
             Debugger.Break();
+        }
+
+        public double Evaluate(Game game, EventContext context, Weights weights)
+        {
+            return 0.0;
         }
     }
 
@@ -49,6 +103,16 @@ namespace CourtIntrigue
                 instructions[i].Execute(result, game, context);
             }
         }
+
+        public double Evaluate(Game game, EventContext context, Weights weights)
+        {
+            double result = 0.0;
+            for (int i = 0; i < instructions.Length; ++i)
+            {
+                result += instructions[i].Evaluate(game, context, weights);
+            }
+            return result;
+        }
     }
 
     class AllowEventSelectionExecute : IExecute
@@ -56,6 +120,11 @@ namespace CourtIntrigue
         public void Execute(EventResults result, Game game, EventContext context)
         {
             result.GiveTargetTurn();
+        }
+
+        public double Evaluate(Game game, EventContext context, Weights weights)
+        {
+            return 0.0;
         }
     }
 
@@ -78,6 +147,18 @@ namespace CourtIntrigue
             }
             EventContext newContext = new EventContext(null, context.CurrentCharacter, context.GetScopedObjectByName("ROOT") as Character, computedParameters);
             game.GetEventById(eventid).Execute(result, game, newContext);
+        }
+
+        public double Evaluate(Game game, EventContext context, Weights weights)
+        {
+            //Dictionary<string, object> computedParameters = new Dictionary<string, object>();
+            //foreach (var pair in parameters)
+            //{
+            //    computedParameters.Add(pair.Key, context.GetScopedObjectByName(pair.Value));
+            //}
+            //EventContext newContext = new EventContext(null, context.CurrentCharacter, context.GetScopedObjectByName("ROOT") as Character, computedParameters);
+            //return game.GetEventById(eventid).Evalute(game, newContext, weights);
+            return 0.0;
         }
     }
 
@@ -102,21 +183,30 @@ namespace CourtIntrigue
             }
             result.AddObservableInfo(new InformationInstance(game.GetInformationById(informationId), computedParameters, game.CurrentTime), chance, null);
         }
+
+        public double Evaluate(Game game, EventContext context, Weights weights)
+        {
+            return 0.0;
+        }
     }
 
     class TellInformationExecute : IExecute
     {
+        private string about;
+        private InformationType type;
         private IExecute operation;
         private int overhearChance;
-        public TellInformationExecute(IExecute operation, int overhearChance)
+        public TellInformationExecute(IExecute operation, int overhearChance, string about, InformationType type)
         {
+            this.about = about;
+            this.type = type;
             this.operation = operation;
             this.overhearChance = overhearChance;
         }
         public void Execute(EventResults result, Game game, EventContext context)
         {
             Character tellingCharacter = context.GetScopedObjectByName("ROOT") as Character;
-            InformationInstance informationInstance = tellingCharacter.ChooseInformation();
+            InformationInstance informationInstance = tellingCharacter.ChooseInformationAbout(type, context.GetScopedObjectByName(about) as Character);
             bool isNewInformation = context.CurrentCharacter.AddInformation(informationInstance);
             context.PushScope(informationInstance);
             operation.Execute(result, game, context);
@@ -129,6 +219,34 @@ namespace CourtIntrigue
                 game.Log(context.CurrentCharacter.Name + " learned an information.");
                 informationInstance.ExecuteOnTold(context.CurrentCharacter, tellingCharacter, game, context.Room);
             }
+        }
+
+        public double Evaluate(Game game, EventContext context, Weights weights)
+        {
+            return 0.0;
+        }
+    }
+
+    class ChooseCharacterExecute : IExecute
+    {
+        private string scopeName;
+        private IExecute operation;
+        public ChooseCharacterExecute(string scopeName, IExecute operation)
+        {
+            this.scopeName = scopeName;
+            this.operation = operation;
+        }
+
+        public void Execute(EventResults result, Game game, EventContext context)
+        {
+            Character chosen = context.CurrentCharacter.ChooseCharacter();
+            context.PushScope(chosen, scopeName);
+            operation.Execute(result, game, context);
+            context.PopScope();
+        }
+        public double Evaluate(Game game, EventContext context, Weights weights)
+        {
+            return 0.0;
         }
     }
 
@@ -160,6 +278,26 @@ namespace CourtIntrigue
                 context.PopScope();
             }
         }
+
+        public double Evaluate(Game game, EventContext context, Weights weights)
+        {
+            //TODO: Start with random index.
+            for (int i = 0; i < context.CurrentCharacter.Children.Count; ++i)
+            {
+                Character character = context.CurrentCharacter.Children[i];
+                context.PushScope(character);
+                if (requirements.Evaluate(context, game))
+                {
+                    double result = operation.Evaluate(game, context, weights);
+
+                    //AnyChild stops after a single interation.
+                    context.PopScope();
+                    return result;
+                }
+                context.PopScope();
+            }
+            return 0.0;
+        }
     }
 
     class EveryoneInRoomExecute : IExecute
@@ -184,6 +322,21 @@ namespace CourtIntrigue
                 context.PopScope();
             }
         }
+
+        public double Evaluate(Game game, EventContext context, Weights weights)
+        {
+            double result = 0.0;
+            foreach (var character in context.Room.GetCharacters(context.CurrentCharacter))
+            {
+                context.PushScope(character);
+                if (requirements.Evaluate(context, game))
+                {
+                    result += operation.Evaluate(game, context, weights);
+                }
+                context.PopScope();
+            }
+            return result;
+        }
     }
 
     class SetScopeExecute : IExecute
@@ -201,6 +354,14 @@ namespace CourtIntrigue
             context.PushScope(context.GetScopedObjectByName(scopeName));
             operation.Execute(result, game, context);
             context.PopScope();
+        }
+
+        public double Evaluate(Game game, EventContext context, Weights weights)
+        {
+            context.PushScope(context.GetScopedObjectByName(scopeName));
+            double result = operation.Evaluate(game, context, weights);
+            context.PopScope();
+            return result;
         }
     }
 
@@ -227,6 +388,18 @@ namespace CourtIntrigue
                 elseExecute.Execute(result, game, context);
             }
         }
+
+        public double Evaluate(Game game, EventContext context, Weights weights)
+        {
+            if (requirements.Evaluate(context, game))
+            {
+                return thenExecute.Evaluate(game, context, weights);
+            }
+            else
+            {
+                return elseExecute.Evaluate(game, context, weights);
+            }
+        }
     }
 
     class GiveJobExecute : IExecute
@@ -240,6 +413,11 @@ namespace CourtIntrigue
         public void Execute(EventResults result, Game game, EventContext context)
         {
             game.GiveJobTo(game.GetJobById(jobId), context.CurrentCharacter);
+        }
+
+        public double Evaluate(Game game, EventContext context, Weights weights)
+        {
+            return weights.MeasureJob(context.CurrentCharacter, game.GetJobById(jobId));
         }
     }
 
@@ -259,6 +437,10 @@ namespace CourtIntrigue
             context.CurrentCharacter.AddOpinionModifier(mod);
         }
 
+        public double Evaluate(Game game, EventContext context, Weights weights)
+        {
+            return weights.MeasureOpinion(context.CurrentCharacter, context.GetScopedObjectByName(character) as Character, game.GetOpinionModifier(identifier));
+        }
     }
 
     class PrestigeChangeExecute : IExecute
@@ -272,6 +454,11 @@ namespace CourtIntrigue
         public void Execute(EventResults result, Game game, EventContext context)
         {
             context.CurrentCharacter.PrestigeChange(change);
+        }
+
+        public double Evaluate(Game game, EventContext context, Weights weights)
+        {
+            return weights.MeasurePrestige(context.CurrentCharacter, change);
         }
     }
 
@@ -287,6 +474,11 @@ namespace CourtIntrigue
         {
             context.CurrentCharacter.SpendGold(gold);
         }
+
+        public double Evaluate(Game game, EventContext context, Weights weights)
+        {
+            return weights.MeasureGold(context.CurrentCharacter, -gold);
+        }
     }
 
     class GetGoldExecute : IExecute
@@ -300,6 +492,11 @@ namespace CourtIntrigue
         public void Execute(EventResults result, Game game, EventContext context)
         {
             context.CurrentCharacter.GetGold(gold);
+        }
+
+        public double Evaluate(Game game, EventContext context, Weights weights)
+        {
+            return weights.MeasureGold(context.CurrentCharacter, gold);
         }
     }
 
@@ -317,6 +514,11 @@ namespace CourtIntrigue
         {
             context.CurrentCharacter.SetVariable(varName, XmlHelper.GetTestValue(context, game, newValue));
         }
+
+        public double Evaluate(Game game, EventContext context, Weights weights)
+        {
+            return 0.0;
+        }
     }
 
     class OffsetVariableExecute : IExecute
@@ -333,6 +535,11 @@ namespace CourtIntrigue
         {
             context.CurrentCharacter.SetVariable(varName, context.CurrentCharacter.GetVariable(varName) + XmlHelper.GetTestValue(context, game, offset));
         }
+
+        public double Evaluate(Game game, EventContext context, Weights weights)
+        {
+            return 0.0;
+        }
     }
 
     class MultiplyOvserveChanceExecute : IExecute
@@ -346,6 +553,11 @@ namespace CourtIntrigue
         public void Execute(EventResults result, Game game, EventContext context)
         {
             context.CurrentCharacter.MultiplyObserveModifier(multiplier);
+        }
+
+        public double Evaluate(Game game, EventContext context, Weights weights)
+        {
+            return 0.0;
         }
     }
 }

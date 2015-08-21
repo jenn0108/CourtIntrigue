@@ -111,6 +111,11 @@ namespace CourtIntrigue
             return Game.GetPortrait(DNA);
         }
 
+        public Weights GetWeights()
+        {
+            return new Weights(this);
+        }
+
         public IEnumerable<OpinionModifierInstance> GetOpinionModifiersAbout(Character character)
         {
             ISet<OpinionModifierInstance> list;
@@ -235,11 +240,23 @@ namespace CourtIntrigue
             return OnChooseOption(options, willpowerCost, context, e);
         }
 
-        public InformationInstance ChooseInformation()
+        public InformationInstance ChooseInformationAbout(InformationType type, Character about)
         {
-            InformationInstance[] information = KnownInformation.ToArray();
+            InformationInstance[] information;
+            if (type == InformationType.Positive)
+                information = KnownInformation.Where(info => info.EvaluateOnTold(about, this, Game) > 0.0).ToArray();
+            else if (type == InformationType.Negative)
+                information = KnownInformation.Where(info => info.EvaluateOnTold(about, this, Game) < 0.0).ToArray();
+            else
+                information = KnownInformation.ToArray();
             int index = OnChooseInformation(information);
             return information[index];
+        }
+
+        public Character ChooseCharacter()
+        {
+            int index = OnChooseCharacter(Game.AllCharacters);
+            return Game.AllCharacters[index];
         }
 
         public virtual EventContext OnTick(Action[] soloActions, Dictionary<Character, Action[]> characterActions)
@@ -258,6 +275,11 @@ namespace CourtIntrigue
         }
 
         public virtual int OnChooseInformation(InformationInstance[] knownInformation)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual int OnChooseCharacter(Character[] characters)
         {
             throw new NotImplementedException();
         }
@@ -291,9 +313,22 @@ namespace CourtIntrigue
             return true;
         }
 
-        public bool HasInformation()
+        public bool HasInformationAbout(Character about, InformationType type)
         {
-            return KnownInformation.Count > 0;
+            foreach(var info in KnownInformation)
+            {
+                if (info.IsAbout(about))
+                {
+                    double result = info.EvaluateOnTold(about, this, Game);
+                    if (type == InformationType.Positive && result > 0.0)
+                        return true;
+                    else if (type == InformationType.Negative && result < 0.0)
+                        return true;
+                    else if (type == InformationType.Neutral && result == 0.0)
+                        return true;
+                }
+            }
+            return false;
         }
 
         public bool HasJob(string jobId)

@@ -11,7 +11,6 @@ namespace CourtIntrigue
         //Classes with no members only need a single instance.
         public static ILogic TRUE = new TrueLogic();
         public static ILogic FALSE = new FalseLogic();
-        public static ILogic HAS_INFORMATION = new HasInformationTestLogic();
         public static ILogic HAS_SPOUSE = new HasSpouseTestLogic();
     }
 
@@ -84,9 +83,19 @@ namespace CourtIntrigue
 
     class HasInformationTestLogic : ILogic
     {
+        private string about;
+        private InformationType type;
+
+        public HasInformationTestLogic(string about, InformationType type)
+        {
+            this.about = about;
+            this.type = type;
+        }
+
         public bool Evaluate(EventContext context, Game game)
         {
-            return context.CurrentCharacter.HasInformation();
+            Character aboutCharacter = context.GetScopedObjectByName(about) as Character;
+            return context.CurrentCharacter.HasInformationAbout(aboutCharacter, type);
         }
     }
 

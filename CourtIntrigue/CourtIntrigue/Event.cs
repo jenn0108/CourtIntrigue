@@ -64,6 +64,48 @@ namespace CourtIntrigue
             }
         }
 
+        public double Evaluate(Game game, EventContext context, Weights weights)
+        {
+            double result = 0.0;
+
+            //DirectExecute always happens if it is present.
+            if (DirectExecute != null)
+                result += DirectExecute.Evaluate(game, context, weights);
+
+            EventOption[] options = GetAvailableOptions(context, game);
+            if (options.Length > 0)
+            {
+                int[] willpowerCost = new int[options.Length];
+                for (int i = 0; i < options.Length; ++i)
+                {
+                    int maxCost = options[i].GetCostToTake(context.CurrentCharacter) - options[i].GetCostToAvoid(context.CurrentCharacter);
+                    for (int j = 0; j < options.Length; ++j)
+                    {
+                        if (i == j)
+                            continue;
+
+                        maxCost = Math.Max(maxCost, options[j].GetCostToAvoid(context.CurrentCharacter));
+                    }
+                    willpowerCost[i] = maxCost;
+                }
+                
+                //We need to choose an option some way:
+                //1. Average the options
+                //2. Choose an optimal one for the (potentially) different character.
+
+                ////If there are options, the character must choose one.
+                //int chosenIndex = context.CurrentCharacter.ChooseOption(options, willpowerCost, context, this);
+                //EventOption chosen = options[chosenIndex];
+                //if (chosen != null && chosen.DirectExecute != null)
+                //{
+                //    context.CurrentCharacter.SpendWillpower(willpowerCost[chosenIndex]);
+                //    //Execute the option activity.
+                //    chosen.DirectExecute.Execute(result, game, context);
+                //}
+            }
+            return result;
+        }
+
         public EventOption[] GetAvailableOptions(EventContext context, Game game)
         {
             List<EventOption> options = new List<EventOption>();

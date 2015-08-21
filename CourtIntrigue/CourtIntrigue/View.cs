@@ -27,14 +27,14 @@ namespace CourtIntrigue
         private Panel bottom;
         private Semaphore mutex;
         private Notificator notificator;
-        private Character target;
+        private Character[] others;
         private Character perspective;
 
         public int SelectedIndex { get; private set; }
 
-        public TextTopBottomButton(Character target, Character perspective, string text, string[] buttons, bool[] buttonEnable, Notificator notificator)
+        public TextTopBottomButton(Character[] others, Character perspective, string text, string[] buttons, bool[] buttonEnable, Notificator notificator)
         {
-            this.target = target;
+            this.others = others;
             this.perspective = perspective;
             upperText = text;
             lowerButtons = buttons;
@@ -53,9 +53,12 @@ namespace CourtIntrigue
 
             Label label = new Label() { Text = upperText, Size = new System.Drawing.Size(top.Width - View.NOTIFICATOR_SIZE - 160, top.Height) };
             top.Controls.Add(label);
-            if (target != null)
+            if (others != null)
             {
-                top.Controls.Add(new CharacterHeadshot() { TargetCharacter = target, PerspectiveCharacter = perspective, Active = false, Interaction = false });
+                for(int i = 0; i < others.Length; ++i)
+                {
+                    top.Controls.Add(new CharacterHeadshot() { TargetCharacter = others[i], PerspectiveCharacter = perspective, Top = i*160, Active = false, Interaction = false });
+                }
                 label.Left = 160;
             }
 
@@ -128,13 +131,15 @@ namespace CourtIntrigue
             top.Controls.Clear();
             bottom.Controls.Clear();
 
+            int columnCount = (int)Math.Floor((top.Width - View.NOTIFICATOR_SIZE - 20) / 150.0);
+            int rowCount = upperButtons.Length / columnCount;
             TableLayoutPanel upperTlp = new TableLayoutPanel()
             {
                 Left = 0,
                 Top = 0,
-                Size = new System.Drawing.Size(top.Width- View.NOTIFICATOR_SIZE, top.Height),
-                ColumnCount = (int)Math.Floor((top.Width - View.NOTIFICATOR_SIZE) /150.0),
-                RowCount = (int)Math.Floor(top.Height/150.0)
+                ColumnCount = columnCount,
+                RowCount = rowCount,
+                AutoSize = true
             };
             int c = 0;
             int r = 0;
@@ -157,7 +162,7 @@ namespace CourtIntrigue
                 }
             }
             top.Controls.Add(upperTlp);
-            notificator.Left = top.Width - View.NOTIFICATOR_SIZE;
+            notificator.Left = top.Width - View.NOTIFICATOR_SIZE - 20;
             notificator.Top = 0;
             notificator.Size = new System.Drawing.Size(View.NOTIFICATOR_SIZE, top.Height);
             top.Controls.Add(notificator);
@@ -198,6 +203,90 @@ namespace CourtIntrigue
         {
             SelectedTop = false;
             SelectedIndex = (int)(sender as Button).Tag;
+            top.Controls.Clear();
+            bottom.Controls.Clear();
+            mutex.Release();
+        }
+    }
+
+    class SelectCharacterView : IView
+    {
+        private Character[] upperButtons;
+        private bool[] upperButtonEnables;
+        private string description;
+        private Panel top;
+        private Panel bottom;
+        private Semaphore mutex;
+        private Notificator notificator;
+        private Character perspectiveCharacter;
+
+        public int SelectedIndex { get; private set; }
+
+        public SelectCharacterView(Character perspective, Character[] topButtons, bool[] topButtonEnables, string desc, Notificator notificator)
+        {
+            perspectiveCharacter = perspective;
+            upperButtons = topButtons;
+            upperButtonEnables = topButtonEnables;
+            description = desc;
+            this.notificator = notificator;
+            SelectedIndex = -1;
+        }
+
+        public void Display(Panel top, Panel bottom, Semaphore mutex)
+        {
+            this.top = top;
+            this.bottom = bottom;
+            this.mutex = mutex;
+            top.Controls.Clear();
+            bottom.Controls.Clear();
+
+            int columnCount = (int)Math.Floor((top.Width - View.NOTIFICATOR_SIZE - 20) / 150.0);
+            int rowCount = upperButtons.Length / columnCount;
+            TableLayoutPanel upperTlp = new TableLayoutPanel()
+            {
+                Left = 0,
+                Top = 0,
+                ColumnCount = columnCount,
+                RowCount = rowCount,
+                AutoSize = true
+            };
+            int c = 0;
+            int r = 0;
+            for (int i = 0; i < upperButtons.Length; ++i)
+            {
+                CharacterHeadshot button = new CharacterHeadshot()
+                {
+                    Tag = i,
+                    Active = upperButtonEnables == null ? true : upperButtonEnables[i],
+                    TargetCharacter = upperButtons[i],
+                    PerspectiveCharacter = perspectiveCharacter
+                };
+                button.SelectCharacter += TopButton_Click;
+                upperTlp.Controls.Add(button, c, r);
+                ++c;
+                if (c > upperTlp.ColumnCount)
+                {
+                    ++r;
+                    c = 0;
+                }
+            }
+            top.Controls.Add(upperTlp);
+            notificator.Left = top.Width - View.NOTIFICATOR_SIZE - 20;
+            notificator.Top = 0;
+            notificator.Size = new System.Drawing.Size(View.NOTIFICATOR_SIZE, top.Height);
+            top.Controls.Add(notificator);
+
+            Label bottomLabel = new Label()
+            {
+                Text = description,
+                Dock = DockStyle.Fill
+            };
+            bottom.Controls.Add(bottomLabel);
+        }
+
+        private void TopButton_Click(object sender, EventArgs e)
+        {
+            SelectedIndex = (int)(sender as Control).Tag;
             top.Controls.Clear();
             bottom.Controls.Clear();
             mutex.Release();

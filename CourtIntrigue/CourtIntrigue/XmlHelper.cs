@@ -47,6 +47,11 @@ namespace CourtIntrigue
                     string scopeName = reader.GetAttribute("name");
                     expressions.Add(new SetScopeExecute(scopeName, ReadExecute(reader, badTags)));
                 }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "choose_character")
+                {
+                    string scopeName = reader.GetAttribute("name");
+                    expressions.Add(new ChooseCharacterExecute(scopeName, ReadExecute(reader, badTags)));
+                }
                 else if (reader.NodeType == XmlNodeType.Element && (reader.Name == "observe_information"))
                 {
                     expressions.Add(ReadGainInformation(reader));
@@ -54,7 +59,10 @@ namespace CourtIntrigue
                 else if (reader.NodeType == XmlNodeType.Element && (reader.Name == "tell_information"))
                 {
                     int overhearChance = int.Parse(reader.GetAttribute("overhear"));
-                    expressions.Add(new TellInformationExecute(ReadExecute(reader, badTags), overhearChance));
+                    string about = reader.GetAttribute("about");
+                    string typeName = reader.GetAttribute("type");
+                    InformationType type = StringToInformationType(typeName);
+                    expressions.Add(new TellInformationExecute(ReadExecute(reader, badTags), overhearChance, about, type));
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "prestige_change")
                 {
@@ -138,7 +146,11 @@ namespace CourtIntrigue
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "has_information")
                 {
-                    expressions.Add(Logic.HAS_INFORMATION);
+                    string about = reader.GetAttribute("about");
+                    string typeName = reader.GetAttribute("type");
+                    InformationType type = StringToInformationType(typeName);
+
+                    expressions.Add(new HasInformationTestLogic(about, type));
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "true")
                 {
@@ -286,6 +298,18 @@ namespace CourtIntrigue
             }
 
             throw new ArgumentException("Found unexpected type name " + typeName);
+        }
+
+        private static InformationType StringToInformationType(string typeName)
+        {
+            if (typeName == "POSITIVE")
+                return InformationType.Positive;
+            else if (typeName == "NEGATIVE")
+                return InformationType.Negative;
+            else if (typeName == "NEURTRAL")
+                return InformationType.Neutral;
+            else
+                throw new ArgumentException("Type not understood for has_information: " + typeName);
         }
 
         private static ILogic ReadOrLogic(XmlReader reader, Dictionary<string, int> badTags)

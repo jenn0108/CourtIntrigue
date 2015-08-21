@@ -27,4 +27,18 @@
     <duration>20</duration>
     <opinion_change>20</opinion_change>
   </opinion_mod>
+  <opinion_mod>
+    <id>AGREE_THIRD_PARTY</id>
+    <label>Agreement</label>
+    <description>You agree with each other.</description>
+    <duration>20</duration>
+    <opinion_change>20</opinion_change>
+  </opinion_mod>
+  <opinion_mod>
+    <id>DISAGREE_THIRD_PARTY</id>
+    <label>Disagreement</label>
+    <description>You disagree with each other.</description>
+    <duration>20</duration>
+    <opinion_change>-20</opinion_change>
+  </opinion_mod>
 </opinion_mods>
