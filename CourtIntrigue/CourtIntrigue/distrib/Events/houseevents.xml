@@ -88,4 +88,20 @@
       </option>
     </options>
   </event>
+  <event>
+    <id>DO_NOTHING_EVENT</id>
+    <description>You spend some time sitting down.</description>
+    <requirements>
+      <action_id>DO_NOTHING_ACTION_ID</action_id>
+      <not>
+        <is_male/>
+        <is_adult/>
+      </not>
+    </requirements>
+    <options>
+      <option>
+        <label>OK</label>
+      </option>
+    </options>
+  </event>
 </events>

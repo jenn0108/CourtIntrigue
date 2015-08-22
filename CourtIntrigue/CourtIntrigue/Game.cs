@@ -76,7 +76,7 @@ namespace CourtIntrigue
             //Go load all the xml files in our rooms directory.
             foreach (var file in Directory.EnumerateFiles("Rooms", "*.xml"))
             {
-                roomManager.LoadRoomsFromFile(file);
+                roomManager.LoadRoomsFromFile(file, badTags);
             }
 
             //Go load all the xml files in our information directory.
@@ -281,6 +281,11 @@ namespace CourtIntrigue
             ++CurrentTime;
         }
 
+        public IEnumerable<Room> GetRooms(Character character)
+        {
+            return roomManager.GetRooms(character, this);
+        }
+
         public OpinionModifier GetOpinionModifier(string identifier)
         {
             return modifierManager.GetOpinionModifierById(identifier);
@@ -418,19 +423,23 @@ namespace CourtIntrigue
 
             Room home = roomManager.MakeUniqueRoom("ESTATE_ROOM");
             // All character have a wife for now.
-            DependentCharacter spouse = new DependentCharacter(GetRandomFemaleName(), wifeBirthdate, character.Dynasty, this, Character.GenderEnum.Female);
+            AICharacter spouse = new AICharacter(GetRandomFemaleName(), wifeBirthdate, character.Dynasty, 50, this, Character.GenderEnum.Female);
+            characters.Add(spouse);
 
             // Now add a random number of children with random genders.
-            List<DependentCharacter> children = new List<DependentCharacter>();
+            List<Character> children = new List<Character>();
             int numChildren = GetRandom(MAX_CHILDREN);
             for (int i = 0; i < numChildren; i++)
             {
                 Character.GenderEnum gender = (Character.GenderEnum)GetRandom(2);
                 string name = gender == Character.GenderEnum.Female ? GetRandomFemaleName() : GetRandomMaleName();
-                children.Add(new DependentCharacter(name, GetChildBirthdate(wifeBirthdate), character.Dynasty, this, gender));
+
+                Character child = new AICharacter(name, GetChildBirthdate(wifeBirthdate), character.Dynasty, 5, this, gender);
+                children.Add(child);
+                characters.Add(child);
             }
 
-            character.AssignFamily(spouse, children, home, cvManager.CreateRandomDNA(this));
+            character.AssignFamily(spouse, children, home, cvManager.CreateRandomDNA(this), cvManager.CreateRandomDNA(this));
         }
 
         public void Log(string txt)

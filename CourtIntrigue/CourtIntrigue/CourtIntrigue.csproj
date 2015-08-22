@@ -71,7 +71,6 @@
     <Compile Include="EventContext.cs" />
     <Compile Include="AICharacter.cs" />
     <Compile Include="Character.cs" />
-    <Compile Include="DependentCharacter.cs" />
     <Compile Include="Dynasty.cs" />
     <Compile Include="Event.cs" />
     <Compile Include="EventManager.cs" />

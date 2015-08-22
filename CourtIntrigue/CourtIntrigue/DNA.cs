@@ -38,6 +38,23 @@ namespace CourtIntrigue
             HairColor = hairColor;
             ShirtColor = shirtColor;
         }
+
+        public static DNA CreateChild(DNA father, DNA mother, Game game)
+        {
+            int face = game.GetRandom(2) == 0 ? father.Face : mother.Face;
+            int mouth = game.GetRandom(2) == 0 ? father.Mouth : mother.Mouth;
+            int nose = game.GetRandom(2) == 0 ? father.Nose : mother.Nose;
+            int eyes = game.GetRandom(2) == 0 ? father.Eyes : mother.Eyes;
+            int eyebrows = game.GetRandom(2) == 0 ? father.Eyebrows : mother.Eyebrows;
+            int ears = game.GetRandom(2) == 0 ? father.Ears : mother.Ears;
+            int hair = game.GetRandom(2) == 0 ? father.Hair : mother.Hair;
+            int skinColor = game.GetRandom(2) == 0 ? father.SkinColor : mother.SkinColor;
+            int eyeColor = game.GetRandom(2) == 0 ? father.EyeColor : mother.EyeColor;
+            int hairColor = game.GetRandom(2) == 0 ? father.HairColor : mother.HairColor;
+            int shirtColor = CharacterVisualizationManager.GetRandomShirtColor(game);
+
+            return new DNA(face, mouth, nose, eyes, eyebrows, ears, hair, skinColor, eyebrows, hairColor, shirtColor);
+        }
     }
 
     class CharacterVisualizationManager
@@ -61,7 +78,7 @@ namespace CourtIntrigue
         private Color[] eyeColors = { Color.FromArgb(0, 165, 255), Color.FromArgb(122, 205, 255), Color.FromArgb(0, 20, 213), Color.FromArgb(39, 153, 92), Color.FromArgb(0, 109, 46), Color.FromArgb(159, 183, 166), Color.FromArgb(153, 92, 39), Color.FromArgb(51, 31, 13), Color.Black };
         private Color[] hairColors = { Color.FromArgb(229, 195, 94), Color.FromArgb(217, 97, 45), Color.FromArgb(84, 53, 37), Color.Black };
 
-        private Color[] shirtColors = GetShirtColors();
+        private static Color[] shirtColors = GetShirtColors();
 
         private Dictionary<DNA, Bitmap> cache = new Dictionary<DNA, Bitmap>();
 
@@ -109,6 +126,11 @@ namespace CourtIntrigue
         private Bitmap[] LoadParts(string path, string pattern)
         {
             return Directory.EnumerateFiles(path, pattern).OrderBy(file => file).Select(file => (Bitmap)Bitmap.FromFile(file)).ToArray();
+        }
+
+        public static int GetRandomShirtColor(Game g)
+        {
+            return g.GetRandom(shirtColors.Length);
         }
 
         // Good enough for now.

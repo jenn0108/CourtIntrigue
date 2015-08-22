@@ -23,4 +23,8 @@
     <id>VISIT_TAILOR_ACTION</id>
     <label>Visit the tailor...</label>
   </action>
+  <action>
+    <id>DO_NOTHING_ACTION_ID</id>
+    <label>Do nothing...</label>
+  </action>
 </actions>

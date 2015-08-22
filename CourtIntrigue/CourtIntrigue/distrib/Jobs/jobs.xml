@@ -14,6 +14,8 @@
     <unique/>
     <requirements>
       <prestige_rank>10</prestige_rank>
+      <is_male/>
+      <is_adult/>
     </requirements>
     <on_hire>CHANCELLOR_ON_HIRE_EVENT</on_hire>
     <on_fire>CHANCELLOR_ON_FIRE_EVENT</on_fire>
@@ -25,6 +27,8 @@
     <unique/>
     <requirements>
       <prestige_rank>10</prestige_rank>
+      <is_male/>
+      <is_adult/>
     </requirements>
     <on_hire>MARSHAL_ON_HIRE_EVENT</on_hire>
     <on_fire>MARSHAL_ON_FIRE_EVENT</on_fire>
@@ -36,6 +40,8 @@
     <unique/>
     <requirements>
       <prestige_rank>10</prestige_rank>
+      <is_male/>
+      <is_adult/>
     </requirements>
     <on_hire>SPYMASTER_ON_HIRE_EVENT</on_hire>
     <on_fire>SPYMASTER_ON_FIRE_EVENT</on_fire>
@@ -47,6 +53,8 @@
     <unique/>
     <requirements>
       <prestige_rank>10</prestige_rank>
+      <is_male/>
+      <is_adult/>
     </requirements>
     <on_hire>STEWARD_ON_HIRE_EVENT</on_hire>
     <on_fire>STEWARD_ON_FIRE_EVENT</on_fire>
@@ -58,6 +66,8 @@
     <unique/>
     <requirements>
       <prestige_rank>10</prestige_rank>
+      <is_male/>
+      <is_adult/>
     </requirements>
     <on_hire>BISHOP_ON_HIRE_EVENT</on_hire>
     <on_fire>BISHOP_ON_FIRE_EVENT</on_fire>
@@ -72,6 +82,8 @@
     <unique/>
     <requirements>
       <prestige_rank>20</prestige_rank>
+      <is_male/>
+      <is_adult/>
     </requirements>
     <on_hire>FALCONER_ON_HIRE_EVENT</on_hire>
     <on_fire>FALCONER_ON_FIRE_EVENT</on_fire>
@@ -83,6 +95,8 @@
     <unique/>
     <requirements>
       <prestige_rank>20</prestige_rank>
+      <is_male/>
+      <is_adult/>
     </requirements>
     <on_hire>MASTEROFHORSE_ON_HIRE_EVENT</on_hire>
     <on_fire>MASTEROFHORSE_ON_FIRE_EVENT</on_fire>
@@ -97,6 +111,7 @@
     <requirements>
       <var_ge name="AGE">7</var_ge>
       <var_le name="AGE">15</var_le>
+      <is_male/>
     </requirements>
   </job>
   <job>
@@ -106,6 +121,7 @@
     <requirements>
       <var_ge name="AGE">15</var_ge>
       <var_le name="AGE">21</var_le>
+      <is_male/>
     </requirements>
   </job>
 </jobs>

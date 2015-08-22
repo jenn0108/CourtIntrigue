@@ -4,6 +4,10 @@
     <name>Town</name>
     <common>Yes</common>
     <characters_approachable>No</characters_approachable>
+    <requirements>
+      <is_male/>
+      <is_adult/>
+    </requirements>
     <solo_actions>
       <action>PUBLIC_URINATION_ACTION</action>
       <action>VISIT_TAILOR_ACTION</action>
@@ -14,6 +18,10 @@
     <name>Court</name>
     <common>Yes</common>
     <characters_approachable>Yes</characters_approachable>
+    <requirements>
+      <is_male/>
+      <is_adult/>
+    </requirements>
     <solo_actions>
       <action>EAVESDROP_ACTION</action>
     </solo_actions>
@@ -29,6 +37,7 @@
     <solo_actions>
       <action>COLLECT_TAXES_ACTION_ID</action>
       <action>SPEND_TIME_WITH_WIFE_ACTION_ID</action>
+      <action>DO_NOTHING_ACTION_ID</action>
     </solo_actions>
   </room>
 </rooms>
