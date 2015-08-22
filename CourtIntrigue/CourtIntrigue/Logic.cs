@@ -12,6 +12,9 @@ namespace CourtIntrigue
         public static ILogic TRUE = new TrueLogic();
         public static ILogic FALSE = new FalseLogic();
         public static ILogic HAS_SPOUSE = new HasSpouseTestLogic();
+        public static ILogic IS_MALE = new IsMaleTestLogic();
+        public static ILogic IS_FEMALE = new IsFemaleTestLogic();
+        public static ILogic IS_ADULT = new IsAdultTestLogic();
     }
 
     interface ILogic
@@ -104,6 +107,30 @@ namespace CourtIntrigue
         public bool Evaluate(EventContext context, Game game)
         {
             return context.CurrentCharacter.Spouse != null;
+        }
+    }
+
+    class IsMaleTestLogic : ILogic
+    {
+        public bool Evaluate(EventContext context, Game game)
+        {
+            return context.CurrentCharacter.Gender == Character.GenderEnum.Male;
+        }
+    }
+
+    class IsFemaleTestLogic : ILogic
+    {
+        public bool Evaluate(EventContext context, Game game)
+        {
+            return context.CurrentCharacter.Gender == Character.GenderEnum.Female;
+        }
+    }
+
+    class IsAdultTestLogic : ILogic
+    {
+        public bool Evaluate(EventContext context, Game game)
+        {
+            return context.CurrentCharacter.Age >= 21;
         }
     }
 

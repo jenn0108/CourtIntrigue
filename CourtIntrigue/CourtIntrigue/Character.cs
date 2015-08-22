@@ -20,8 +20,10 @@ namespace CourtIntrigue
         public int WillPower { get; private set; }
         public Dynasty Dynasty { get; private set; }
         public GenderEnum Gender { get; private set; }
-        public DependentCharacter Spouse { get; private set; }
-        public List<DependentCharacter> Children { get; private set; }
+        public Character Spouse { get; private set; }
+        public Character Father { get; private set; }
+        public Character Mother { get; private set; }
+        public List<Character> Children { get; private set; }
         public Room Home { get; private set; }
         protected Room room;
         protected List<InformationInstance> KnownInformation { get; private set; }
@@ -83,13 +85,16 @@ namespace CourtIntrigue
             traits = new Dictionary<string, Trait>();
             jobs = new Dictionary<string, Job>();
             prestigeModifiers = new HashSet<PrestigeModifier>();
+            Children = new List<Character>();
         }
 
-        public void AssignFamily(DependentCharacter spouse, List<DependentCharacter> children, Room home, DNA dna)
+        public void AssignFamily(Character spouse, List<Character> children, Room home, DNA husbandDna, DNA wifeDna)
         {
-            DNA = dna;
+            DNA = husbandDna;
             Home = home;
             Spouse = spouse;
+            spouse.Spouse = this;
+            spouse.DNA = wifeDna;
             Children = children;
             CharacterLog("Created family for " + Name + " with spouse: " + spouse.Name + " and children: " + string.Join(", ", children.Select(c => c.Name + "(" + c.Gender.ToString() + ")")));
 
@@ -98,6 +103,9 @@ namespace CourtIntrigue
             foreach(var c in children)
             {
                 c.Home = home;
+                c.Father = this;
+                c.Mother = spouse;
+                c.DNA = DNA.CreateChild(husbandDna, wifeDna, Game);
             }
         }
 
@@ -197,7 +205,7 @@ namespace CourtIntrigue
 
             KnownInformation = KnownInformation.Where(info => !info.IsExpired(Game.CurrentDay)).ToList();
 
-            Room[] rooms = Game.CommonRooms.Union(Home.Yield()).ToArray();
+            Room[] rooms = Game.GetRooms(this).Union(Home.Yield()).ToArray();
 
             int index = OnBeginDay(rooms);
             if (index == Game.CommonRooms.Length)

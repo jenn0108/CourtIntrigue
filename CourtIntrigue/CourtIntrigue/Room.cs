@@ -16,6 +16,7 @@ namespace CourtIntrigue
         public bool Common { get; private set; }
         public string[] SoloActions { get; private set; }
         public string[] PairActions { get; private set; }
+        public ILogic Requirements { get; private set; }
 
         public IEnumerable<Character> GetCharacters(Character skip = null)
         {
@@ -39,13 +40,14 @@ namespace CourtIntrigue
             }
         }
 
-        public Room(string id, string name, bool common, string[] soloActions, string[] pairActions)
+        public Room(string id, string name, bool common, string[] soloActions, string[] pairActions, ILogic requirements)
         {
             Identifier = id;
             Name = name;
             PairActions = pairActions;
             Common = common;
             SoloActions = soloActions;
+            Requirements = requirements;
             if (soloActions == null || soloActions.Length == 0)
             {
                 throw new ArgumentNullException("Rooms must have at least one action");
@@ -83,7 +85,7 @@ namespace CourtIntrigue
 
         public Room Clone()
         {
-            return new Room(Identifier, Name, Common, SoloActions, PairActions);
+            return new Room(Identifier, Name, Common, SoloActions, PairActions, Requirements);
         }
 
         public override string ToString()
@@ -107,7 +109,7 @@ namespace CourtIntrigue
             return rooms.Where(r => r.Identifier == id).First();
         }
 
-        public void LoadRoomsFromFile(string filename)
+        public void LoadRoomsFromFile(string filename, Dictionary<string, int> badTags)
         {
             using (XmlReader reader = XmlReader.Create(filename))
             {
@@ -115,20 +117,34 @@ namespace CourtIntrigue
                 {
                     if (reader.NodeType == XmlNodeType.Element && reader.Name == "rooms")
                     {
-                        ReadRooms(reader);
+                        ReadRooms(reader, badTags);
+                    }
+                    else if (reader.NodeType == XmlNodeType.Element)
+                    {
+                        if (badTags.ContainsKey(reader.Name))
+                            ++badTags[reader.Name];
+                        else
+                            badTags.Add(reader.Name, 1);
                     }
                 }
             }
         }
 
-        private void ReadRooms(XmlReader reader)
+        private void ReadRooms(XmlReader reader, Dictionary<string, int> badTags)
         {
             while (reader.Read())
             {
                 if (reader.NodeType == XmlNodeType.Element && reader.Name == "room")
                 {
-                    Room r = ReadRoom(reader);
+                    Room r = ReadRoom(reader, badTags);
                     rooms.Add(r);
+                }
+                else if (reader.NodeType == XmlNodeType.Element)
+                {
+                    if (badTags.ContainsKey(reader.Name))
+                        ++badTags[reader.Name];
+                    else
+                        badTags.Add(reader.Name, 1);
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "rooms")
                 {
@@ -137,13 +153,14 @@ namespace CourtIntrigue
             }
         }
 
-        private Room ReadRoom(XmlReader reader)
+        private Room ReadRoom(XmlReader reader, Dictionary<string, int> badTags)
         {
             string identifier = null;
             string name = null;
             bool common = false;
             List<string> soloActions = new List<string>();
             List<string> pairActions = new List<string>();
+            ILogic requirements = Logic.TRUE;
             while (reader.Read())
             {
                 if (reader.NodeType == XmlNodeType.Element && reader.Name == "id")
@@ -166,12 +183,23 @@ namespace CourtIntrigue
                 {
                     pairActions = ReadActions(reader);
                 }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "requirements")
+                {
+                    requirements = XmlHelper.ReadLogic(reader, badTags);
+                }
+                else if (reader.NodeType == XmlNodeType.Element)
+                {
+                    if (badTags.ContainsKey(reader.Name))
+                        ++badTags[reader.Name];
+                    else
+                        badTags.Add(reader.Name, 1);
+                }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "room")
                 {
                     break;
                 }
             }
-            return new Room(identifier, name, common, soloActions.ToArray(), pairActions.ToArray());
+            return new Room(identifier, name, common, soloActions.ToArray(), pairActions.ToArray(), requirements);
         }
 
 
@@ -196,6 +224,16 @@ namespace CourtIntrigue
         public Room MakeUniqueRoom(string id)
         {
             return GetRoomById(id).Clone();
+        }
+
+        public IEnumerable<Room> GetRooms(Character character, Game game)
+        {
+            EventContext context = new EventContext(null, character, null);
+            foreach(var room in rooms)
+            {
+                if (room.Common && room.Requirements.Evaluate(context, game))
+                    yield return room;
+            }
         }
     }
 }

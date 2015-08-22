@@ -4,6 +4,8 @@
     <description>You decide today's a good day for taxes.</description>
     <requirements>
       <action_id>COLLECT_TAXES_ACTION_ID</action_id>
+      <is_male/>
+      <is_adult/>
       <!-- The King collects taxes through the Steward -->
       <not>
         <has_job>KING_JOB</has_job>
@@ -62,6 +64,8 @@
     <requirements>
       <action_id>SPEND_TIME_WITH_WIFE_ACTION_ID</action_id>
       <has_spouse/>
+      <is_male/>
+      <is_adult/>
     </requirements>
     <options>
       <option>
@@ -75,6 +79,24 @@
     <requirements>
       <action_id>SPEND_TIME_WITH_WIFE_ACTION_ID</action_id>
       <has_spouse/>
+      <is_male/>
+      <is_adult/>
+    </requirements>
+    <options>
+      <option>
+        <label>OK</label>
+      </option>
+    </options>
+  </event>
+  <event>
+    <id>DO_NOTHING_EVENT</id>
+    <description>You spend some time sitting down.</description>
+    <requirements>
+      <action_id>DO_NOTHING_ACTION_ID</action_id>
+      <not>
+        <is_male/>
+        <is_adult/>
+      </not>
     </requirements>
     <options>
       <option>

@@ -178,6 +178,18 @@ namespace CourtIntrigue
                 {
                     expressions.Add(Logic.HAS_SPOUSE);
                 }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "is_male")
+                {
+                    expressions.Add(Logic.IS_MALE);
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "is_female")
+                {
+                    expressions.Add(Logic.IS_FEMALE);
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "is_adult")
+                {
+                    expressions.Add(Logic.IS_ADULT);
+                }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "has_trait")
                 {
                     expressions.Add(new HasTraitLogic(reader.ReadElementContentAsString()));
