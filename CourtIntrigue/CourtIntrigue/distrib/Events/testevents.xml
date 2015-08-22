@@ -51,6 +51,8 @@
     <description>You wander around trying to pick up useful tidbits of information.</description>
     <requirements>
       <action_id>EAVESDROP_ACTION</action_id>
+      <is_male/>
+      <is_adult/>
     </requirements>
     <options>
       <option>

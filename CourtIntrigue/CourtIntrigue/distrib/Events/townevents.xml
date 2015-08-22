@@ -4,6 +4,8 @@
     <description>You step into the tailor's shop.</description>
     <requirements>
       <action_id>VISIT_TAILOR_ACTION</action_id>
+      <is_male/>
+      <is_adult/>
     </requirements>
     <options>
       <option>
