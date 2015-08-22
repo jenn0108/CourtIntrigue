@@ -8,6 +8,17 @@
     </requirements>
     <daily_change>1</daily_change>
   </prestige_mod>
+  
+  <prestige_mod>
+    <id>NO_CHILDREN_RECENTLY_PRESTIGE_MOD</id>
+    <label>Maybe you're gay</label>
+    <description>It seems a little strange you and your wife haven't conceived recently.</description>
+    <requirements>
+      <has_spouse/>
+      <var_lt name="LastBirth">TIME</var_lt>
+    </requirements>
+    <daily_change>-2</daily_change>
+  </prestige_mod>
 
   <!-- Job Modifiers -->
   <prestige_mod>
@@ -133,12 +144,72 @@
   </prestige_mod>
   <prestige_mod>
     <id>SQUIRE_PRESTIGE_MOD</id>
-    <label>Page</label>
+    <label>Squire</label>
     <description>Being a squire is an important part of a feudal upbringing.</description>
     <requirements>
       <has_job>SQUIRE_JOB</has_job>
     </requirements>
     <daily_change>2</daily_change>
+  </prestige_mod>
+
+  <!-- TODO:The the bonus for this prestige mod should apply for each child not just once -->
+  <prestige_mod>
+    <id>CHILD_PAGE_PRESTIGE_MOD</id>
+    <label>Page</label>
+    <description>Being a page is an important part of a feudal upbringing.</description>
+    <requirements>
+      <any_child>
+        <has_job>PAGE_JOB</has_job>
+      </any_child>
+    </requirements>
+    <daily_change>1</daily_change>
+  </prestige_mod>
+
+  <!-- TODO:The the bonus for this prestige mod should apply for each child not just once -->
+  <prestige_mod>
+    <id>CHILD_SQUIRE_PRESTIGE_MOD</id>
+    <label>Squire</label>
+    <description>Being a squire is an important part of a feudal upbringing.</description>
+    <requirements>
+      <any_child>
+        <has_job>SQUIRE_JOB</has_job>
+      </any_child>
+    </requirements>
+    <daily_change>1</daily_change>
+  </prestige_mod>
+
+  <!-- TODO:The the bonus for this prestige mod should apply for each child not just once -->
+  <prestige_mod>
+    <id>PAGELESS_CHILD_PRESTIGE_MOD</id>
+    <label>Not Page?</label>
+    <description>You have a child of page age who isn't one!</description>
+    <requirements>
+      <any_child>
+        <not>
+          <has_job>PAGE_JOB</has_job>
+        </not>
+        <var_ge name="AGE">7</var_ge>
+        <var_le name="AGE">15</var_le>
+      </any_child>
+    </requirements>
+    <daily_change>-1</daily_change>
+  </prestige_mod>
+
+  <!-- TODO:The the bonus for this prestige mod should apply for each child not just once -->
+  <prestige_mod>
+    <id>SQUIRELESS_CHILD_PRESTIGE_MOD</id>
+    <label>Not Squire?</label>
+    <description>You have a child of squire age who isn't one!</description>
+    <requirements>
+      <any_child>
+        <not>
+          <has_job>SQUIRE_JOB</has_job>
+        </not>
+        <var_ge name="AGE">15</var_ge>
+        <var_le name="AGE">21</var_le>
+      </any_child>
+    </requirements>
+    <daily_change>-2</daily_change>
   </prestige_mod>
   
   <!-- Transient modifiers -->
@@ -156,11 +227,79 @@
   <prestige_mod>
     <id>WELLDRESS_PRESTIGE_MOD</id>
     <label>Well Dressed</label>
-    <description>A well dressed man is well respected.</description>
+    <description>A well dressed person is well respected.</description>
     <requirements>
       <var_gt name="WellDressed">TIME</var_gt>
     </requirements>
-    <daily_change>10</daily_change>
+    <daily_change>2</daily_change>
+  </prestige_mod>
+
+  <prestige_mod>
+    <id>POORDRESS_PRESTIGE_MOD</id>
+    <label>Poorly Dressed</label>
+    <description>A poorly dressed person is shameful.</description>
+    <requirements>
+      <var_lt name="WellDressed">TIME</var_lt>
+    </requirements>
+    <daily_change>-2</daily_change>
+  </prestige_mod>
+
+  <prestige_mod>
+    <id>SPOUSE_WELLDRESS_PRESTIGE_MOD</id>
+    <label>Spouse Well Dressed</label>
+    <description>A well dressed spouse is increases your social standing.</description>
+    <requirements>
+      <set_scope name="SPOUSE">
+        <var_gt name="WellDressed">TIME</var_gt>
+      </set_scope>
+    </requirements>
+    <daily_change>2</daily_change>
+  </prestige_mod>
+
+  <prestige_mod>
+    <id>SPOUSE_POORDRESS_PRESTIGE_MOD</id>
+    <label>Poorly Dressed</label>
+    <description>A poorly dressed spouse is an embarrasement.</description>
+    <requirements>
+      <set_scope name="SPOUSE">
+        <var_lt name="WellDressed">TIME</var_lt>
+      </set_scope>
+    </requirements>
+    <daily_change>-2</daily_change>
+  </prestige_mod>
+
+  <prestige_mod>
+    <id>CHILDREN_WELLDRESS_PRESTIGE_MOD</id>
+    <label>Child Well Dressed</label>
+    <description>Having well dressed children is increases your social standing.</description>
+    <requirements>
+      <all_child>
+        <var_gt name="WellDressed">TIME</var_gt>
+      </all_child>
+    </requirements>
+    <daily_change>2</daily_change>
+  </prestige_mod>
+
+  <prestige_mod>
+    <id>CHILDREN_POORDRESS_PRESTIGE_MOD</id>
+    <label>Child Poorly Dressed</label>
+    <description>A poorly dressed child is an embarrasement.</description>
+    <requirements>
+      <any_child>
+        <var_lt name="WellDressed">TIME</var_lt>
+      </any_child>
+    </requirements>
+    <daily_change>-2</daily_change>
+  </prestige_mod>
+
+  <prestige_mod>
+    <id>NOT_SEEN_AT_CHURCH_PRESTIGE_MOD</id>
+    <label>Not seen at church</label>
+    <description>You haven't been seen at church recently.  Do you even believe in the Church?</description>
+    <requirements>
+      <var_lt name="LastTimeAtChurch">TIME</var_lt>
+    </requirements>
+    <daily_change>-10</daily_change>
   </prestige_mod>
 
   <prestige_mod>

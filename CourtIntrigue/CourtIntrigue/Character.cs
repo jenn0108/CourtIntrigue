@@ -392,6 +392,15 @@ namespace CourtIntrigue
 
         public int GetVariable(string name)
         {
+            if (name == "GOLD")
+            {
+                return Money;
+            }
+            else if (name == "AGE")
+            {
+                return Age;
+            }
+
             int val = 0;
             variables.TryGetValue(name, out val);
             return val;

@@ -47,7 +47,6 @@ Mechanics:
 --------------------------------------
 
 Characters have traits & money(like ck2)
-Families/Dynasties have prestige
 
 Daily Prestige changes:
 ------------------------

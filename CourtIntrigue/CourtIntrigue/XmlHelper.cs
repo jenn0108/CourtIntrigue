@@ -186,13 +186,9 @@ namespace CourtIntrigue
                 {
                     expressions.Add(new AnyChildLogic(ReadLogic(reader, badTags)));
                 }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "age_at_least")
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "all_child")
                 {
-                    expressions.Add(new AgeAtLeastLogic(reader.ReadElementContentAsInt()));
-                }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "age_at_most")
-                {
-                    expressions.Add(new AgeAtMostLogic(reader.ReadElementContentAsInt()));
+                    expressions.Add(new AllChildLogic(ReadLogic(reader, badTags)));
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "prestige_rank")
                 {
@@ -248,10 +244,6 @@ namespace CourtIntrigue
                 {
                     string varName = reader.GetAttribute("name");
                     expressions.Add(new VariableNotEqualLogic(varName, reader.ReadElementContentAsString()));
-                }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "has_gold")
-                {
-                    expressions.Add(new HasGoldLogic(reader.ReadElementContentAsInt()));
                 }
                 else if (reader.NodeType == XmlNodeType.Element)
                 {
@@ -553,14 +545,28 @@ namespace CourtIntrigue
 
         public static int GetTestValue(EventContext context, Game game, string value)
         {
+            //These values must match the special cases on IsSpecialName
             if (value == "TIME")
                 return game.CurrentTime;
+            else if (value == "AGE")
+                return context.CurrentCharacter.Age;
+            else if (value == "GOLD")
+                return context.CurrentCharacter.Money;
 
             int intValue;
             if (int.TryParse(value, out intValue))
                 return intValue;
 
             return context.CurrentCharacter.GetVariable(value);
+        }
+
+        public static bool IsSpecialName(string value)
+        {
+            //These values must match the special cases on GetTestValue
+            if (value == "TIME" || value == "AGE" || value == "GOLD")
+                return true;
+
+            return false;
         }
     }
 

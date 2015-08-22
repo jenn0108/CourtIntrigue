@@ -9,7 +9,7 @@
       <option>
         <label>Buy yourself new clothes</label>
         <requirements>
-          <has_gold>5</has_gold>
+          <var_ge name="GOLD">5</var_ge>
         </requirements>
         <exec>
           <!-- Buying clothes is very distracting -->

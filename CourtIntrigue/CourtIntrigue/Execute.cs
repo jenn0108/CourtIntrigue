@@ -512,6 +512,9 @@ namespace CourtIntrigue
 
         public void Execute(EventResults result, Game game, EventContext context)
         {
+            if (XmlHelper.IsSpecialName(varName))
+                throw new InvalidOperationException("Cannot assign to special properties: " + varName);
+
             context.CurrentCharacter.SetVariable(varName, XmlHelper.GetTestValue(context, game, newValue));
         }
 
@@ -533,6 +536,9 @@ namespace CourtIntrigue
 
         public void Execute(EventResults result, Game game, EventContext context)
         {
+            if (XmlHelper.IsSpecialName(varName))
+                throw new InvalidOperationException("Cannot assign to special properties: " + varName);
+
             context.CurrentCharacter.SetVariable(varName, context.CurrentCharacter.GetVariable(varName) + XmlHelper.GetTestValue(context, game, offset));
         }
 

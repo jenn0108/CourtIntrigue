@@ -95,8 +95,8 @@
     <label>Page</label>
     <description>Trained to serve knights.</description>
     <requirements>
-      <age_at_least>7</age_at_least>
-      <age_at_most>16</age_at_most>
+      <var_ge name="AGE">7</var_ge>
+      <var_le name="AGE">15</var_le>
     </requirements>
   </job>
   <job>
@@ -104,8 +104,8 @@
     <label>Squire</label>
     <description>Assists knights.</description>
     <requirements>
-      <age_at_least>16</age_at_least>
-      <age_at_most>21</age_at_most>
+      <var_ge name="AGE">15</var_ge>
+      <var_le name="AGE">21</var_le>
     </requirements>
   </job>
 </jobs>

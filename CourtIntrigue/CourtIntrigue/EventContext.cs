@@ -69,6 +69,10 @@ namespace CourtIntrigue
             {
                 return CurrentScope;
             }
+            else if (name == "SPOUSE")
+            {
+                return CurrentCharacter.Spouse;
+            }
 
             foreach (var pair in scopes)
             {

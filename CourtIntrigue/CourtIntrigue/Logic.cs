@@ -153,33 +153,33 @@ namespace CourtIntrigue
         }
     }
 
-    class AgeAtLeastLogic : ILogic
+    class AllChildLogic : ILogic
     {
-        private int compareAge;
+        private ILogic requirements;
 
-        public AgeAtLeastLogic(int compareAge)
+        public AllChildLogic(ILogic requirements)
         {
-            this.compareAge = compareAge;
+            this.requirements = requirements;
         }
 
         public bool Evaluate(EventContext context, Game game)
         {
-            return context.CurrentCharacter.Age >= compareAge;
-        }
-    }
-
-    class AgeAtMostLogic : ILogic
-    {
-        private int compareAge;
-
-        public AgeAtMostLogic(int compareAge)
-        {
-            this.compareAge = compareAge;
-        }
-
-        public bool Evaluate(EventContext context, Game game)
-        {
-            return context.CurrentCharacter.Age <= compareAge;
+            //No children means its never true.  Used in CHILDREN_WELLDRESS_PRESTIGE_MOD.
+            if (context.CurrentCharacter.Children.Count == 0)
+                return false;
+            
+            for (int i = 0; i < context.CurrentCharacter.Children.Count; ++i)
+            {
+                context.PushScope(context.CurrentCharacter.Children[i]);
+                if (!requirements.Evaluate(context, game))
+                {
+                    //We've found a child that doesn't the requirements.  This is a failure
+                    context.PopScope();
+                    return false;
+                }
+                context.PopScope();
+            }
+            return true;
         }
     }
 
@@ -377,21 +377,6 @@ namespace CourtIntrigue
         public bool Evaluate(EventContext context, Game game)
         {
             return context.CurrentCharacter.GetVariable(varName) != XmlHelper.GetTestValue(context, game, testValue);
-        }
-    }
-
-    class HasGoldLogic : ILogic
-    {
-        private int gold;
-
-        public HasGoldLogic(int gold)
-        {
-            this.gold = gold;
-        }
-
-        public bool Evaluate(EventContext context, Game game)
-        {
-            return context.CurrentCharacter.Money >= gold;
         }
     }
 
