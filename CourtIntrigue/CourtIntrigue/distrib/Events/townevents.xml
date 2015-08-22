@@ -23,7 +23,7 @@
         </exec>
       </option>
       <option>
-        <label>Browes the tailor services</label>
+        <label>Browse the tailor services</label>
         <exec>
           <!-- Spending time in the shop drastically reduces your chance of seeing things -->
           <multiply_observe_chance>0.5</multiply_observe_chance>
