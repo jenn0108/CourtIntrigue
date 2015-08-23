@@ -267,10 +267,11 @@ namespace CourtIntrigue
             return information[index];
         }
 
-        public Character ChooseCharacter()
+        public Character ChooseCharacter(ILogic requirements, EventContext context)
         {
-            int index = OnChooseCharacter(Game.AllCharacters);
-            return Game.AllCharacters[index];
+            Character[] filteredCharacters = Game.FilterCharacters(requirements, context);
+            int index = OnChooseCharacter(filteredCharacters);
+            return filteredCharacters[index];
         }
 
         public virtual EventContext OnTick(Action[] soloActions, Dictionary<Character, Action[]> characterActions)

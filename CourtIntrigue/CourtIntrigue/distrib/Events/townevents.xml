@@ -9,19 +9,42 @@
     </requirements>
     <options>
       <option>
-        <label>Buy yourself new clothes</label>
+        <label>Buy new clothes for your family</label>
         <requirements>
           <var_ge name="GOLD">5</var_ge>
         </requirements>
         <exec>
           <!-- Buying clothes is very distracting -->
           <multiply_observe_chance>0.0</multiply_observe_chance>
-          <spend_gold>5</spend_gold>
-          <set_variable name="WellDressed">TIME</set_variable>
-          <offset_variable name="WellDressed">50</offset_variable>
-          <trigger_event>
-            <id>VISIT_TAILOR_BOUGHT_SELF_CLOTHES_EVENT</id>
-          </trigger_event>
+          <choose_character name="CHOSEN_RELATION">
+            <requirements>
+              <or>
+                <is_spouse_of>ROOT</is_spouse_of>
+                <is_child_of>ROOT</is_child_of>
+                <is_character>ROOT</is_character>
+              </or>
+            </requirements>
+            <exec>
+              <set_scope name="ROOT">
+                <if>
+                  <requirements>
+                    <is_character>CHOSEN_RELATION</is_character>
+                  </requirements>
+                  <then>
+                    <trigger_event>
+                      <id>BUY_CLOTHES_FOR_SELF_EVENT</id>
+                    </trigger_event>
+                  </then>
+                  <else>
+                    <trigger_event>
+                      <id>BUY_CLOTHES_FOR_EVENT</id>
+                      <parameters Recipient="CHOSEN_RELATION"/>
+                    </trigger_event>
+                  </else>
+                </if>
+              </set_scope>
+            </exec>
+          </choose_character>
         </exec>
       </option>
       <option>
@@ -38,7 +61,7 @@
   </event>
   <event>
     <id>VISIT_TAILOR_EVENT_1</id>
-    <description>A man's outfit costs 5 gold.</description>
+    <description>Outfits cost 5 gold each.</description>
     <options>
       <option>
         <label>OK</label>
@@ -46,11 +69,35 @@
     </options>
   </event>
   <event>
-    <id>VISIT_TAILOR_BOUGHT_SELF_CLOTHES_EVENT</id>
-    <description>You bought yourself a swanky new outfit!</description>
+    <id>BUY_CLOTHES_FOR_EVENT</id>
+    <description>You bought $Recipient.Name$ a nice new outfit!</description>
+    <parameters>
+      <parameter type="character">Recipient</parameter>
+    </parameters>
     <options>
       <option>
         <label>OK</label>
+        <exec>
+          <spend_gold>5</spend_gold>
+          <set_scope name="Recipient">
+            <set_variable name="WellDressed">TIME</set_variable>
+            <offset_variable name="WellDressed">50</offset_variable>
+          </set_scope>
+        </exec>
+      </option>
+    </options>
+  </event>
+  <event>
+    <id>BUY_CLOTHES_FOR_SELF_EVENT</id>
+    <description>You bought yourself a nice new outfit!</description>
+    <options>
+      <option>
+        <label>OK</label>
+        <exec>
+          <spend_gold>5</spend_gold>
+          <set_variable name="WellDressed">TIME</set_variable>
+          <offset_variable name="WellDressed">50</offset_variable>
+        </exec>
       </option>
     </options>
   </event>

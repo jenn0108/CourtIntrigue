@@ -192,12 +192,14 @@
         <label>Speak about someone positively</label>
         <exec>
           <choose_character name="ABOUT">
-            <set_scope name="ROOT">
-              <trigger_event>
-                <id>POSITIVE_TALK_EVENT</id>
-                <parameters To="TARGET" About="ABOUT"/>
-              </trigger_event>
-            </set_scope>
+            <exec>
+              <set_scope name="ROOT">
+                <trigger_event>
+                  <id>POSITIVE_TALK_EVENT</id>
+                  <parameters To="TARGET" About="ABOUT"/>
+                </trigger_event>
+              </set_scope>
+            </exec>
           </choose_character>
         </exec>
       </option>
@@ -205,12 +207,14 @@
         <label>Speak about someone negatively</label>
         <exec>
           <choose_character name="ABOUT">
-            <set_scope name="ROOT">
-              <trigger_event>
-                <id>NEGATIVE_TALK_EVENT</id>
-                <parameters To="TARGET" About="ABOUT"/>
-              </trigger_event>
-            </set_scope>
+            <exec>
+              <set_scope name="ROOT">
+                <trigger_event>
+                  <id>NEGATIVE_TALK_EVENT</id>
+                  <parameters To="TARGET" About="ABOUT"/>
+                </trigger_event>
+              </set_scope>
+            </exec>
           </choose_character>
         </exec>
       </option>

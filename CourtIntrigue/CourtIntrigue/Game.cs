@@ -286,6 +286,21 @@ namespace CourtIntrigue
             return roomManager.GetRooms(character, this);
         }
 
+        public Character[] FilterCharacters(ILogic requirements, EventContext context)
+        {
+            List<Character> matchingCharacters = new List<Character>();
+            foreach (Character character in this.AllCharacters)
+            {
+                context.PushScope(character);
+                if (requirements.Evaluate(context, this))
+                {
+                    matchingCharacters.Add(character);
+                }
+                context.PopScope();
+            }
+            return matchingCharacters.ToArray();
+        }
+
         public OpinionModifier GetOpinionModifier(string identifier)
         {
             return modifierManager.GetOpinionModifierById(identifier);

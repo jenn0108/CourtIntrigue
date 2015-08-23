@@ -231,15 +231,17 @@ namespace CourtIntrigue
     {
         private string scopeName;
         private IExecute operation;
-        public ChooseCharacterExecute(string scopeName, IExecute operation)
+        private ILogic requirements;
+        public ChooseCharacterExecute(string scopeName, IExecute operation, ILogic requirements)
         {
             this.scopeName = scopeName;
             this.operation = operation;
+            this.requirements = requirements;
         }
 
         public void Execute(EventResults result, Game game, EventContext context)
         {
-            Character chosen = context.CurrentCharacter.ChooseCharacter();
+            Character chosen = context.CurrentCharacter.ChooseCharacter(requirements, context);
             context.PushScope(chosen, scopeName);
             operation.Execute(result, game, context);
             context.PopScope();

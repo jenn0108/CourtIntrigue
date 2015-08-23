@@ -50,7 +50,7 @@ namespace CourtIntrigue
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "choose_character")
                 {
                     string scopeName = reader.GetAttribute("name");
-                    expressions.Add(new ChooseCharacterExecute(scopeName, ReadExecute(reader, badTags)));
+                    expressions.Add(ReadChooseCharacter(reader, badTags));
                 }
                 else if (reader.NodeType == XmlNodeType.Element && (reader.Name == "observe_information"))
                 {
@@ -140,129 +140,9 @@ namespace CourtIntrigue
             List<ILogic> expressions = new List<ILogic>();
             while (reader.Read())
             {
-                if (reader.NodeType == XmlNodeType.Element && reader.Name == "action_id")
+                if (reader.NodeType == XmlNodeType.Element)
                 {
-                    expressions.Add(new ActionIdentifierTestLogic(reader.ReadElementContentAsString()));
-                }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "has_information")
-                {
-                    string about = reader.GetAttribute("about");
-                    string typeName = reader.GetAttribute("type");
-                    InformationType type = StringToInformationType(typeName);
-
-                    expressions.Add(new HasInformationTestLogic(about, type));
-                }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "true")
-                {
-                    expressions.Add(Logic.TRUE);
-                }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "false")
-                {
-                    expressions.Add(Logic.FALSE);
-                }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "not")
-                {
-                    expressions.Add(new NotLogic(ReadLogic(reader, badTags)));
-                }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "and")
-                {
-                    //ReadLogic will just and whatever it finds.
-                    expressions.Add(ReadLogic(reader, badTags));
-                }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "or")
-                {
-                    //ReadLogic will just and whatever it finds.
-                    expressions.Add(ReadOrLogic(reader, badTags));
-                }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "has_spouse")
-                {
-                    expressions.Add(Logic.HAS_SPOUSE);
-                }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "is_male")
-                {
-                    expressions.Add(Logic.IS_MALE);
-                }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "is_female")
-                {
-                    expressions.Add(Logic.IS_FEMALE);
-                }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "is_adult")
-                {
-                    expressions.Add(Logic.IS_ADULT);
-                }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "has_trait")
-                {
-                    expressions.Add(new HasTraitLogic(reader.ReadElementContentAsString()));
-                }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "any_child")
-                {
-                    expressions.Add(new AnyChildLogic(ReadLogic(reader, badTags)));
-                }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "all_child")
-                {
-                    expressions.Add(new AllChildLogic(ReadLogic(reader, badTags)));
-                }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "prestige_rank")
-                {
-                    expressions.Add(new PrestigeRankLogic(reader.ReadElementContentAsInt()));
-                }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "job_requirements")
-                {
-                    expressions.Add(new JobRequirementsLogic(reader.ReadElementContentAsString()));
-                }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "has_title_type")
-                {
-                    expressions.Add(new HasTitleTypeLogic(reader.ReadElementContentAsString()));
-                }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "has_job")
-                {
-                    expressions.Add(new HasJobLogic(reader.ReadElementContentAsString()));
-                }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "test_event_options")
-                {
-                    expressions.Add(ReadTestEventOptionsLogic(reader, badTags));
-                }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "set_scope")
-                {
-                    string scopeName = reader.GetAttribute("name");
-                    expressions.Add(new SetScopeLogic(scopeName, ReadLogic(reader, badTags)));
-                }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "var_gt")
-                {
-                    string varName = reader.GetAttribute("name");
-                    expressions.Add(new VariableGreaterThanLogic(varName, reader.ReadElementContentAsString()));
-                }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "var_lt")
-                {
-                    string varName = reader.GetAttribute("name");
-                    expressions.Add(new VariableLessThanLogic(varName, reader.ReadElementContentAsString()));
-                }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "var_eq")
-                {
-                    string varName = reader.GetAttribute("name");
-                    expressions.Add(new VariableEqualLogic(varName, reader.ReadElementContentAsString()));
-                }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "var_ge")
-                {
-                    string varName = reader.GetAttribute("name");
-                    expressions.Add(new VariableGreaterOrEqualLogic(varName, reader.ReadElementContentAsString()));
-                }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "var_le")
-                {
-                    string varName = reader.GetAttribute("name");
-                    expressions.Add(new VariableLessOrEqualLogic(varName, reader.ReadElementContentAsString()));
-                }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "var_ne")
-                {
-                    string varName = reader.GetAttribute("name");
-                    expressions.Add(new VariableNotEqualLogic(varName, reader.ReadElementContentAsString()));
-                }
-                else if (reader.NodeType == XmlNodeType.Element)
-                {
-                    if (badTags.ContainsKey(reader.Name))
-                        ++badTags[reader.Name];
-                    else
-                        badTags.Add(reader.Name, 1);
+                    expressions.Add(ReadSingleLogic(reader, badTags));
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == tag)
                 {
@@ -288,6 +168,148 @@ namespace CourtIntrigue
             }
             else
                 return new AndLogic(expressions.ToArray());
+        }
+
+        private static ILogic ReadSingleLogic(XmlReader reader, Dictionary<string, int> badTags)
+        {
+            if (reader.NodeType == XmlNodeType.Element && reader.Name == "action_id")
+            {
+                return new ActionIdentifierTestLogic(reader.ReadElementContentAsString());
+            }
+            else if (reader.NodeType == XmlNodeType.Element && reader.Name == "has_information")
+            {
+                string about = reader.GetAttribute("about");
+                string typeName = reader.GetAttribute("type");
+                InformationType type = StringToInformationType(typeName);
+
+                return new HasInformationTestLogic(about, type);
+            }
+            else if (reader.NodeType == XmlNodeType.Element && reader.Name == "true")
+            {
+                return Logic.TRUE;
+            }
+            else if (reader.NodeType == XmlNodeType.Element && reader.Name == "false")
+            {
+                return Logic.FALSE;
+            }
+            else if (reader.NodeType == XmlNodeType.Element && reader.Name == "not")
+            {
+                return new NotLogic(ReadLogic(reader, badTags));
+            }
+            else if (reader.NodeType == XmlNodeType.Element && reader.Name == "and")
+            {
+                //ReadLogic will just and whatever it finds.
+                return ReadLogic(reader, badTags);
+            }
+            else if (reader.NodeType == XmlNodeType.Element && reader.Name == "or")
+            {
+                //ReadLogic will just or whatever it finds.
+                return ReadOrLogic(reader, badTags);
+            }
+            else if (reader.NodeType == XmlNodeType.Element && reader.Name == "has_spouse")
+            {
+                return Logic.HAS_SPOUSE;
+            }
+            else if (reader.NodeType == XmlNodeType.Element && reader.Name == "is_male")
+            {
+                return Logic.IS_MALE;
+            }
+            else if (reader.NodeType == XmlNodeType.Element && reader.Name == "is_female")
+            {
+                return Logic.IS_FEMALE;
+            }
+            else if (reader.NodeType == XmlNodeType.Element && reader.Name == "is_adult")
+            {
+                return Logic.IS_ADULT;
+            }
+            else if (reader.NodeType == XmlNodeType.Element && reader.Name == "is_spouse_of")
+            {
+                return new IsSpouseOfLogic(reader.ReadElementContentAsString());
+            }
+            else if (reader.NodeType == XmlNodeType.Element && reader.Name == "is_child_of")
+            {
+                return new IsChildOfLogic(reader.ReadElementContentAsString());
+            }
+            else if (reader.NodeType == XmlNodeType.Element && reader.Name == "is_character")
+            {
+                return new IsCharacterLogic(reader.ReadElementContentAsString());
+            }
+
+            else if (reader.NodeType == XmlNodeType.Element && reader.Name == "has_trait")
+            {
+                return new HasTraitLogic(reader.ReadElementContentAsString());
+            }
+            else if (reader.NodeType == XmlNodeType.Element && reader.Name == "any_child")
+            {
+                return new AnyChildLogic(ReadLogic(reader, badTags));
+            }
+            else if (reader.NodeType == XmlNodeType.Element && reader.Name == "all_child")
+            {
+                return new AllChildLogic(ReadLogic(reader, badTags));
+            }
+            else if (reader.NodeType == XmlNodeType.Element && reader.Name == "prestige_rank")
+            {
+                return new PrestigeRankLogic(reader.ReadElementContentAsInt());
+            }
+            else if (reader.NodeType == XmlNodeType.Element && reader.Name == "job_requirements")
+            {
+                return new JobRequirementsLogic(reader.ReadElementContentAsString());
+            }
+            else if (reader.NodeType == XmlNodeType.Element && reader.Name == "has_title_type")
+            {
+                return new HasTitleTypeLogic(reader.ReadElementContentAsString());
+            }
+            else if (reader.NodeType == XmlNodeType.Element && reader.Name == "has_job")
+            {
+                return new HasJobLogic(reader.ReadElementContentAsString());
+            }
+            else if (reader.NodeType == XmlNodeType.Element && reader.Name == "test_event_options")
+            {
+                return ReadTestEventOptionsLogic(reader, badTags);
+            }
+            else if (reader.NodeType == XmlNodeType.Element && reader.Name == "set_scope")
+            {
+                string scopeName = reader.GetAttribute("name");
+                return new SetScopeLogic(scopeName, ReadLogic(reader, badTags));
+            }
+            else if (reader.NodeType == XmlNodeType.Element && reader.Name == "var_gt")
+            {
+                string varName = reader.GetAttribute("name");
+                return new VariableGreaterThanLogic(varName, reader.ReadElementContentAsString());
+            }
+            else if (reader.NodeType == XmlNodeType.Element && reader.Name == "var_lt")
+            {
+                string varName = reader.GetAttribute("name");
+                return new VariableLessThanLogic(varName, reader.ReadElementContentAsString());
+            }
+            else if (reader.NodeType == XmlNodeType.Element && reader.Name == "var_eq")
+            {
+                string varName = reader.GetAttribute("name");
+                return new VariableEqualLogic(varName, reader.ReadElementContentAsString());
+            }
+            else if (reader.NodeType == XmlNodeType.Element && reader.Name == "var_ge")
+            {
+                string varName = reader.GetAttribute("name");
+                return new VariableGreaterOrEqualLogic(varName, reader.ReadElementContentAsString());
+            }
+            else if (reader.NodeType == XmlNodeType.Element && reader.Name == "var_le")
+            {
+                string varName = reader.GetAttribute("name");
+                return new VariableLessOrEqualLogic(varName, reader.ReadElementContentAsString());
+            }
+            else if (reader.NodeType == XmlNodeType.Element && reader.Name == "var_ne")
+            {
+                string varName = reader.GetAttribute("name");
+                return new VariableNotEqualLogic(varName, reader.ReadElementContentAsString());
+            }
+            else if (reader.NodeType == XmlNodeType.Element)
+            {
+                if (badTags.ContainsKey(reader.Name))
+                    ++badTags[reader.Name];
+                else
+                    badTags.Add(reader.Name, 1);
+            }
+            return Logic.FALSE;
         }
 
         public static Type StringToType(string typeName)
@@ -323,7 +345,7 @@ namespace CourtIntrigue
             {
                 if (reader.NodeType == XmlNodeType.Element)
                 {
-                    expressions.Add(ReadLogic(reader, badTags));
+                    expressions.Add(ReadSingleLogic(reader, badTags));
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "or")
                 {
@@ -610,6 +632,31 @@ namespace CourtIntrigue
 
             return new IfExecute(requirements, thenExecute, elseExecute);
         }
+
+        private static IExecute ReadChooseCharacter(XmlReader reader, Dictionary<string, int> badTags)
+        {
+            ILogic requirements = Logic.TRUE;
+            IExecute exec = Execute.NOOP;
+            string name = reader.GetAttribute("name");
+            while (reader.Read())
+            {
+                if (reader.NodeType == XmlNodeType.Element && reader.Name == "requirements")
+                {
+                    requirements = ReadLogic(reader, badTags);
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "exec")
+                {
+                    exec = ReadExecute(reader, badTags);
+                }
+                else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "choose_character")
+                {
+                    break;
+                }
+            }
+
+            return new ChooseCharacterExecute(name, exec, requirements);
+        }
+
 
         public static int GetTestValue(EventContext context, Game game, string value)
         {

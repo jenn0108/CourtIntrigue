@@ -134,6 +134,52 @@ namespace CourtIntrigue
         }
     }
 
+    class IsChildOfLogic : ILogic
+    {
+        private string otherCharacter;
+
+        public IsChildOfLogic(string otherCharacter)
+        {
+            this.otherCharacter = otherCharacter;
+        }
+
+        public bool Evaluate(EventContext context, Game game)
+        {
+            return (context.GetScopedObjectByName(otherCharacter) as Character).Children.Contains(context.CurrentCharacter);
+        }
+    }
+
+    class IsCharacterLogic : ILogic
+    {
+        private string character;
+
+        public IsCharacterLogic(string character)
+        {
+            this.character = character;
+        }
+
+        public bool Evaluate(EventContext context, Game game)
+        {
+            return (context.GetScopedObjectByName(character) as Character) == context.CurrentCharacter;
+        }
+    }
+
+    class IsSpouseOfLogic : ILogic
+    {
+        private string otherCharacter;
+
+        public IsSpouseOfLogic(string otherCharacter)
+        {
+            this.otherCharacter = otherCharacter;
+        }
+
+
+        public bool Evaluate(EventContext context, Game game)
+        {
+            return (context.GetScopedObjectByName(otherCharacter) as Character).Spouse == context.CurrentCharacter;
+        }
+    }
+
     class HasTraitLogic : ILogic
     {
         private string traitId;
