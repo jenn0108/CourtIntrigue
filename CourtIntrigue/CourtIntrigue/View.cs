@@ -100,6 +100,7 @@ namespace CourtIntrigue
         private void Button_Click(object sender, EventArgs e)
         {
             SelectedIndex = (int)(sender as Button).Tag;
+            top.Controls.Remove(notificator);
             View.DisposeAndClearPanel(top);
             View.DisposeAndClearPanel(bottom);
             mutex.Release();
@@ -203,6 +204,7 @@ namespace CourtIntrigue
         {
             SelectedTop = true;
             SelectedIndex = (int)(sender as Control).Tag;
+            top.Controls.Remove(notificator);
             View.DisposeAndClearPanel(top);
             View.DisposeAndClearPanel(bottom);
             mutex.Release();
@@ -212,6 +214,7 @@ namespace CourtIntrigue
         {
             SelectedTop = false;
             SelectedIndex = (int)(sender as Button).Tag;
+            top.Controls.Remove(notificator);
             View.DisposeAndClearPanel(top);
             View.DisposeAndClearPanel(bottom);
             mutex.Release();
