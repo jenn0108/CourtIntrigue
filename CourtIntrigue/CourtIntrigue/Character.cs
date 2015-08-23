@@ -100,7 +100,8 @@ namespace CourtIntrigue
             Spouse = spouse;
             spouse.Spouse = this;
             spouse.DNA = wifeDna;
-            Children = children;
+            Children = new List<Character>(children);
+            spouse.Children = new List<Character>(children);
             CharacterLog("Created family for " + Name + " with spouse: " + spouse.Name + " and children: " + string.Join(", ", children.Select(c => c.Name + "(" + c.Gender.ToString() + ")")));
 
             //Assign the home to the dependents as well.
