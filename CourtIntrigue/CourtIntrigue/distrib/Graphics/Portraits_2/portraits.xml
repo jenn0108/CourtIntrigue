@@ -14,6 +14,13 @@
     <requirements>
     </requirements>
   </mouth>
+  <mouth>
+    <image>mouth_4.png</image>
+    <requirements>
+      <is_adult/>
+      <is_female/>
+    </requirements>
+  </mouth>
   <face>
     <image>base_1.png</image>
     <requirements>
@@ -53,6 +60,13 @@
     </requirements>
   </hair>
   <hair>
+    <image>hair_2.png</image>
+    <requirements>
+      <is_female/>
+      <is_adult/>
+    </requirements>
+  </hair>
+  <hair>
     <image>empty.png</image>
     <requirements>
       <is_male/>
@@ -76,6 +90,13 @@
   <hair>
     <image>hair_5.png</image>
     <requirements>
+      <is_male/>
+    </requirements>
+  </hair>
+  <hair>
+    <image>hair_6.png</image>
+    <requirements>
+      <is_female/>
     </requirements>
   </hair>
   <nose>

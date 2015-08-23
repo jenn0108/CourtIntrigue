@@ -140,6 +140,7 @@
     <EmbeddedResource Include="StartWindow.resx">
       <DependentUpon>StartWindow.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="distrib\Graphics\Portraits_2\working_face.pdn" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -160,6 +161,26 @@
     <Content Include="distrib\Events\jobevents.xml" />
     <Content Include="distrib\Events\testevents.xml" />
     <Content Include="distrib\Events\townevents.xml" />
+    <Content Include="distrib\Graphics\Portraits_2\base_1.png" />
+    <Content Include="distrib\Graphics\Portraits_2\ears_1.png" />
+    <Content Include="distrib\Graphics\Portraits_2\empty.png" />
+    <Content Include="distrib\Graphics\Portraits_2\eyebrows_2.png" />
+    <Content Include="distrib\Graphics\Portraits_2\eyebrows_3.png" />
+    <Content Include="distrib\Graphics\Portraits_2\eyes_1.png" />
+    <Content Include="distrib\Graphics\Portraits_2\eyes_2.png" />
+    <Content Include="distrib\Graphics\Portraits_2\hair_1.png" />
+    <Content Include="distrib\Graphics\Portraits_2\hair_2.png" />
+    <Content Include="distrib\Graphics\Portraits_2\hair_3.png" />
+    <Content Include="distrib\Graphics\Portraits_2\hair_4.png" />
+    <Content Include="distrib\Graphics\Portraits_2\hair_5.png" />
+    <Content Include="distrib\Graphics\Portraits_2\mouth_1.png" />
+    <Content Include="distrib\Graphics\Portraits_2\mouth_2.png" />
+    <Content Include="distrib\Graphics\Portraits_2\mouth_3.png" />
+    <Content Include="distrib\Graphics\Portraits_2\mouth_4.png" />
+    <Content Include="distrib\Graphics\Portraits_2\nose_1.png" />
+    <Content Include="distrib\Graphics\Portraits_2\nose_2.png" />
+    <Content Include="distrib\Graphics\Portraits_2\nose_3.png" />
+    <Content Include="distrib\Graphics\Portraits_2\portraits.xml" />
     <Content Include="distrib\Informations\testinformations.xml">
       <SubType>Designer</SubType>
     </Content>
