@@ -249,6 +249,8 @@
     <label>Spouse Well Dressed</label>
     <description>A well dressed spouse is increases your social standing.</description>
     <requirements>
+      <is_adult/>
+      <has_spouse/>
       <set_scope name="SPOUSE">
         <var_gt name="WellDressed">TIME</var_gt>
       </set_scope>
@@ -261,6 +263,8 @@
     <label>Poorly Dressed</label>
     <description>A poorly dressed spouse is an embarrasement.</description>
     <requirements>
+      <is_adult/>
+      <has_spouse/>
       <set_scope name="SPOUSE">
         <var_lt name="WellDressed">TIME</var_lt>
       </set_scope>
@@ -273,6 +277,7 @@
     <label>Child Well Dressed</label>
     <description>Having well dressed children is increases your social standing.</description>
     <requirements>
+      <is_adult/>
       <all_child>
         <var_gt name="WellDressed">TIME</var_gt>
       </all_child>
@@ -285,6 +290,7 @@
     <label>Child Poorly Dressed</label>
     <description>A poorly dressed child is an embarrasement.</description>
     <requirements>
+      <is_adult/>
       <any_child>
         <var_lt name="WellDressed">TIME</var_lt>
       </any_child>
