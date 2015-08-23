@@ -75,7 +75,7 @@ namespace CourtIntrigue
 
         // Maybe we should use named colors here?
         private Color[] skinColors = { Color.FromArgb(255, 228, 214), Color.FromArgb(255, 224, 186), Color.FromArgb(255, 213, 163), Color.FromArgb(247, 198, 159), Color.FromArgb(219, 159, 103) };
-        private Color[] eyeColors = { Color.FromArgb(0, 165, 255), Color.FromArgb(122, 205, 255), Color.FromArgb(0, 20, 213), Color.FromArgb(39, 153, 92), Color.FromArgb(0, 109, 46), Color.FromArgb(159, 183, 166), Color.FromArgb(153, 92, 39), Color.FromArgb(51, 31, 13), Color.Black };
+        private Color[] eyeColors = { Color.FromArgb(0, 165, 255), Color.FromArgb(122, 205, 255), Color.FromArgb(0, 70, 182), Color.FromArgb(39, 153, 92), Color.FromArgb(0, 109, 46), Color.FromArgb(159, 183, 166), Color.FromArgb(153, 92, 39), Color.FromArgb(51, 31, 13), Color.Black };
         private Color[] hairColors = { Color.FromArgb(229, 195, 94), Color.FromArgb(217, 97, 45), Color.FromArgb(84, 53, 37), Color.Black };
 
         private static Color[] shirtColors = GetShirtColors();
@@ -109,14 +109,17 @@ namespace CourtIntrigue
                 output = new Bitmap(96, 96);
                 using (Graphics G = Graphics.FromImage(output))
                 {
-                    G.DrawImage(ReplaceColors(faceImages[dna.Face], dna), 0, 0);
-                    G.DrawImage(ReplaceColors(mouthImages[dna.Mouth], dna), 0, 0);
-                    G.DrawImage(ReplaceColors(noseImages[dna.Nose], dna), 0, 0);
-                    G.DrawImage(ReplaceColors(eyeImages[dna.Eyes], dna), 0, 0);
-                    G.DrawImage(ReplaceColors(eyebrowImages[dna.Eyebrows], dna), 0, 0);
-                    G.DrawImage(ReplaceColors(earImages[dna.Ears], dna), 0, 0);
-                    G.DrawImage(ReplaceColors(hairImages[dna.Hair], dna), 0, 0);
+                    G.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+                    G.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+                    G.DrawImage(faceImages[dna.Face], 0, 0);
+                    G.DrawImage(mouthImages[dna.Mouth], 0, 0);
+                    G.DrawImage(noseImages[dna.Nose], 0, 0);
+                    G.DrawImage(eyeImages[dna.Eyes], 0, 0);
+                    G.DrawImage(eyebrowImages[dna.Eyebrows], 0, 0);
+                    G.DrawImage(earImages[dna.Ears], 0, 0);
+                    G.DrawImage(hairImages[dna.Hair], 0, 0);
                 }
+                output = ReplaceColors(output, dna);
                 cache.Add(dna, output);
             }
             

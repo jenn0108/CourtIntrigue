@@ -170,7 +170,7 @@ namespace CourtIntrigue
             }
             else
             {
-                splitContainer2.Panel1.Controls.Clear();
+                View.DisposeAndClearPanel(splitContainer2.Panel1);
                 JournalForm journalForm = new JournalForm(game.AllCharacters, game, player);
                 journalForm.TopLevel = false;
                 splitContainer2.Panel1.Controls.Add(journalForm);
@@ -186,7 +186,7 @@ namespace CourtIntrigue
             }
             else
             {
-                splitContainer2.Panel1.Controls.Clear();
+                View.DisposeAndClearPanel(splitContainer2.Panel1);
                 TextBox box = new TextBox()
                 {
                     Multiline = true,
@@ -229,7 +229,7 @@ namespace CourtIntrigue
             }
             else
             {
-                splitContainer2.Panel1.Controls.Clear();
+                View.DisposeAndClearPanel(splitContainer2.Panel1);
             }
         }
 

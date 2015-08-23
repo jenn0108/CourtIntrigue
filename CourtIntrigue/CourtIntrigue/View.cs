@@ -11,6 +11,15 @@ namespace CourtIntrigue
     static class View
     {
         public static int NOTIFICATOR_SIZE = 200;
+
+        public static void DisposeAndClearPanel(Panel panel)
+        {
+            foreach (Control control in panel.Controls)
+            {
+                control.Dispose();
+            }
+            panel.Controls.Clear();
+        }
     }
 
     interface IView
@@ -48,8 +57,8 @@ namespace CourtIntrigue
             this.top = top;
             this.bottom = bottom;
             this.mutex = mutex;
-            top.Controls.Clear();
-            bottom.Controls.Clear();
+            View.DisposeAndClearPanel(top);
+            View.DisposeAndClearPanel(bottom);
 
             Label label = new Label() { Text = upperText, Size = new System.Drawing.Size(top.Width - View.NOTIFICATOR_SIZE - 160, top.Height) };
             top.Controls.Add(label);
@@ -91,8 +100,8 @@ namespace CourtIntrigue
         private void Button_Click(object sender, EventArgs e)
         {
             SelectedIndex = (int)(sender as Button).Tag;
-            top.Controls.Clear();
-            bottom.Controls.Clear();
+            View.DisposeAndClearPanel(top);
+            View.DisposeAndClearPanel(bottom);
             mutex.Release();
         }
     }
@@ -128,8 +137,8 @@ namespace CourtIntrigue
             this.top = top;
             this.bottom = bottom;
             this.mutex = mutex;
-            top.Controls.Clear();
-            bottom.Controls.Clear();
+            View.DisposeAndClearPanel(top);
+            View.DisposeAndClearPanel(bottom);
 
             int columnCount = (int)Math.Floor((top.Width - View.NOTIFICATOR_SIZE - 20) / 150.0);
             int rowCount = upperButtons.Length / columnCount;
@@ -194,8 +203,8 @@ namespace CourtIntrigue
         {
             SelectedTop = true;
             SelectedIndex = (int)(sender as Control).Tag;
-            top.Controls.Clear();
-            bottom.Controls.Clear();
+            View.DisposeAndClearPanel(top);
+            View.DisposeAndClearPanel(bottom);
             mutex.Release();
         }
 
@@ -203,8 +212,8 @@ namespace CourtIntrigue
         {
             SelectedTop = false;
             SelectedIndex = (int)(sender as Button).Tag;
-            top.Controls.Clear();
-            bottom.Controls.Clear();
+            View.DisposeAndClearPanel(top);
+            View.DisposeAndClearPanel(bottom);
             mutex.Release();
         }
     }
@@ -237,8 +246,8 @@ namespace CourtIntrigue
             this.top = top;
             this.bottom = bottom;
             this.mutex = mutex;
-            top.Controls.Clear();
-            bottom.Controls.Clear();
+            View.DisposeAndClearPanel(top);
+            View.DisposeAndClearPanel(bottom);
 
             int columnCount = (int)Math.Floor((top.Width - View.NOTIFICATOR_SIZE - 20) / 150.0);
             int rowCount = upperButtons.Length / columnCount;
@@ -287,8 +296,8 @@ namespace CourtIntrigue
         private void TopButton_Click(object sender, EventArgs e)
         {
             SelectedIndex = (int)(sender as Control).Tag;
-            top.Controls.Clear();
-            bottom.Controls.Clear();
+            View.DisposeAndClearPanel(top);
+            View.DisposeAndClearPanel(bottom);
             mutex.Release();
         }
     }

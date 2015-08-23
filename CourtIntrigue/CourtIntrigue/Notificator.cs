@@ -46,7 +46,7 @@ namespace CourtIntrigue
 
         private void GenerateTable()
         {
-            table.Controls.Clear();
+            View.DisposeAndClearPanel(table);
             table.RowStyles.Clear();
             for (int i = 0; i < notifications.Count; ++i)
             {
