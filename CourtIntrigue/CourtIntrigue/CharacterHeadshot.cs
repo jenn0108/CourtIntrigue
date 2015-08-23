@@ -92,7 +92,27 @@ namespace CourtIntrigue
         {
             if(targetCharacter != null)
             {
-                portrait.Image = targetCharacter.GetPortrait();
+                //If we have jobs, we need to render the job icons across the top of the portrait.
+                if(targetCharacter.Jobs.Count() > 0)
+                {
+                    Bitmap myCopy = new Bitmap(targetCharacter.GetPortrait());
+                    using (Graphics G = Graphics.FromImage(myCopy))
+                    {
+                        int x = 0;
+                        foreach (var job in targetCharacter.Jobs)
+                        {
+                            G.DrawImage(job.Image, x, 0);
+                            x += job.Image.Width;
+                        }
+                    }
+                        
+                    portrait.Image = myCopy;
+                }
+                else
+                {
+                    portrait.Image = targetCharacter.GetPortrait();
+                }
+                
 
                 nameLabel.Text = targetCharacter.Fullname;
                 prestigeBox.Text = targetCharacter.Prestige.ToString();

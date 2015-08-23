@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Drawing;
 
 namespace CourtIntrigue
 {
@@ -12,17 +13,19 @@ namespace CourtIntrigue
         public string Identifier { get; private set; }
         public string Label { get; private set; }
         public string Description { get; private set; }
+        public Bitmap Image { get; private set; }
         public bool Unique { get; private set; }
         public bool Permanent { get; private set; }
         public ILogic Requirements { get; private set; }
         public string OnHire { get; private set; }
         public string OnFire { get; private set; }
 
-        public Job(string id, string label, string description, bool unique, bool permanent, ILogic requirements, string onHire, string onFire)
+        public Job(string id, string label, string description, Bitmap image, bool unique, bool permanent, ILogic requirements, string onHire, string onFire)
         {
             Identifier = id;
             Label = label;
             Description = description;
+            Image = image;
             Unique = unique;
             Permanent = permanent;
             Requirements = requirements;
@@ -81,6 +84,7 @@ namespace CourtIntrigue
             string identifier = null;
             string description = null;
             string label = null;
+            Bitmap image = new Bitmap(20, 20);
             bool unique = false;
             bool permanent = false;
             ILogic requirements = Logic.TRUE;
@@ -99,6 +103,10 @@ namespace CourtIntrigue
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "description")
                 {
                     description = reader.ReadElementContentAsString().Trim();
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "image")
+                {
+                    image = (Bitmap)Image.FromFile(reader.ReadElementContentAsString());
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "unique")
                 {
@@ -125,7 +133,7 @@ namespace CourtIntrigue
                     break;
                 }
             }
-            return new Job(identifier, label, description, unique, permanent, requirements, onHire, onFire);
+            return new Job(identifier, label, description, image, unique, permanent, requirements, onHire, onFire);
         }
 
         public void InitializeJobs(List<Character> characters, Game game)

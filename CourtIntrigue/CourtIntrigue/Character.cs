@@ -45,6 +45,11 @@ namespace CourtIntrigue
             get { return traits.Values; }
         }
 
+        public IEnumerable<Job> Jobs
+        {
+            get { return jobs.Values; }
+        }
+
         public IEnumerable<PrestigeModifier> CurrentPrestigeModifiers
         {
             get { return prestigeModifiers; }

@@ -3,6 +3,7 @@
     <id>KING_JOB</id>
     <label>King</label>
     <description>The ruler of all the things!!</description>
+    <image>Graphics/Jobs/KingJob.png</image>
     <unique/>
     <permanent/>
     <on_hire>KING_ON_HIRE_EVENT</on_hire>
@@ -11,6 +12,7 @@
     <id>CHANCELLOR_JOB</id>
     <label>Chancellor</label>
     <description>He does stuff</description>
+    <image>Graphics/Jobs/ChancellorJob.png</image>
     <unique/>
     <requirements>
       <prestige_rank>10</prestige_rank>
@@ -24,6 +26,7 @@
     <id>MARSHAL_JOB</id>
     <label>Marshal</label>
     <description>He does stuff</description>
+    <image>Graphics/Jobs/MarshalJob.png</image>
     <unique/>
     <requirements>
       <prestige_rank>10</prestige_rank>
@@ -37,6 +40,7 @@
     <id>SPYMASTER_JOB</id>
     <label>Spymaster</label>
     <description>He spies on stuff</description>
+    <image>Graphics/Jobs/SpymasterJob.png</image>
     <unique/>
     <requirements>
       <prestige_rank>10</prestige_rank>
@@ -50,6 +54,7 @@
     <id>STEWARD_JOB</id>
     <label>Steward</label>
     <description>He does stuff</description>
+    <image>Graphics/Jobs/StewardJob.png</image>
     <unique/>
     <requirements>
       <prestige_rank>10</prestige_rank>
@@ -63,6 +68,7 @@
     <id>BISHOP_JOB</id>
     <label>Bishop</label>
     <description>He does stuff</description>
+    <image>Graphics/Jobs/BishopJob.png</image>
     <unique/>
     <requirements>
       <prestige_rank>10</prestige_rank>
