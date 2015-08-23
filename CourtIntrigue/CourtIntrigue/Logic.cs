@@ -373,8 +373,8 @@ namespace CourtIntrigue
             testValue = testVal;
         }
         public bool Evaluate(EventContext context, Game game)
-        {
-            return context.CurrentCharacter.GetVariable(varName) > XmlHelper.GetTestValue(context, game, testValue);
+        {            
+            return XmlHelper.GetTestValue(context, game, varName) > XmlHelper.GetTestValue(context, game, testValue);
         }
     }
 
@@ -389,7 +389,7 @@ namespace CourtIntrigue
         }
         public bool Evaluate(EventContext context, Game game)
         {
-            return context.CurrentCharacter.GetVariable(varName) < XmlHelper.GetTestValue(context, game, testValue);
+            return XmlHelper.GetTestValue(context, game, varName) < XmlHelper.GetTestValue(context, game, testValue);
         }
     }
 
@@ -404,7 +404,7 @@ namespace CourtIntrigue
         }
         public bool Evaluate(EventContext context, Game game)
         {
-            return context.CurrentCharacter.GetVariable(varName) == XmlHelper.GetTestValue(context, game, testValue);
+            return XmlHelper.GetTestValue(context, game, varName) == XmlHelper.GetTestValue(context, game, testValue);
         }
     }
 
@@ -419,7 +419,7 @@ namespace CourtIntrigue
         }
         public bool Evaluate(EventContext context, Game game)
         {
-            return context.CurrentCharacter.GetVariable(varName) >= XmlHelper.GetTestValue(context, game, testValue);
+            return XmlHelper.GetTestValue(context, game, varName) >= XmlHelper.GetTestValue(context, game, testValue);
         }
     }
 
@@ -434,7 +434,7 @@ namespace CourtIntrigue
         }
         public bool Evaluate(EventContext context, Game game)
         {
-            return context.CurrentCharacter.GetVariable(varName) <= XmlHelper.GetTestValue(context, game, testValue);
+            return XmlHelper.GetTestValue(context, game, varName) <= XmlHelper.GetTestValue(context, game, testValue);
         }
     }
 
@@ -449,7 +449,7 @@ namespace CourtIntrigue
         }
         public bool Evaluate(EventContext context, Game game)
         {
-            return context.CurrentCharacter.GetVariable(varName) != XmlHelper.GetTestValue(context, game, testValue);
+            return XmlHelper.GetTestValue(context, game, varName) != XmlHelper.GetTestValue(context, game, testValue);
         }
     }
 

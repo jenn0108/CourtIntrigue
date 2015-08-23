@@ -10,6 +10,8 @@ namespace CourtIntrigue
 {
     class EventManager
     {
+        private static string BEGIN_DAY_ACTION_ID = "BEGIN_DAY_ACTION_ID";
+
         //I'm not sure if we actually want to store events by id.
         private Dictionary<string, Event> events = new Dictionary<string, Event>();
         private Dictionary<string, Action> actions = new Dictionary<string, Action>();
@@ -32,6 +34,19 @@ namespace CourtIntrigue
                 return okToRun[0];
 
             return okToRun[game.GetRandom(okToRun.Count)];
+        }
+
+        public void ExecuteDayEvents(Character character, Game game)
+        {
+            EventContext context = new EventContext(BEGIN_DAY_ACTION_ID, character, null);
+
+            foreach (var pair in events)
+            {
+                if (pair.Value.ActionRequirements.Evaluate(context, game))
+                {
+                    pair.Value.Execute(new EventResults(), game, context);
+                }
+            }
         }
 
         public Action[] FindAllowableActions(Room room, Character initiator, Character target, Game game)
@@ -174,6 +189,10 @@ namespace CourtIntrigue
                     break;
                 }
             }
+
+            if (options.Count == 0)
+                throw new EventIncorrectException("Events must have at least one option or else they look weird");
+
             return new Event(identifier, description, actionLogic, dirExec, options.ToArray(), parameters.ToArray());
         }
 

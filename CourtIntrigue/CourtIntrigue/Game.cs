@@ -134,6 +134,11 @@ namespace CourtIntrigue
             OrderCharacters();
         }
 
+        public void ExecuteDayEvents(Character character)
+        {
+            eventManager.ExecuteDayEvents(character, this);
+        }
+
         public Action[] FindAllowableActions(Room room, Character initiator, Character target)
         {
             return eventManager.FindAllowableActions(room, initiator, target, this);

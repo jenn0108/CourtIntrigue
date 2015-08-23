@@ -1,0 +1,20 @@
+﻿<events>
+  <event>
+    <id>INITIALIZE_CHARACTER</id>
+    <description>Welcome!  Your goal is to gain prestige.</description>
+    <requirements>
+      <action_id>BEGIN_DAY_ACTION_ID</action_id>
+      <is_adult/>
+      <var_eq name="TIME">0</var_eq>
+    </requirements>
+    <exec>
+      <!-- Initialize the LastBirth giving characters some grace period before they lose prestige -->
+      <offset_variable name="LastBirth">200</offset_variable>
+    </exec>
+    <options>
+      <option>
+        <label>Start Game</label>
+      </option>
+    </options>
+  </event>
+</events>

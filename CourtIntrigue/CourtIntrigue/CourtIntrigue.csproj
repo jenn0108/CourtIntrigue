@@ -157,6 +157,7 @@
   <ItemGroup>
     <Content Include="distrib\Actions\actions.xml" />
     <Content Include="distrib\Events\approach.xml" />
+    <Content Include="distrib\Events\dailyevents.xml" />
     <Content Include="distrib\Events\houseevents.xml" />
     <Content Include="distrib\Events\jobevents.xml" />
     <Content Include="distrib\Events\testevents.xml" />

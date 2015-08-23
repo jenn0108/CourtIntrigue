@@ -211,6 +211,8 @@ namespace CourtIntrigue
 
             KnownInformation = KnownInformation.Where(info => !info.IsExpired(Game.CurrentDay)).ToList();
 
+            Game.ExecuteDayEvents(this);
+
             Room[] rooms = Game.GetRooms(this).Union(Home.Yield()).ToArray();
 
             int index = OnBeginDay(rooms);
