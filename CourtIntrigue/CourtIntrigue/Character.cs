@@ -105,7 +105,7 @@ namespace CourtIntrigue
                 c.Home = home;
                 c.Father = this;
                 c.Mother = spouse;
-                c.DNA = DNA.CreateChild(husbandDna, wifeDna, Game);
+                c.DNA = Game.CreateChildDNA(c, husbandDna, wifeDna);
             }
         }
 

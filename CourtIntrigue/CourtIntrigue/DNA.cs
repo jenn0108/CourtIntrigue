@@ -39,23 +39,6 @@ namespace CourtIntrigue
             HairColor = hairColor;
             ShirtColor = shirtColor;
         }
-
-        public static DNA CreateChild(DNA father, DNA mother, Game game)
-        {
-            int face = game.GetRandom(2) == 0 ? father.Face : mother.Face;
-            int mouth = game.GetRandom(2) == 0 ? father.Mouth : mother.Mouth;
-            int nose = game.GetRandom(2) == 0 ? father.Nose : mother.Nose;
-            int eyes = game.GetRandom(2) == 0 ? father.Eyes : mother.Eyes;
-            int eyebrows = game.GetRandom(2) == 0 ? father.Eyebrows : mother.Eyebrows;
-            int ears = game.GetRandom(2) == 0 ? father.Ears : mother.Ears;
-            int hair = game.GetRandom(2) == 0 ? father.Hair : mother.Hair;
-            int skinColor = game.GetRandom(2) == 0 ? father.SkinColor : mother.SkinColor;
-            int eyeColor = game.GetRandom(2) == 0 ? father.EyeColor : mother.EyeColor;
-            int hairColor = game.GetRandom(2) == 0 ? father.HairColor : mother.HairColor;
-            int shirtColor = CharacterVisualizationManager.GetRandomShirtColor(game);
-
-            return new DNA(face, mouth, nose, eyes, eyebrows, ears, hair, skinColor, eyebrows, hairColor, shirtColor);
-        }
     }
 
     class CharacterVisualizationManager
@@ -115,6 +98,23 @@ namespace CourtIntrigue
             return dna;
         }
 
+        public DNA CreateChildDNA(Character character, DNA father, DNA mother, Game game)
+        {
+            int face = SelectRandomAllowed(faceImages, character, father.Face, mother.Face, game);
+            int mouth = SelectRandomAllowed(mouthImages, character, father.Mouth, mother.Mouth, game);
+            int nose = SelectRandomAllowed(noseImages, character, father.Nose, mother.Nose, game);
+            int eyes = SelectRandomAllowed(eyeImages, character, father.Eyes, mother.Eyes, game);
+            int eyebrows = SelectRandomAllowed(eyebrowImages, character, father.Eyebrows, mother.Eyebrows, game);
+            int ears = SelectRandomAllowed(earImages, character, father.Ears, mother.Ears, game);
+            int hair = SelectRandomAllowed(hairImages, character, father.Hair, mother.Hair, game);
+            int skinColor = SelectRandomAllowedColor(skinColors, character, father.SkinColor, mother.SkinColor, game);
+            int eyeColor = SelectRandomAllowedColor(eyeColors, character, father.EyeColor, mother.EyeColor, game);
+            int hairColor = SelectRandomAllowedColor(hairColors, character, father.HairColor, mother.HairColor, game);
+            int shirtColor = CharacterVisualizationManager.GetRandomShirtColor(game);
+
+            return new DNA(face, mouth, nose, eyes, eyebrows, ears, hair, skinColor, eyebrows, hairColor, shirtColor);
+        }
+
         public Bitmap ComposeFace(DNA dna)
         {
             Bitmap output;
@@ -145,6 +145,34 @@ namespace CourtIntrigue
             EventContext context = new EventContext(null, character, null);
             PortraitRule[] allowed = rules.Where(r => r.Requirements.Evaluate(context, game)).ToArray();
             return allowed[game.GetRandom(allowed.Length)].Index;
+        }
+
+        private int SelectRandomAllowed(List<PortraitRule> rules, Character character, int father, int mother, Game game)
+        {
+            EventContext context = new EventContext(null, character, null);
+
+            List<PortraitRule> allowed = new List<PortraitRule>();
+            if(rules[father].Requirements.Evaluate(context, game))
+            {
+                for (int i = 0; i < 45; ++i)
+                {
+                    allowed.Add(rules[father]);
+                }
+            }
+            if (rules[mother].Requirements.Evaluate(context, game))
+            {
+                for (int i = 0; i < 45; ++i)
+                {
+                    allowed.Add(rules[mother]);
+                }
+            }
+            allowed.AddRange(rules.Where(r => r.Requirements.Evaluate(context, game)));
+            return allowed[game.GetRandom(allowed.Count)].Index;
+        }
+
+        private int SelectRandomAllowedColor(Color[] rules, Character character, int father, int mother, Game game)
+        {
+            return game.GetRandom(2) == 0 ? father : mother;
         }
 
         private void LoadPortraitRules(string file, string path, Dictionary<string, int> badTags)

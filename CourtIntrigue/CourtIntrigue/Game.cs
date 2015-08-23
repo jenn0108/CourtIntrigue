@@ -441,6 +441,11 @@ namespace CourtIntrigue
 
             character.AssignFamily(spouse, children, home, cvManager.CreateRandomDNA(character, this), cvManager.CreateRandomDNA(spouse, this));
         }
+        
+        public DNA CreateChildDNA(Character character, DNA father, DNA mother)
+        {
+            return cvManager.CreateChildDNA(character, father, mother, this);
+        }
 
         public void Log(string txt)
         {
