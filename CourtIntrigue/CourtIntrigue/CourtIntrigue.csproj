@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cacluate.cs" />
     <Compile Include="CharacterHeadshot.cs">
       <SubType>UserControl</SubType>
     </Compile>

@@ -70,6 +70,24 @@
     <options>
       <option>
         <label>OK</label>
+        <exec>
+          <set_scope name="SPOUSE">
+            <if>
+              <requirements>
+                <var_lt name="PregnancyEnd">TIME</var_lt>
+              </requirements>
+              <then>
+                <!-- Wife can get pregnant again -->
+                <random>
+                  <outcome chance="0.5">
+                    <set_variable name="IsPregnant">1</set_variable>
+                    <set_variable name="PregnancyEnd">TIME+150</set_variable>
+                  </outcome>
+                </random>
+              </then>
+            </if>
+          </set_scope>
+        </exec>
       </option>
     </options>
   </event>

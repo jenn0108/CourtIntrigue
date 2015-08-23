@@ -15,6 +15,8 @@ namespace CourtIntrigue
         public static ILogic IS_MALE = new IsMaleTestLogic();
         public static ILogic IS_FEMALE = new IsFemaleTestLogic();
         public static ILogic IS_ADULT = new IsAdultTestLogic();
+
+        public static double EPSILON = 1.0e-5;
     }
 
     interface ILogic
@@ -366,90 +368,98 @@ namespace CourtIntrigue
     class VariableGreaterThanLogic : ILogic
     {
         private string varName;
-        private string testValue;
-        public VariableGreaterThanLogic(string name, string testVal)
+        private ICalculate testValue;
+        public VariableGreaterThanLogic(string name, ICalculate testVal)
         {
             varName = name;
             testValue = testVal;
         }
         public bool Evaluate(EventContext context, Game game)
-        {            
-            return XmlHelper.GetTestValue(context, game, varName) > XmlHelper.GetTestValue(context, game, testValue);
+        {
+            double myValue = XmlHelper.GetTestValue(context, game, varName);
+            return myValue > testValue.Calculate(context, game);
         }
     }
 
     class VariableLessThanLogic : ILogic
     {
         private string varName;
-        private string testValue;
-        public VariableLessThanLogic(string name, string testVal)
+        private ICalculate testValue;
+        public VariableLessThanLogic(string name, ICalculate testVal)
         {
             varName = name;
             testValue = testVal;
         }
         public bool Evaluate(EventContext context, Game game)
         {
-            return XmlHelper.GetTestValue(context, game, varName) < XmlHelper.GetTestValue(context, game, testValue);
+            double myValue = XmlHelper.GetTestValue(context, game, varName);
+            return myValue < testValue.Calculate(context, game);
         }
     }
 
     class VariableEqualLogic : ILogic
     {
         private string varName;
-        private string testValue;
-        public VariableEqualLogic(string name, string testVal)
+        private ICalculate testValue;
+        public VariableEqualLogic(string name, ICalculate testVal)
         {
             varName = name;
             testValue = testVal;
         }
         public bool Evaluate(EventContext context, Game game)
         {
-            return XmlHelper.GetTestValue(context, game, varName) == XmlHelper.GetTestValue(context, game, testValue);
+            double myValue = XmlHelper.GetTestValue(context, game, varName);
+            return Math.Abs(myValue - testValue.Calculate(context, game)) < Logic.EPSILON;
         }
     }
 
     class VariableGreaterOrEqualLogic : ILogic
     {
         private string varName;
-        private string testValue;
-        public VariableGreaterOrEqualLogic(string name, string testVal)
+        private ICalculate testValue;
+        public VariableGreaterOrEqualLogic(string name, ICalculate testVal)
         {
             varName = name;
             testValue = testVal;
         }
         public bool Evaluate(EventContext context, Game game)
         {
-            return XmlHelper.GetTestValue(context, game, varName) >= XmlHelper.GetTestValue(context, game, testValue);
+            double myValue = XmlHelper.GetTestValue(context, game, varName);
+            return myValue > testValue.Calculate(context, game) ||
+                Math.Abs(myValue - testValue.Calculate(context, game)) < Logic.EPSILON;
         }
     }
 
     class VariableLessOrEqualLogic : ILogic
     {
         private string varName;
-        private string testValue;
-        public VariableLessOrEqualLogic(string name, string testVal)
+        private ICalculate testValue;
+        public VariableLessOrEqualLogic(string name, ICalculate testVal)
         {
             varName = name;
             testValue = testVal;
         }
         public bool Evaluate(EventContext context, Game game)
         {
-            return XmlHelper.GetTestValue(context, game, varName) <= XmlHelper.GetTestValue(context, game, testValue);
+            double myValue = XmlHelper.GetTestValue(context, game, varName);
+            return myValue < testValue.Calculate(context, game) ||
+                Math.Abs(myValue - testValue.Calculate(context, game)) < Logic.EPSILON;
         }
     }
 
     class VariableNotEqualLogic : ILogic
     {
         private string varName;
-        private string testValue;
-        public VariableNotEqualLogic(string name, string testVal)
+        private ICalculate testValue;
+        public VariableNotEqualLogic(string name, ICalculate testVal)
         {
             varName = name;
             testValue = testVal;
         }
         public bool Evaluate(EventContext context, Game game)
         {
-            return XmlHelper.GetTestValue(context, game, varName) != XmlHelper.GetTestValue(context, game, testValue);
+            double myValue = XmlHelper.GetTestValue(context, game, varName);
+            return Math.Abs(myValue - testValue.Calculate(context, game)) >= Logic.EPSILON;
         }
     }
 

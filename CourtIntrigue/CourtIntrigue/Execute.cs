@@ -505,8 +505,8 @@ namespace CourtIntrigue
     class SetVariableExecute : IExecute
     {
         private string varName;
-        private string newValue;
-        public SetVariableExecute(string varName, string newValue)
+        private ICalculate newValue;
+        public SetVariableExecute(string varName, ICalculate newValue)
         {
             this.varName = varName;
             this.newValue = newValue;
@@ -517,7 +517,7 @@ namespace CourtIntrigue
             if (XmlHelper.IsSpecialName(varName))
                 throw new InvalidOperationException("Cannot assign to special properties: " + varName);
 
-            context.CurrentCharacter.SetVariable(varName, XmlHelper.GetTestValue(context, game, newValue));
+            context.CurrentCharacter.SetVariable(varName, newValue.Calculate(context, game));
         }
 
         public double Evaluate(Game game, EventContext context, Weights weights)
@@ -529,8 +529,8 @@ namespace CourtIntrigue
     class OffsetVariableExecute : IExecute
     {
         private string varName;
-        private string offset;
-        public OffsetVariableExecute(string varName, string offset)
+        private ICalculate offset;
+        public OffsetVariableExecute(string varName, ICalculate offset)
         {
             this.varName = varName;
             this.offset = offset;
@@ -541,7 +541,7 @@ namespace CourtIntrigue
             if (XmlHelper.IsSpecialName(varName))
                 throw new InvalidOperationException("Cannot assign to special properties: " + varName);
 
-            context.CurrentCharacter.SetVariable(varName, context.CurrentCharacter.GetVariable(varName) + XmlHelper.GetTestValue(context, game, offset));
+            context.CurrentCharacter.SetVariable(varName, context.CurrentCharacter.GetVariable(varName) + offset.Calculate(context, game));
         }
 
         public double Evaluate(Game game, EventContext context, Weights weights)
@@ -563,6 +563,59 @@ namespace CourtIntrigue
             context.CurrentCharacter.MultiplyObserveModifier(multiplier);
         }
 
+        public double Evaluate(Game game, EventContext context, Weights weights)
+        {
+            return 0.0;
+        }
+    }
+
+    class RandomExecute : IExecute
+    {
+        private IExecute[] outcomes;
+        private double[] chances;
+
+        public RandomExecute(IExecute[] outcomes, double[] chances)
+        {
+            this.outcomes = outcomes;
+            this.chances = chances;
+        }
+
+        public void Execute(EventResults result, Game game, EventContext context)
+        {
+            const int RandomPrecision = 1000000;
+
+            int val = game.GetRandom(RandomPrecision);
+            for(int i = 0; i < outcomes.Length; ++i)
+            {
+                int myCutoff = (int)(chances[i] * RandomPrecision);
+                if (val < myCutoff)
+                {
+                    outcomes[i].Execute(result, game, context);
+                    return;
+                }
+
+                val -= myCutoff;
+            }
+        }
+
+        public double Evaluate(Game game, EventContext context, Weights weights)
+        {
+            double result = 0.0;
+            for (int i = 0; i < outcomes.Length; ++i)
+            {
+                result += outcomes[i].Evaluate(game, context, weights) * chances[i];
+            }
+            return result;
+        }
+    }
+
+    class CreateChildExecute : IExecute
+    {
+
+        public void Execute(EventResults result, Game game, EventContext context)
+        {
+            game.CreateChild(context.CurrentCharacter, context.CurrentCharacter.Spouse);
+        }
         public double Evaluate(Game game, EventContext context, Weights weights)
         {
             return 0.0;

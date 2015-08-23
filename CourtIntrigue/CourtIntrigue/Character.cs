@@ -30,7 +30,7 @@ namespace CourtIntrigue
         protected ISet<InformationInstance> history = new HashSet<InformationInstance>();
         protected Dictionary<string, Trait> traits { get; private set; }
         protected Dictionary<string, Job> jobs { get; private set; }
-        protected Dictionary<string, int> variables = new Dictionary<string, int>();
+        protected Dictionary<string, double> variables = new Dictionary<string, double>();
         protected ISet<PrestigeModifier> prestigeModifiers { get; private set; }
         protected Dictionary<Character, ISet<OpinionModifierInstance>> opinionModifiers = new Dictionary<Character, ISet<OpinionModifierInstance>>();
         protected Game Game { get; private set; }
@@ -113,6 +113,15 @@ namespace CourtIntrigue
                 c.Mother = spouse;
                 c.DNA = Game.CreateChildDNA(c, husbandDna, wifeDna);
             }
+        }
+
+        public void AssignParents(Character mother, Character father)
+        {
+            DNA = Game.CreateChildDNA(this, father.DNA, mother.DNA);
+            Home = mother.Home;
+            CurrentRoom = mother.Home;
+            Mother = mother;
+            Father = father;
         }
 
         public IEnumerable<string> GetVariableNames()
@@ -407,7 +416,7 @@ namespace CourtIntrigue
             }
         }
 
-        public int GetVariable(string name)
+        public double GetVariable(string name)
         {
             if (name == "GOLD")
             {
@@ -418,12 +427,12 @@ namespace CourtIntrigue
                 return Age;
             }
 
-            int val = 0;
+            double val = 0;
             variables.TryGetValue(name, out val);
             return val;
         }
 
-        public void SetVariable(string name, int val)
+        public void SetVariable(string name, double val)
         {
             if (variables.ContainsKey(name))
                 variables[name] = val;

@@ -179,7 +179,11 @@ namespace CourtIntrigue
 
             OrderCharacters();
 
-            foreach (var character in characters)
+
+            //Cache the character so that babies don't screw up the list when they are
+            //added during the begin day events (which detect end of pregnancy.)
+            var characterCache = new List<Character>(characters);
+            foreach (var character in characterCache)
             {
                 character.CurrentRoom = character.BeginDay();
             }
@@ -465,6 +469,17 @@ namespace CourtIntrigue
         public DNA CreateChildDNA(Character character, DNA father, DNA mother)
         {
             return cvManager.CreateChildDNA(character, father, mother, this);
+        }
+
+        public void CreateChild(Character mother, Character father)
+        {
+            Character.GenderEnum gender = (Character.GenderEnum)GetRandom(2);
+            string name = gender == Character.GenderEnum.Female ? GetRandomFemaleName() : GetRandomMaleName();
+
+            Character child = new AICharacter(name, CurrentTime, mother.Spouse.Dynasty, 0, this, gender);
+            child.AssignParents(mother, father);
+
+            characters.Add(child);
         }
 
         public void Log(string txt)

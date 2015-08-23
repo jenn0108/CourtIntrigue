@@ -80,8 +80,7 @@
         <exec>
           <spend_gold>5</spend_gold>
           <set_scope name="Recipient">
-            <set_variable name="WellDressed">TIME</set_variable>
-            <offset_variable name="WellDressed">50</offset_variable>
+            <set_variable name="WellDressed">TIME+50</set_variable>
           </set_scope>
         </exec>
       </option>
@@ -95,8 +94,7 @@
         <label>OK</label>
         <exec>
           <spend_gold>5</spend_gold>
-          <set_variable name="WellDressed">TIME</set_variable>
-          <offset_variable name="WellDressed">50</offset_variable>
+          <set_variable name="WellDressed">TIME+50</set_variable>
         </exec>
       </option>
     </options>

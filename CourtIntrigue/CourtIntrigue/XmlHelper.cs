@@ -23,6 +23,133 @@ namespace CourtIntrigue
 
     static class XmlHelper
     {
+
+        private static IEnumerable<string> Tokenize(string expression)
+        {
+            expression = expression.Trim();
+            int lastPos = 0;
+            for(int i = 0; i < expression.Length; ++i)
+            {
+                if(expression[i] == '+' || expression[i] == '-' || 
+                    expression[i] == '*' || expression[i] == '/' ||
+                    expression[i] == '(' || expression[i] == ')')
+                {
+                    if (lastPos < i - 1)
+                        yield return expression.Substring(lastPos, i - lastPos);
+                    yield return expression[i].ToString();
+                    lastPos = i + 1;
+                }
+            }
+            if (lastPos < expression.Length)
+                yield return expression.Substring(lastPos);
+        }
+
+        private static int Precedence(string op)
+        {
+            if (op == "+" || op == "-")
+                return 1;
+            else if (op == "*" || op == "/")
+                return 2;
+            else
+                return 0;
+        }
+
+        public static ICalculate ReadCalc(XmlReader reader)
+        {
+            Queue<string> output = new Queue<string>();
+            Stack<string> operators = new Stack<string>();
+            string expression = reader.ReadElementContentAsString();
+            string[] tokens = Tokenize(expression).ToArray();
+            foreach (var tok in tokens)
+            {
+                if(tok == "+" || tok == "-" || tok == "*" || tok == "/")
+                {
+                    while(operators.Count > 0 && Precedence(tok) <= Precedence(operators.Peek()))
+                    {
+                        output.Enqueue(operators.Pop());
+                    }
+                    operators.Push(tok);
+                }
+                else if(tok == "(")
+                {
+                    operators.Push(tok);
+                }
+                else if (tok == ")")
+                {
+                    while (operators.Peek() != "(")
+                    {
+                        output.Enqueue(operators.Pop());
+                    }
+                    operators.Pop();
+                }
+                else
+                {
+                    output.Enqueue(tok);
+                }
+            }
+            while (operators.Count > 0)
+            {
+                if (operators.Peek() == "(")
+                    throw new Exception("Unmatched (");
+                output.Enqueue(operators.Pop());
+            }
+
+            if(output.Count == 1)
+                return new VariableCalculate(output.Peek());
+
+            List<ICalculate> parts = new List<ICalculate>();
+            while(output.Count > 0)
+            {
+                string part = output.Dequeue();
+                if(part == "+")
+                {
+                    ICalculate add = new AddCalculate(parts.ToArray());
+                    parts.Clear();
+                    parts.Add(add);
+                }
+                else if(part == "-")
+                {
+                    if(parts.Count == 1)
+                    {
+                        ICalculate neg = new NegateCalculate(parts[0]);
+                        parts.Clear();
+                        parts.Add(neg);
+                    }
+                    else if(parts.Count == 2)
+                    {
+                        ICalculate sub = new SubtractCalculate(parts[0], parts[1]);
+                        parts.Clear();
+                        parts.Add(sub);
+                    }
+                    else
+                        throw new Exception("Subtraction can only have one or two parts");
+                }
+                else if (part == "*")
+                {
+                    ICalculate add = new MultiplyCalculate(parts.ToArray());
+                    parts.Clear();
+                    parts.Add(add);
+                }
+                else if (part == "/")
+                {
+                    if (parts.Count > 2)
+                        throw new Exception("Division can only have two parts");
+                    ICalculate sub = new DivideCalculate(parts[0], parts[1]);
+                    parts.Clear();
+                    parts.Add(sub);
+                }
+                else
+                {
+                    parts.Add(new VariableCalculate(part));
+                }
+            }
+
+            if(parts.Count != 1)
+                throw new NotImplementedException();
+
+            return parts[0];
+        }
+
         public static IExecute ReadExecute(XmlReader reader, Dictionary<string, int> badTags)
         {
             //How did we start? Used for determining when we're done.
@@ -40,7 +167,7 @@ namespace CourtIntrigue
                 }
                 else if (reader.NodeType == XmlNodeType.Element && (reader.Name == "everyone_in_room" || reader.Name == "any_child"))
                 {
-                    expressions.Add(ReadScopingLoop(reader ,badTags));
+                    expressions.Add(ReadScopingLoop(reader, badTags));
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "set_scope")
                 {
@@ -99,12 +226,20 @@ namespace CourtIntrigue
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "set_variable")
                 {
                     string varName = reader.GetAttribute("name");
-                    expressions.Add(new SetVariableExecute(varName, reader.ReadElementContentAsString()));
+                    expressions.Add(new SetVariableExecute(varName, ReadCalc(reader)));
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "offset_variable")
                 {
                     string varName = reader.GetAttribute("name");
-                    expressions.Add(new OffsetVariableExecute(varName, reader.ReadElementContentAsString()));
+                    expressions.Add(new OffsetVariableExecute(varName, ReadCalc(reader)));
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "random")
+                {
+                    expressions.Add(ReadRandom(reader, badTags));
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "create_child")
+                {
+                    expressions.Add(new CreateChildExecute());
                 }
                 else if (reader.NodeType == XmlNodeType.Element)
                 {
@@ -275,32 +410,32 @@ namespace CourtIntrigue
             else if (reader.NodeType == XmlNodeType.Element && reader.Name == "var_gt")
             {
                 string varName = reader.GetAttribute("name");
-                return new VariableGreaterThanLogic(varName, reader.ReadElementContentAsString());
+                return new VariableGreaterThanLogic(varName, ReadCalc(reader));
             }
             else if (reader.NodeType == XmlNodeType.Element && reader.Name == "var_lt")
             {
                 string varName = reader.GetAttribute("name");
-                return new VariableLessThanLogic(varName, reader.ReadElementContentAsString());
+                return new VariableLessThanLogic(varName, ReadCalc(reader));
             }
             else if (reader.NodeType == XmlNodeType.Element && reader.Name == "var_eq")
             {
                 string varName = reader.GetAttribute("name");
-                return new VariableEqualLogic(varName, reader.ReadElementContentAsString());
+                return new VariableEqualLogic(varName, ReadCalc(reader));
             }
             else if (reader.NodeType == XmlNodeType.Element && reader.Name == "var_ge")
             {
                 string varName = reader.GetAttribute("name");
-                return new VariableGreaterOrEqualLogic(varName, reader.ReadElementContentAsString());
+                return new VariableGreaterOrEqualLogic(varName, ReadCalc(reader));
             }
             else if (reader.NodeType == XmlNodeType.Element && reader.Name == "var_le")
             {
                 string varName = reader.GetAttribute("name");
-                return new VariableLessOrEqualLogic(varName, reader.ReadElementContentAsString());
+                return new VariableLessOrEqualLogic(varName, ReadCalc(reader));
             }
             else if (reader.NodeType == XmlNodeType.Element && reader.Name == "var_ne")
             {
                 string varName = reader.GetAttribute("name");
-                return new VariableNotEqualLogic(varName, reader.ReadElementContentAsString());
+                return new VariableNotEqualLogic(varName, ReadCalc(reader));
             }
             else if (reader.NodeType == XmlNodeType.Element)
             {
@@ -633,6 +768,33 @@ namespace CourtIntrigue
             return new IfExecute(requirements, thenExecute, elseExecute);
         }
 
+        private static IExecute ReadRandom(XmlReader reader, Dictionary<string, int> badTags)
+        {
+            List<IExecute> outcomes = new List<IExecute>();
+            List<double> chances = new List<double>();
+            while (reader.Read())
+            {
+                if (reader.NodeType == XmlNodeType.Element && reader.Name == "outcome")
+                {
+                    chances.Add(double.Parse(reader.GetAttribute("chance")));
+                    outcomes.Add(ReadExecute(reader, badTags));
+                }
+                else if (reader.NodeType == XmlNodeType.Element)
+                {
+                    if (badTags.ContainsKey(reader.Name))
+                        ++badTags[reader.Name];
+                    else
+                        badTags.Add(reader.Name, 1);
+                }
+                else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "random")
+                {
+                    break;
+                }
+            }
+
+            return new RandomExecute(outcomes.ToArray(), chances.ToArray());
+        }
+
         private static IExecute ReadChooseCharacter(XmlReader reader, Dictionary<string, int> badTags)
         {
             ILogic requirements = Logic.TRUE;
@@ -657,8 +819,7 @@ namespace CourtIntrigue
             return new ChooseCharacterExecute(name, exec, requirements);
         }
 
-
-        public static int GetTestValue(EventContext context, Game game, string value)
+        public static double GetTestValue(EventContext context, Game game, string value)
         {
             //These values must match the special cases on IsSpecialName
             if (value == "TIME")
@@ -668,9 +829,9 @@ namespace CourtIntrigue
             else if (value == "GOLD")
                 return context.CurrentCharacter.Money;
 
-            int intValue;
-            if (int.TryParse(value, out intValue))
-                return intValue;
+            double dValue;
+            if (double.TryParse(value, out dValue))
+                return dValue;
 
             return context.CurrentCharacter.GetVariable(value);
         }

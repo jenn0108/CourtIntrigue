@@ -17,4 +17,48 @@
       </option>
     </options>
   </event>
+  <event>
+    <id>PREGNANCY_CHECK_DAILY_EVENT</id>
+    <description>You're realize today that you must be pregnant!</description>
+    <requirements>
+      <action_id>BEGIN_DAY_ACTION_ID</action_id>
+      <is_adult/>
+      <is_female/>
+      <var_eq name="IsPregnant">1</var_eq>
+      <var_lt name="PregnancyEnd">TIME+125</var_lt>
+    </requirements>
+    <options>
+      <option>
+        <label>Yay!</label>
+        <exec>
+          <set_variable name="PregnancyKnown">1</set_variable>
+        </exec>
+      </option>
+    </options>
+  </event>
+  <event>
+    <id>GIVE_BIRTH_DAILY_EVENT</id>
+    <description>You popped out a kid!</description>
+    <requirements>
+      <action_id>BEGIN_DAY_ACTION_ID</action_id>
+      <is_adult/>
+      <is_female/>
+      <var_eq name="IsPregnant">1</var_eq>
+      <var_lt name="PregnancyEnd">TIME</var_lt>
+    </requirements>
+    <options>
+      <option>
+        <label>A bundle of joy!</label>
+        <exec>
+          <create_child/>
+          <set_variable name="LastBirth">TIME+200</set_variable>
+          <set_variable name="PregnancyKnown">0</set_variable>
+          <set_variable name="IsPregnant">0</set_variable>
+          <set_scope name="SPOUSE">
+            <set_variable name="LastBirth">TIME+200</set_variable>
+          </set_scope>
+        </exec>
+      </option>
+    </options>
+  </event>
 </events>
