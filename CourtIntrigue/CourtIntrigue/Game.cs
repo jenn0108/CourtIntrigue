@@ -88,7 +88,7 @@ namespace CourtIntrigue
             //Go load all the xml files in our traits directory.
             foreach (var file in Directory.EnumerateFiles("Traits", "*.xml"))
             {
-                modifierManager.LoadTraitsFromFile(file);
+                modifierManager.LoadTraitsFromFile(file, badTags);
             }
 
             //Go load all the xml files in our modifiers directory.

@@ -65,7 +65,7 @@ namespace CourtIntrigue
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "parameters")
                 {
-                    parameters = XmlHelper.ReadParameters(reader);
+                    parameters = XmlHelper.ReadParameters(reader, badTags);
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "on_observe")
                 {

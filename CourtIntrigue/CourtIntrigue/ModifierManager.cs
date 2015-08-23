@@ -13,7 +13,7 @@ namespace CourtIntrigue
         private List<PrestigeModifier> prestigeModifiers = new List<PrestigeModifier>();
         private Dictionary<string, OpinionModifier> opinionModifiers = new Dictionary<string, OpinionModifier>();
 
-        private Trait ReadTrait(XmlReader reader)
+        private Trait ReadTrait(XmlReader reader, Dictionary<string, int> badTags)
         {
             string identifier = null;
             string description = null;
@@ -38,7 +38,7 @@ namespace CourtIntrigue
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "opposites")
                 {
-                    opposites = XmlHelper.ReadList(reader, "opposite");
+                    opposites = XmlHelper.ReadList(reader, "opposite", badTags);
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "opposite_opinion")
                 {
@@ -47,6 +47,13 @@ namespace CourtIntrigue
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "same_opinion")
                 {
                     sameOpinion = reader.ReadElementContentAsInt();
+                }
+                else if (reader.NodeType == XmlNodeType.Element)
+                {
+                    if (badTags.ContainsKey(reader.Name))
+                        ++badTags[reader.Name];
+                    else
+                        badTags.Add(reader.Name, 1);
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "trait")
                 {
@@ -85,6 +92,13 @@ namespace CourtIntrigue
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "daily_change")
                 {
                     dailyChange = reader.ReadElementContentAsInt();
+                }
+                else if (reader.NodeType == XmlNodeType.Element)
+                {
+                    if (badTags.ContainsKey(reader.Name))
+                        ++badTags[reader.Name];
+                    else
+                        badTags.Add(reader.Name, 1);
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "prestige_mod")
                 {
@@ -139,7 +153,7 @@ namespace CourtIntrigue
             return new OpinionModifier(identifier, label, description, duration, change);
         }
 
-        public void LoadTraitsFromFile(string filename)
+        public void LoadTraitsFromFile(string filename, Dictionary<string, int> badTags)
         {
             using (XmlReader reader = XmlReader.Create(filename))
             {
@@ -147,20 +161,27 @@ namespace CourtIntrigue
                 {
                     if (reader.NodeType == XmlNodeType.Element && reader.Name == "traits")
                     {
-                        ReadTraits(reader);
+                        ReadTraits(reader, badTags);
                     }
                 }
             }
         }
 
-        private void ReadTraits(XmlReader reader)
+        private void ReadTraits(XmlReader reader, Dictionary<string, int> badTags)
         {
             while (reader.Read())
             {
                 if (reader.NodeType == XmlNodeType.Element && reader.Name == "trait")
                 {
-                    Trait e = ReadTrait(reader);
+                    Trait e = ReadTrait(reader, badTags);
                     traits.Add(e.Identifier, e);
+                }
+                else if (reader.NodeType == XmlNodeType.Element)
+                {
+                    if (badTags.ContainsKey(reader.Name))
+                        ++badTags[reader.Name];
+                    else
+                        badTags.Add(reader.Name, 1);
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "traits")
                 {
@@ -184,6 +205,13 @@ namespace CourtIntrigue
                     {
                         ReadOpinionModifiers(reader, badTags);
                     }
+                    else if (reader.NodeType == XmlNodeType.Element)
+                    {
+                        if (badTags.ContainsKey(reader.Name))
+                            ++badTags[reader.Name];
+                        else
+                            badTags.Add(reader.Name, 1);
+                    }
                 }
             }
         }
@@ -197,6 +225,13 @@ namespace CourtIntrigue
                     OpinionModifier mod = ReadOpinionModifier(reader, badTags);
                     opinionModifiers.Add(mod.Identifier, mod);
                 }
+                else if (reader.NodeType == XmlNodeType.Element)
+                {
+                    if (badTags.ContainsKey(reader.Name))
+                        ++badTags[reader.Name];
+                    else
+                        badTags.Add(reader.Name, 1);
+                }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "opinion_mods")
                 {
                     break;
@@ -209,14 +244,21 @@ namespace CourtIntrigue
             return opinionModifiers[identifier];
         }
 
-        private void ReadPrestigeModifiers(XmlReader reader, Dictionary<string, int> bagTags)
+        private void ReadPrestigeModifiers(XmlReader reader, Dictionary<string, int> badTags)
         {
             while (reader.Read())
             {
                 if (reader.NodeType == XmlNodeType.Element && reader.Name == "prestige_mod")
                 {
-                    PrestigeModifier mod = ReadPrestigeModifier(reader, bagTags);
+                    PrestigeModifier mod = ReadPrestigeModifier(reader, badTags);
                     prestigeModifiers.Add(mod);
+                }
+                else if (reader.NodeType == XmlNodeType.Element)
+                {
+                    if (badTags.ContainsKey(reader.Name))
+                        ++badTags[reader.Name];
+                    else
+                        badTags.Add(reader.Name, 1);
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "prestige_mods")
                 {
