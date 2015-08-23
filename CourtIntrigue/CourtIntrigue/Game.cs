@@ -103,7 +103,7 @@ namespace CourtIntrigue
                 jobManager.LoadJobsFromFile(file, badTags);
             }
 
-            cvManager.LoadFromDirectory("Graphics/Portraits_2");
+            cvManager.LoadFromDirectory("Graphics/Portraits_2", badTags);
 
             foreach (var pair in badTags)
             {
@@ -439,7 +439,7 @@ namespace CourtIntrigue
                 characters.Add(child);
             }
 
-            character.AssignFamily(spouse, children, home, cvManager.CreateRandomDNA(this), cvManager.CreateRandomDNA(this));
+            character.AssignFamily(spouse, children, home, cvManager.CreateRandomDNA(character, this), cvManager.CreateRandomDNA(spouse, this));
         }
 
         public void Log(string txt)

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
+using System.Xml;
 
 namespace CourtIntrigue
 {
@@ -59,19 +60,33 @@ namespace CourtIntrigue
 
     class CharacterVisualizationManager
     {
+        class PortraitRule
+        {
+            public ILogic Requirements { get; private set; }
+            public Bitmap Bitmap { get; private set; }
+            public int Index { get; private set; }
+
+            public PortraitRule(Bitmap bitmap, ILogic requirements, int index)
+            {
+                Bitmap = bitmap;
+                Requirements = requirements;
+                Index = index;
+            }
+        }
+
         // Arbitrary colors to show which areas are skin, eyes and hair.
         private static Color SKIN_PIXEL = Color.FromArgb(255, 0, 255); // Using this not Blue since we might want Blue for eyes
         private static Color EYE_PIXEL = Color.FromArgb(255, 0, 0);
         private static Color HAIR_PIXEL = Color.FromArgb(0, 255, 0);
         private static Color SHIRT_PIXEL = Color.FromArgb(0, 255, 255);
 
-        private Bitmap[] faceImages;
-        private Bitmap[] mouthImages;
-        private Bitmap[] noseImages;
-        private Bitmap[] eyeImages;
-        private Bitmap[] eyebrowImages;
-        private Bitmap[] earImages;
-        private Bitmap[] hairImages;
+        private List<PortraitRule> faceImages = new List<PortraitRule>();
+        private List<PortraitRule> mouthImages = new List<PortraitRule>();
+        private List<PortraitRule> noseImages = new List<PortraitRule>();
+        private List<PortraitRule> eyeImages = new List<PortraitRule>();
+        private List<PortraitRule> eyebrowImages = new List<PortraitRule>();
+        private List<PortraitRule> earImages = new List<PortraitRule>();
+        private List<PortraitRule> hairImages = new List<PortraitRule>();
 
         // Maybe we should use named colors here?
         private Color[] skinColors = { Color.FromArgb(255, 228, 214), Color.FromArgb(255, 224, 186), Color.FromArgb(255, 213, 163), Color.FromArgb(247, 198, 159), Color.FromArgb(219, 159, 103) };
@@ -82,21 +97,20 @@ namespace CourtIntrigue
 
         private Dictionary<DNA, Bitmap> cache = new Dictionary<DNA, Bitmap>();
 
-        public void LoadFromDirectory(string path)
+        public void LoadFromDirectory(string path, Dictionary<string, int> badTags)
         {
-            faceImages = LoadParts(path, "base_*.png");
-            mouthImages = LoadParts(path, "mouth_*.png");
-            noseImages = LoadParts(path, "nose_*.png");
-            eyeImages = LoadParts(path, "eyes_*.png");
-            eyebrowImages = LoadParts(path, "eyebrows_*.png");
-            earImages = LoadParts(path, "ears_*.png");
-            hairImages = LoadParts(path, "hair_*.png");
+            foreach(var file in Directory.EnumerateFiles(path, "*.xml"))
+            {
+                LoadPortraitRules(file, path, badTags);
+            }
         }
 
-        public DNA CreateRandomDNA(Game game)
+        public DNA CreateRandomDNA(Character character, Game game)
         {
-            DNA dna = new DNA(game.GetRandom(faceImages.Length), game.GetRandom(mouthImages.Length), game.GetRandom(noseImages.Length),
-                game.GetRandom(eyeImages.Length), game.GetRandom(eyebrowImages.Length), game.GetRandom(earImages.Length), game.GetRandom(hairImages.Length),
+            DNA dna = new DNA(SelectRandomAllowed(faceImages, character, game),
+                SelectRandomAllowed(mouthImages, character, game), SelectRandomAllowed(noseImages, character, game),
+                SelectRandomAllowed(eyeImages, character, game), SelectRandomAllowed(eyebrowImages, character, game),
+                SelectRandomAllowed(earImages, character, game), SelectRandomAllowed(hairImages, character, game),
                 game.GetRandom(skinColors.Length), game.GetRandom(eyeColors.Length), game.GetRandom(hairColors.Length), game.GetRandom(shirtColors.Length));
             return dna;
         }
@@ -111,13 +125,13 @@ namespace CourtIntrigue
                 {
                     G.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
                     G.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-                    G.DrawImage(faceImages[dna.Face], 0, 0);
-                    G.DrawImage(mouthImages[dna.Mouth], 0, 0);
-                    G.DrawImage(noseImages[dna.Nose], 0, 0);
-                    G.DrawImage(eyeImages[dna.Eyes], 0, 0);
-                    G.DrawImage(eyebrowImages[dna.Eyebrows], 0, 0);
-                    G.DrawImage(earImages[dna.Ears], 0, 0);
-                    G.DrawImage(hairImages[dna.Hair], 0, 0);
+                    G.DrawImage(faceImages[dna.Face].Bitmap, 0, 0);
+                    G.DrawImage(mouthImages[dna.Mouth].Bitmap, 0, 0);
+                    G.DrawImage(noseImages[dna.Nose].Bitmap, 0, 0);
+                    G.DrawImage(eyeImages[dna.Eyes].Bitmap, 0, 0);
+                    G.DrawImage(eyebrowImages[dna.Eyebrows].Bitmap, 0, 0);
+                    G.DrawImage(earImages[dna.Ears].Bitmap, 0, 0);
+                    G.DrawImage(hairImages[dna.Hair].Bitmap, 0, 0);
                 }
                 output = ReplaceColors(output, dna);
                 cache.Add(dna, output);
@@ -126,9 +140,87 @@ namespace CourtIntrigue
             return output;
         }
 
-        private Bitmap[] LoadParts(string path, string pattern)
+        private int SelectRandomAllowed(List<PortraitRule> rules, Character character, Game game)
         {
-            return Directory.EnumerateFiles(path, pattern).OrderBy(file => file).Select(file => (Bitmap)Bitmap.FromFile(file)).ToArray();
+            EventContext context = new EventContext(null, character, null);
+            PortraitRule[] allowed = rules.Where(r => r.Requirements.Evaluate(context, game)).ToArray();
+            return allowed[game.GetRandom(allowed.Length)].Index;
+        }
+
+        private void LoadPortraitRules(string file, string path, Dictionary<string, int> badTags)
+        {
+            using (XmlReader reader = XmlReader.Create(file))
+            {
+                while(reader.Read())
+                {
+                    if(reader.NodeType == XmlNodeType.Element && reader.Name == "portrait_rules")
+                    {
+                        ReadPortraitRules(reader, path, badTags);
+                    }
+                }
+            }
+        }
+
+        private void ReadPortraitRules(XmlReader reader, string path, Dictionary<string, int> badTags)
+        {
+            while (reader.Read())
+            {
+                if(reader.NodeType == XmlNodeType.Element && reader.Name == "face")
+                {
+                    ReadPortraitRule(reader, faceImages, path, badTags);
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "mouth")
+                {
+                    ReadPortraitRule(reader, mouthImages, path, badTags);
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "nose")
+                {
+                    ReadPortraitRule(reader, noseImages, path, badTags);
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "eye")
+                {
+                    ReadPortraitRule(reader, eyeImages, path, badTags);
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "eyebrow")
+                {
+                    ReadPortraitRule(reader, eyebrowImages, path, badTags);
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "ear")
+                {
+                    ReadPortraitRule(reader, earImages, path, badTags);
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "hair")
+                {
+                    ReadPortraitRule(reader, hairImages, path, badTags);
+                }
+                else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "portrait_rules")
+                {
+                    break;
+                }
+            }
+        }
+
+        private void ReadPortraitRule(XmlReader reader, List<PortraitRule> rules, string path, Dictionary<string, int> badTags)
+        {
+            string tag = reader.Name;
+            Bitmap image = null;
+            ILogic requirements = Logic.TRUE;
+            while (reader.Read())
+            {
+                if (reader.NodeType == XmlNodeType.Element && reader.Name == "image")
+                {
+                    image = (Bitmap)Image.FromFile(path + "/" + reader.ReadElementContentAsString());
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "requirements")
+                {
+                    requirements = XmlHelper.ReadLogic(reader, badTags);
+                }
+                else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == tag)
+                {
+                    break;
+                }
+            }
+            rules.Add(new PortraitRule(image, requirements, rules.Count));
         }
 
         public static int GetRandomShirtColor(Game g)
