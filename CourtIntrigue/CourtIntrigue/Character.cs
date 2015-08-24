@@ -7,9 +7,9 @@ using System.Drawing;
 
 namespace CourtIntrigue
 {
+    public enum Gender { Female, Male };
     class Character
     {
-        public enum GenderEnum { Female, Male };
         public DNA DNA { get; private set; }
         public string Name { get; private set; }
         public int BirthDate { get; private set; }
@@ -19,7 +19,7 @@ namespace CourtIntrigue
         public double ObserveModifier { get; private set; }
         public int WillPower { get; private set; }
         public Dynasty Dynasty { get; private set; }
-        public GenderEnum Gender { get; private set; }
+        public Gender Gender { get; private set; }
         public Character Spouse { get; private set; }
         public Character Father { get; private set; }
         public Character Mother { get; private set; }
@@ -77,7 +77,7 @@ namespace CourtIntrigue
             get { return Game.TicksToYear(Game.CurrentDay - BirthDate); }
         }
 
-        public Character(string name, int birthdate, Dynasty dynasty, int money, Game game, GenderEnum gender)
+        public Character(string name, int birthdate, Dynasty dynasty, int money, Game game, Gender gender)
         {
             Name = name;
             BirthDate = birthdate;

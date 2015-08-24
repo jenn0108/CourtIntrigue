@@ -52,7 +52,7 @@ namespace CourtIntrigue
             logger = new TextBoxLogger(this);
             game = new Game(logger, NUM_PLAYERS);
 
-            player = new PlayerCharacter(this, playerName, -Game.GetYearInTicks(age), new Dynasty(playerDynasty), 500, game, Character.GenderEnum.Male);
+            player = new PlayerCharacter(this, playerName, -Game.GetYearInTicks(age), new Dynasty(playerDynasty), 500, game, Gender.Male);
             game.AddPlayer(player);
             UpdateDate();
             UpdateStatus();

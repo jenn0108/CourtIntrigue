@@ -10,6 +10,8 @@
     <exec>
       <!-- Initialize the LastBirth giving characters some grace period before they lose prestige -->
       <offset_variable name="LastBirth">200</offset_variable>
+      <!-- Initialize the LastTimeAtChurch giving characters some grace period before they lose prestige -->
+      <offset_variable name="LastTimeAtChurch">20</offset_variable>
     </exec>
     <options>
       <option>

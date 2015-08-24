@@ -116,7 +116,7 @@ namespace CourtIntrigue
     {
         public bool Evaluate(EventContext context, Game game)
         {
-            return context.CurrentCharacter.Gender == Character.GenderEnum.Male;
+            return context.CurrentCharacter.Gender == Gender.Male;
         }
     }
 
@@ -124,7 +124,7 @@ namespace CourtIntrigue
     {
         public bool Evaluate(EventContext context, Game game)
         {
-            return context.CurrentCharacter.Gender == Character.GenderEnum.Female;
+            return context.CurrentCharacter.Gender == Gender.Female;
         }
     }
 

@@ -12,6 +12,9 @@ namespace CourtIntrigue
 {
     internal partial class CharacterHeadshot : UserControl
     {
+        private static Bitmap MaleImage = (Bitmap)Image.FromFile("Graphics/Male.png");
+        private static Bitmap FemaleImage = (Bitmap)Image.FromFile("Graphics/Female.png");
+
         private Character targetCharacter;
         private Character perspectiveCharacter;
 
@@ -93,25 +96,25 @@ namespace CourtIntrigue
             if(targetCharacter != null)
             {
                 //If we have jobs, we need to render the job icons across the top of the portrait.
-                if(targetCharacter.Jobs.Count() > 0)
+                Bitmap myCopy = new Bitmap(targetCharacter.GetPortrait());
+                using (Graphics G = Graphics.FromImage(myCopy))
                 {
-                    Bitmap myCopy = new Bitmap(targetCharacter.GetPortrait());
-                    using (Graphics G = Graphics.FromImage(myCopy))
+                    int x = 0;
+                    foreach (var job in targetCharacter.Jobs)
                     {
-                        int x = 0;
-                        foreach (var job in targetCharacter.Jobs)
-                        {
-                            G.DrawImage(job.Image, x, 0);
-                            x += job.Image.Width;
-                        }
+                        G.DrawImage(job.Image, x, 0);
+                        x += job.Image.Width;
                     }
-                        
-                    portrait.Image = myCopy;
+                    if (targetCharacter.Gender == Gender.Male)
+                        G.DrawImage(MaleImage, myCopy.Width - MaleImage.Width, myCopy.Height - MaleImage.Height);
+                    else
+                        G.DrawImage(FemaleImage, myCopy.Width - FemaleImage.Width, myCopy.Height - FemaleImage.Height);
                 }
-                else
-                {
-                    portrait.Image = targetCharacter.GetPortrait();
-                }
+                    
+
+                    
+
+                portrait.Image = myCopy;
                 
 
                 nameLabel.Text = targetCharacter.Fullname;

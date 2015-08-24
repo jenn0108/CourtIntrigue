@@ -434,7 +434,7 @@ namespace CourtIntrigue
         {
             Dynasty dynasty = GetRandomDynasty();
             int birthdate = GetAdultBirthdate();
-            AICharacter character = new AICharacter(GetRandomMaleName(), birthdate, dynasty, 100, this, Character.GenderEnum.Male);
+            AICharacter character = new AICharacter(GetRandomMaleName(), birthdate, dynasty, 100, this, Gender.Male);
 
             AssignFamily(character);
             modifierManager.AssignInitialTraits(this, character, 4);
@@ -447,7 +447,7 @@ namespace CourtIntrigue
 
             Room home = roomManager.MakeUniqueRoom("ESTATE_ROOM");
             // All character have a wife for now.
-            AICharacter spouse = new AICharacter(GetRandomFemaleName(), wifeBirthdate, character.Dynasty, 50, this, Character.GenderEnum.Female);
+            AICharacter spouse = new AICharacter(GetRandomFemaleName(), wifeBirthdate, character.Dynasty, 50, this, Gender.Female);
             characters.Add(spouse);
 
             // Now add a random number of children with random genders.
@@ -455,8 +455,8 @@ namespace CourtIntrigue
             int numChildren = GetRandom(MAX_CHILDREN);
             for (int i = 0; i < numChildren; i++)
             {
-                Character.GenderEnum gender = (Character.GenderEnum)GetRandom(2);
-                string name = gender == Character.GenderEnum.Female ? GetRandomFemaleName() : GetRandomMaleName();
+                Gender gender = (Gender)GetRandom(2);
+                string name = gender == Gender.Female ? GetRandomFemaleName() : GetRandomMaleName();
 
                 Character child = new AICharacter(name, GetChildBirthdate(wifeBirthdate), character.Dynasty, 5, this, gender);
                 children.Add(child);
@@ -473,8 +473,8 @@ namespace CourtIntrigue
 
         public void CreateChild(Character mother, Character father)
         {
-            Character.GenderEnum gender = (Character.GenderEnum)GetRandom(2);
-            string name = gender == Character.GenderEnum.Female ? GetRandomFemaleName() : GetRandomMaleName();
+            Gender gender = (Gender)GetRandom(2);
+            string name = gender == Gender.Female ? GetRandomFemaleName() : GetRandomMaleName();
 
             Character child = new AICharacter(name, CurrentTime, mother.Spouse.Dynasty, 0, this, gender);
             child.AssignParents(mother, father);

@@ -12,7 +12,7 @@ namespace CourtIntrigue
         private MainWindow main;
         private Notificator notificator;
 
-        public PlayerCharacter(MainWindow main, string name, int birthdate, Dynasty dynasty, int money, Game game, GenderEnum gender) : base(name, birthdate, dynasty, money, game, gender)
+        public PlayerCharacter(MainWindow main, string name, int birthdate, Dynasty dynasty, int money, Game game, Gender gender) : base(name, birthdate, dynasty, money, game, gender)
         {
             this.main = main;
             notificator = new Notificator();
@@ -21,7 +21,7 @@ namespace CourtIntrigue
         
         public override int OnBeginDay(Room[] rooms)
         {
-            TextTopBottomButton view = new TextTopBottomButton(null, this, "A new day greets you!", rooms.Select(r => r.Name).ToArray(), null, notificator);
+            TextTopBottomButton view = new TextTopBottomButton(null, this, "A new day greets you!\nWhere would you like to go?", rooms.Select(r => r.Name).ToArray(), null, notificator);
             main.LaunchView(view);
             return view.SelectedIndex;
         }
