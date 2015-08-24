@@ -37,16 +37,36 @@ namespace CourtIntrigue
 
         public override int OnChooseOption(EventOption[] options, int[] willpowerCost, EventContext context, Event e)
         {
-            int allowedAcount = willpowerCost.Count(cost => cost <= WillPower);
+            int allowedCount = willpowerCost.Count(cost => cost <= WillPower);
 
-            if(allowedAcount < 1)
+            if(allowedCount < 1)
             {
                 //Events must have at least one willpower free option or else characters may be locked out
                 //of doing anything at all.
                 throw new EventIncorrectException("Events must have at least one willpower free option");
             }
 
-            int chosenIndex = Game.GetRandom(options.Length);
+            if (options.Length == 1)
+                return 0;
+
+            double bestValue = double.NegativeInfinity;
+            List<int> bestOptions = new List<int>();
+            for (int iOption = 0; iOption < options.Length; ++iOption)
+            {
+                double optionValue = options[iOption].DirectExecute.Evaluate(Game, context, GetWeights());
+                if (optionValue > bestValue)
+                {
+                    bestOptions.Clear();
+                    bestOptions.Add(iOption);
+                    bestValue = optionValue;
+                }
+                else if (optionValue == bestValue)
+                {
+                    bestOptions.Add(iOption);
+                }
+            }
+            int chosenIndex = bestOptions[Game.GetRandom(bestOptions.Count())];
+
             while(willpowerCost[chosenIndex] > WillPower)
             {
                 chosenIndex = Game.GetRandom(options.Length);

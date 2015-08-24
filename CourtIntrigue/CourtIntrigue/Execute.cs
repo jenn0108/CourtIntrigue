@@ -151,14 +151,13 @@ namespace CourtIntrigue
 
         public double Evaluate(Game game, EventContext context, Weights weights)
         {
-            //Dictionary<string, object> computedParameters = new Dictionary<string, object>();
-            //foreach (var pair in parameters)
-            //{
-            //    computedParameters.Add(pair.Key, context.GetScopedObjectByName(pair.Value));
-            //}
-            //EventContext newContext = new EventContext(null, context.CurrentCharacter, context.GetScopedObjectByName("ROOT") as Character, computedParameters);
-            //return game.GetEventById(eventid).Evalute(game, newContext, weights);
-            return 0.0;
+            Dictionary<string, object> computedParameters = new Dictionary<string, object>();
+            foreach (var pair in parameters)
+            {
+                computedParameters.Add(pair.Key, context.GetScopedObjectByName(pair.Value));
+            }
+            EventContext newContext = new EventContext(null, context.CurrentCharacter, context.GetScopedObjectByName("ROOT") as Character, computedParameters);
+            return game.GetEventById(eventid).Evaluate(game, newContext, weights);
         }
     }
 
