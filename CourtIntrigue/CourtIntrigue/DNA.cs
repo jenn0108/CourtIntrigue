@@ -80,7 +80,7 @@ namespace CourtIntrigue
 
         private Dictionary<DNA, Bitmap> cache = new Dictionary<DNA, Bitmap>();
 
-        public void LoadFromDirectory(string path, Dictionary<string, int> badTags)
+        public void LoadFromDirectory(string path, Counter<string> badTags)
         {
             foreach(var file in Directory.EnumerateFiles(path, "*.xml"))
             {
@@ -175,7 +175,7 @@ namespace CourtIntrigue
             return game.GetRandom(2) == 0 ? father : mother;
         }
 
-        private void LoadPortraitRules(string file, string path, Dictionary<string, int> badTags)
+        private void LoadPortraitRules(string file, string path, Counter<string> badTags)
         {
             using (XmlReader reader = XmlReader.Create(file))
             {
@@ -189,7 +189,7 @@ namespace CourtIntrigue
             }
         }
 
-        private void ReadPortraitRules(XmlReader reader, string path, Dictionary<string, int> badTags)
+        private void ReadPortraitRules(XmlReader reader, string path, Counter<string> badTags)
         {
             while (reader.Read())
             {
@@ -228,7 +228,7 @@ namespace CourtIntrigue
             }
         }
 
-        private void ReadPortraitRule(XmlReader reader, List<PortraitRule> rules, string path, Dictionary<string, int> badTags)
+        private void ReadPortraitRule(XmlReader reader, List<PortraitRule> rules, string path, Counter<string> badTags)
         {
             string tag = reader.Name;
             Bitmap image = null;

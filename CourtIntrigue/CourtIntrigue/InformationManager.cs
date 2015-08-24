@@ -11,7 +11,7 @@ namespace CourtIntrigue
     {
         private Dictionary<string, Information> informations = new Dictionary<string, Information>();
 
-        public void LoadInformationsFromFile(string filename, Dictionary<string, int> bagTags)
+        public void LoadInformationsFromFile(string filename, Counter<string> badTags)
         {
             using (XmlReader reader = XmlReader.Create(filename))
             {
@@ -19,13 +19,13 @@ namespace CourtIntrigue
                 {
                     if (reader.NodeType == XmlNodeType.Element && reader.Name == "informations")
                     {
-                        ReadInformations(reader, bagTags);
+                        ReadInformations(reader, badTags);
                     }
                 }
             }
         }
 
-        private void ReadInformations(XmlReader reader, Dictionary<string, int> badTags)
+        private void ReadInformations(XmlReader reader, Counter<string> badTags)
         {
             while (reader.Read())
             {
@@ -41,7 +41,7 @@ namespace CourtIntrigue
             }
         }
 
-        private Information ReadInformation(XmlReader reader, Dictionary<string, int> badTags)
+        private Information ReadInformation(XmlReader reader, Counter<string> badTags)
         {
             string identifier = null;
             string description = null;

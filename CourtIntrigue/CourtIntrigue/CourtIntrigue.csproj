@@ -68,6 +68,7 @@
     <Compile Include="CharacterHeadshot.Designer.cs">
       <DependentUpon>CharacterHeadshot.cs</DependentUpon>
     </Compile>
+    <Compile Include="Counter.cs" />
     <Compile Include="DNA.cs" />
     <Compile Include="EventContext.cs" />
     <Compile Include="AICharacter.cs" />

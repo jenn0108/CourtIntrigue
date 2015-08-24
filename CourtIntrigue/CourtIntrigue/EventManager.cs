@@ -84,7 +84,7 @@ namespace CourtIntrigue
             return events[id];
         }
 
-        public void LoadActionsFromFile(string filename, Dictionary<string, int> badTags)
+        public void LoadActionsFromFile(string filename, Counter<string> badTags)
         {
             using (XmlReader reader = XmlReader.Create(filename))
             {
@@ -98,7 +98,7 @@ namespace CourtIntrigue
             }
         }
 
-        public void LoadEventsFromFile(string filename, Dictionary<string, int> badTags)
+        public void LoadEventsFromFile(string filename, Counter<string> badTags)
         {
             using (XmlReader reader = XmlReader.Create(filename))
             {
@@ -112,7 +112,7 @@ namespace CourtIntrigue
             }
         }
 
-        private void ReadEvents(XmlReader reader, Dictionary<string, int> badTags)
+        private void ReadEvents(XmlReader reader, Counter<string> badTags)
         {
             while (reader.Read())
             {
@@ -128,7 +128,7 @@ namespace CourtIntrigue
             }
         }
 
-        private void ReadActions(XmlReader reader, Dictionary<string, int> badTags)
+        private void ReadActions(XmlReader reader, Counter<string> badTags)
         {
             while (reader.Read())
             {
@@ -144,7 +144,7 @@ namespace CourtIntrigue
             }
         }
 
-        private Event ReadEvent(XmlReader reader, Dictionary<string, int> badTags)
+        private Event ReadEvent(XmlReader reader, Counter<string> badTags)
         {
             string identifier = null;
             string description = null;
@@ -196,7 +196,7 @@ namespace CourtIntrigue
             return new Event(identifier, description, actionLogic, dirExec, options.ToArray(), parameters.ToArray());
         }
 
-        private Action ReadAction(XmlReader reader, Dictionary<string, int> badTags)
+        private Action ReadAction(XmlReader reader, Counter<string> badTags)
         {
             string identifier = null;
             string label = null;
@@ -218,7 +218,7 @@ namespace CourtIntrigue
             return new Action(identifier, label);
         }
 
-        private List<EventOption> ReadOptions(XmlReader reader, Dictionary<string, int> badTags)
+        private List<EventOption> ReadOptions(XmlReader reader, Counter<string> badTags)
         {
             List<EventOption> options = new List<EventOption>();
             while (reader.Read())
@@ -236,7 +236,7 @@ namespace CourtIntrigue
         }
 
 
-        private EventOption ReadOption(XmlReader reader, Dictionary<string, int> badTags)
+        private EventOption ReadOption(XmlReader reader, Counter<string> badTags)
         {
             string label = null;
 

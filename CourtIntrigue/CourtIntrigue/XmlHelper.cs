@@ -150,7 +150,7 @@ namespace CourtIntrigue
             return parts[0];
         }
 
-        public static IExecute ReadExecute(XmlReader reader, Dictionary<string, int> badTags)
+        public static IExecute ReadExecute(XmlReader reader, Counter<string> badTags)
         {
             //How did we start? Used for determining when we're done.
             string tag = reader.Name;
@@ -243,10 +243,7 @@ namespace CourtIntrigue
                 }
                 else if (reader.NodeType == XmlNodeType.Element)
                 {
-                    if (badTags.ContainsKey(reader.Name))
-                        ++badTags[reader.Name];
-                    else
-                        badTags.Add(reader.Name, 1);
+                    badTags.Increment(reader.Name);
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == tag)
                 {
@@ -268,7 +265,7 @@ namespace CourtIntrigue
         }
 
 
-        public static ILogic ReadLogic(XmlReader reader, Dictionary<string, int> badTags)
+        public static ILogic ReadLogic(XmlReader reader, Counter<string> badTags)
         {
             //How did we start? Used for determining when we're done.
             string tag = reader.Name;
@@ -305,7 +302,7 @@ namespace CourtIntrigue
                 return new AndLogic(expressions.ToArray());
         }
 
-        private static ILogic ReadSingleLogic(XmlReader reader, Dictionary<string, int> badTags)
+        private static ILogic ReadSingleLogic(XmlReader reader, Counter<string> badTags)
         {
             if (reader.NodeType == XmlNodeType.Element && reader.Name == "action_id")
             {
@@ -439,10 +436,7 @@ namespace CourtIntrigue
             }
             else if (reader.NodeType == XmlNodeType.Element)
             {
-                if (badTags.ContainsKey(reader.Name))
-                    ++badTags[reader.Name];
-                else
-                    badTags.Add(reader.Name, 1);
+                badTags.Increment(reader.Name);
             }
             return Logic.FALSE;
         }
@@ -473,7 +467,7 @@ namespace CourtIntrigue
                 throw new ArgumentException("Type not understood for has_information: " + typeName);
         }
 
-        private static ILogic ReadOrLogic(XmlReader reader, Dictionary<string, int> badTags)
+        private static ILogic ReadOrLogic(XmlReader reader, Counter<string> badTags)
         {
             List<ILogic> expressions = new List<ILogic>();
             while (reader.Read())
@@ -501,7 +495,7 @@ namespace CourtIntrigue
                 return new OrLogic(expressions.ToArray());
         }
 
-        private static IExecute ReadScopingLoop(XmlReader reader, Dictionary<string, int> badTags)
+        private static IExecute ReadScopingLoop(XmlReader reader, Counter<string> badTags)
         {
             //How did we start? Used for determining when we're done.
             string tag = reader.Name;
@@ -519,10 +513,7 @@ namespace CourtIntrigue
                 }
                 else if (reader.NodeType == XmlNodeType.Element)
                 {
-                    if (badTags.ContainsKey(reader.Name))
-                        ++badTags[reader.Name];
-                    else
-                        badTags.Add(reader.Name, 1);
+                    badTags.Increment(reader.Name);
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == tag)
                 {
@@ -539,7 +530,7 @@ namespace CourtIntrigue
                 throw new Exception("Unexpected tag " + tag);
         }
 
-        private static IExecute ReadGainInformation(XmlReader reader, Dictionary<string, int> badTags)
+        private static IExecute ReadGainInformation(XmlReader reader, Counter<string> badTags)
         {
             string id = null;
             int chance = 100;
@@ -564,10 +555,7 @@ namespace CourtIntrigue
                 }
                 else if (reader.NodeType == XmlNodeType.Element)
                 {
-                    if (badTags.ContainsKey(reader.Name))
-                        ++badTags[reader.Name];
-                    else
-                        badTags.Add(reader.Name, 1);
+                    badTags.Increment(reader.Name);
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == tag)
                 {
@@ -581,7 +569,7 @@ namespace CourtIntrigue
                 throw new Exception("Found unknown information tag: " + tag);
         }
 
-        private static IExecute ReadApplyOpinionMod(XmlReader reader, Dictionary<string, int> badTags)
+        private static IExecute ReadApplyOpinionMod(XmlReader reader, Counter<string> badTags)
         {
             string id = null;
             string character = null;
@@ -597,10 +585,7 @@ namespace CourtIntrigue
                 }
                 else if (reader.NodeType == XmlNodeType.Element)
                 {
-                    if (badTags.ContainsKey(reader.Name))
-                        ++badTags[reader.Name];
-                    else
-                        badTags.Add(reader.Name, 1);
+                    badTags.Increment(reader.Name);
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "apply_opinion_mod")
                 {
@@ -611,7 +596,7 @@ namespace CourtIntrigue
             return new ApplyOpinionModifierExecute(id, character);
         }
 
-        private static IExecute ReadTriggerEvent(XmlReader reader, Dictionary<string, int> badTags)
+        private static IExecute ReadTriggerEvent(XmlReader reader, Counter<string> badTags)
         {
             string id = null;
             string tag = reader.Name;
@@ -631,10 +616,7 @@ namespace CourtIntrigue
                 }
                 else if (reader.NodeType == XmlNodeType.Element)
                 {
-                    if (badTags.ContainsKey(reader.Name))
-                        ++badTags[reader.Name];
-                    else
-                        badTags.Add(reader.Name, 1);
+                    badTags.Increment(reader.Name);
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == tag)
                 {
@@ -648,7 +630,7 @@ namespace CourtIntrigue
                 throw new Exception("Found unknown information tag: " + tag);
         }
 
-        public static List<Parameter> ReadParameters(XmlReader reader, Dictionary<string, int> badTags)
+        public static List<Parameter> ReadParameters(XmlReader reader, Counter<string> badTags)
         {
             List<Parameter> parameters = new List<Parameter>();
             while (reader.Read())
@@ -662,10 +644,7 @@ namespace CourtIntrigue
                 }
                 else if (reader.NodeType == XmlNodeType.Element)
                 {
-                    if (badTags.ContainsKey(reader.Name))
-                        ++badTags[reader.Name];
-                    else
-                        badTags.Add(reader.Name, 1);
+                    badTags.Increment(reader.Name);
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "parameters")
                 {
@@ -675,7 +654,7 @@ namespace CourtIntrigue
             return parameters;
         }
 
-        public static string[] ReadList(XmlReader reader, string elementTag, Dictionary<string, int> badTags)
+        public static string[] ReadList(XmlReader reader, string elementTag, Counter<string> badTags)
         {
             string tag = reader.Name;
             List<string> elements = new List<string>();
@@ -687,10 +666,7 @@ namespace CourtIntrigue
                 }
                 else if (reader.NodeType == XmlNodeType.Element)
                 {
-                    if (badTags.ContainsKey(reader.Name))
-                        ++badTags[reader.Name];
-                    else
-                        badTags.Add(reader.Name, 1);
+                    badTags.Increment(reader.Name);
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == tag)
                 {
@@ -700,7 +676,7 @@ namespace CourtIntrigue
             return elements.ToArray();
         }
 
-        private static ILogic ReadTestEventOptionsLogic(XmlReader reader, Dictionary<string, int> badTags)
+        private static ILogic ReadTestEventOptionsLogic(XmlReader reader, Counter<string> badTags)
         {
             string id = null;
             Dictionary<string, string> parameters = new Dictionary<string, string>();
@@ -719,10 +695,7 @@ namespace CourtIntrigue
                 }
                 else if (reader.NodeType == XmlNodeType.Element)
                 {
-                    if (badTags.ContainsKey(reader.Name))
-                        ++badTags[reader.Name];
-                    else
-                        badTags.Add(reader.Name, 1);
+                    badTags.Increment(reader.Name);
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "test_event_options")
                 {
@@ -733,7 +706,7 @@ namespace CourtIntrigue
             return new TestEventOptionsLogic(id, parameters);
         }
 
-        private static IExecute ReadIfExecute(XmlReader reader, Dictionary<string, int> badTags)
+        private static IExecute ReadIfExecute(XmlReader reader, Counter<string> badTags)
         {
             ILogic requirements = Logic.TRUE;
             IExecute thenExecute = Execute.NOOP;
@@ -754,10 +727,7 @@ namespace CourtIntrigue
                 }
                 else if (reader.NodeType == XmlNodeType.Element)
                 {
-                    if (badTags.ContainsKey(reader.Name))
-                        ++badTags[reader.Name];
-                    else
-                        badTags.Add(reader.Name, 1);
+                    badTags.Increment(reader.Name);
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "if")
                 {
@@ -768,7 +738,7 @@ namespace CourtIntrigue
             return new IfExecute(requirements, thenExecute, elseExecute);
         }
 
-        private static IExecute ReadRandom(XmlReader reader, Dictionary<string, int> badTags)
+        private static IExecute ReadRandom(XmlReader reader, Counter<string> badTags)
         {
             List<IExecute> outcomes = new List<IExecute>();
             List<double> chances = new List<double>();
@@ -781,10 +751,7 @@ namespace CourtIntrigue
                 }
                 else if (reader.NodeType == XmlNodeType.Element)
                 {
-                    if (badTags.ContainsKey(reader.Name))
-                        ++badTags[reader.Name];
-                    else
-                        badTags.Add(reader.Name, 1);
+                    badTags.Increment(reader.Name);
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "random")
                 {
@@ -795,7 +762,7 @@ namespace CourtIntrigue
             return new RandomExecute(outcomes.ToArray(), chances.ToArray());
         }
 
-        private static IExecute ReadChooseCharacter(XmlReader reader, Dictionary<string, int> badTags)
+        private static IExecute ReadChooseCharacter(XmlReader reader, Counter<string> badTags)
         {
             ILogic requirements = Logic.TRUE;
             IExecute exec = Execute.NOOP;
