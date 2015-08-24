@@ -122,6 +122,9 @@ namespace CourtIntrigue
             CurrentRoom = mother.Home;
             Mother = mother;
             Father = father;
+
+            mother.Children.Add(this);
+            father.Children.Add(this);
         }
 
         public IEnumerable<string> GetVariableNames()
