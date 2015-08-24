@@ -46,7 +46,7 @@ namespace CourtIntrigue
         private Dictionary<string, Job> normalJobs = new Dictionary<string, Job>();
         private Dictionary<Job, Character> uniqueJobs = new Dictionary<Job, Character>();
 
-        public void LoadJobsFromFile(string filename, Dictionary<string, int> bagTags)
+        public void LoadJobsFromFile(string filename, Counter<string> badTags)
         {
             using (XmlReader reader = XmlReader.Create(filename))
             {
@@ -54,13 +54,13 @@ namespace CourtIntrigue
                 {
                     if (reader.NodeType == XmlNodeType.Element && reader.Name == "jobs")
                     {
-                        ReadJobs(reader, bagTags);
+                        ReadJobs(reader, badTags);
                     }
                 }
             }
         }
 
-        private void ReadJobs(XmlReader reader, Dictionary<string, int> badTags)
+        private void ReadJobs(XmlReader reader, Counter<string> badTags)
         {
             while (reader.Read())
             {
@@ -72,6 +72,10 @@ namespace CourtIntrigue
                     else
                         normalJobs.Add(job.Identifier, job);
                 }
+                else if (reader.NodeType == XmlNodeType.Element)
+                {
+                    badTags.Increment(reader.Name);
+                }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "jobs")
                 {
                     break;
@@ -79,7 +83,7 @@ namespace CourtIntrigue
             }
         }
 
-        private Job ReadJob(XmlReader reader, Dictionary<string, int> badTags)
+        private Job ReadJob(XmlReader reader, Counter<string> badTags)
         {
             string identifier = null;
             string description = null;
@@ -127,6 +131,10 @@ namespace CourtIntrigue
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "on_fire")
                 {
                     onFire = reader.ReadElementContentAsString().Trim();
+                }
+                else if (reader.NodeType == XmlNodeType.Element)
+                {
+                    badTags.Increment(reader.Name);
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "job")
                 {

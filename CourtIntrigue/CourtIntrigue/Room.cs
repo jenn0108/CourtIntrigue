@@ -109,7 +109,7 @@ namespace CourtIntrigue
             return rooms.Where(r => r.Identifier == id).First();
         }
 
-        public void LoadRoomsFromFile(string filename, Dictionary<string, int> badTags)
+        public void LoadRoomsFromFile(string filename, Counter<string> badTags)
         {
             using (XmlReader reader = XmlReader.Create(filename))
             {
@@ -121,16 +121,13 @@ namespace CourtIntrigue
                     }
                     else if (reader.NodeType == XmlNodeType.Element)
                     {
-                        if (badTags.ContainsKey(reader.Name))
-                            ++badTags[reader.Name];
-                        else
-                            badTags.Add(reader.Name, 1);
+                        badTags.Increment(reader.Name);
                     }
                 }
             }
         }
 
-        private void ReadRooms(XmlReader reader, Dictionary<string, int> badTags)
+        private void ReadRooms(XmlReader reader, Counter<string> badTags)
         {
             while (reader.Read())
             {
@@ -141,10 +138,7 @@ namespace CourtIntrigue
                 }
                 else if (reader.NodeType == XmlNodeType.Element)
                 {
-                    if (badTags.ContainsKey(reader.Name))
-                        ++badTags[reader.Name];
-                    else
-                        badTags.Add(reader.Name, 1);
+                    badTags.Increment(reader.Name);
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "rooms")
                 {
@@ -153,7 +147,7 @@ namespace CourtIntrigue
             }
         }
 
-        private Room ReadRoom(XmlReader reader, Dictionary<string, int> badTags)
+        private Room ReadRoom(XmlReader reader, Counter<string> badTags)
         {
             string identifier = null;
             string name = null;
@@ -189,10 +183,7 @@ namespace CourtIntrigue
                 }
                 else if (reader.NodeType == XmlNodeType.Element)
                 {
-                    if (badTags.ContainsKey(reader.Name))
-                        ++badTags[reader.Name];
-                    else
-                        badTags.Add(reader.Name, 1);
+                    badTags.Increment(reader.Name);
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "room")
                 {

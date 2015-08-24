@@ -13,7 +13,7 @@ namespace CourtIntrigue
         private List<PrestigeModifier> prestigeModifiers = new List<PrestigeModifier>();
         private Dictionary<string, OpinionModifier> opinionModifiers = new Dictionary<string, OpinionModifier>();
 
-        private Trait ReadTrait(XmlReader reader, Dictionary<string, int> badTags)
+        private Trait ReadTrait(XmlReader reader, Counter<string> badTags)
         {
             string identifier = null;
             string description = null;
@@ -50,10 +50,7 @@ namespace CourtIntrigue
                 }
                 else if (reader.NodeType == XmlNodeType.Element)
                 {
-                    if (badTags.ContainsKey(reader.Name))
-                        ++badTags[reader.Name];
-                    else
-                        badTags.Add(reader.Name, 1);
+                    badTags.Increment(reader.Name);
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "trait")
                 {
@@ -63,7 +60,7 @@ namespace CourtIntrigue
             return new Trait(identifier, label, description, sameOpinion, oppositeOpinion, opposites);
         }
 
-        private PrestigeModifier ReadPrestigeModifier(XmlReader reader, Dictionary<string, int> badTags)
+        private PrestigeModifier ReadPrestigeModifier(XmlReader reader, Counter<string> badTags)
         {
             string identifier = null;
             string description = null;
@@ -95,10 +92,7 @@ namespace CourtIntrigue
                 }
                 else if (reader.NodeType == XmlNodeType.Element)
                 {
-                    if (badTags.ContainsKey(reader.Name))
-                        ++badTags[reader.Name];
-                    else
-                        badTags.Add(reader.Name, 1);
+                    badTags.Increment(reader.Name);
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "prestige_mod")
                 {
@@ -108,7 +102,7 @@ namespace CourtIntrigue
             return new PrestigeModifier(identifier, label, description, requirements, dailyChange);
         }
 
-        private OpinionModifier ReadOpinionModifier(XmlReader reader, Dictionary<string, int> badTags)
+        private OpinionModifier ReadOpinionModifier(XmlReader reader, Counter<string> badTags)
         {
             string identifier = null;
             string description = null;
@@ -140,10 +134,7 @@ namespace CourtIntrigue
                 }
                 else if (reader.NodeType == XmlNodeType.Element)
                 {
-                    if (badTags.ContainsKey(reader.Name))
-                        ++badTags[reader.Name];
-                    else
-                        badTags.Add(reader.Name, 1);
+                    badTags.Increment(reader.Name);
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "opinion_mod")
                 {
@@ -153,7 +144,7 @@ namespace CourtIntrigue
             return new OpinionModifier(identifier, label, description, duration, change);
         }
 
-        public void LoadTraitsFromFile(string filename, Dictionary<string, int> badTags)
+        public void LoadTraitsFromFile(string filename, Counter<string> badTags)
         {
             using (XmlReader reader = XmlReader.Create(filename))
             {
@@ -167,7 +158,7 @@ namespace CourtIntrigue
             }
         }
 
-        private void ReadTraits(XmlReader reader, Dictionary<string, int> badTags)
+        private void ReadTraits(XmlReader reader, Counter<string> badTags)
         {
             while (reader.Read())
             {
@@ -178,10 +169,7 @@ namespace CourtIntrigue
                 }
                 else if (reader.NodeType == XmlNodeType.Element)
                 {
-                    if (badTags.ContainsKey(reader.Name))
-                        ++badTags[reader.Name];
-                    else
-                        badTags.Add(reader.Name, 1);
+                    badTags.Increment(reader.Name);
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "traits")
                 {
@@ -191,7 +179,7 @@ namespace CourtIntrigue
         }
 
 
-        public void LoadModifiersFromFile(string filename, Dictionary<string, int> badTags)
+        public void LoadModifiersFromFile(string filename, Counter<string> badTags)
         {
             using (XmlReader reader = XmlReader.Create(filename))
             {
@@ -207,16 +195,13 @@ namespace CourtIntrigue
                     }
                     else if (reader.NodeType == XmlNodeType.Element)
                     {
-                        if (badTags.ContainsKey(reader.Name))
-                            ++badTags[reader.Name];
-                        else
-                            badTags.Add(reader.Name, 1);
+                        badTags.Increment(reader.Name);
                     }
                 }
             }
         }
 
-        private void ReadOpinionModifiers(XmlReader reader, Dictionary<string, int> badTags)
+        private void ReadOpinionModifiers(XmlReader reader, Counter<string> badTags)
         {
             while (reader.Read())
             {
@@ -227,10 +212,7 @@ namespace CourtIntrigue
                 }
                 else if (reader.NodeType == XmlNodeType.Element)
                 {
-                    if (badTags.ContainsKey(reader.Name))
-                        ++badTags[reader.Name];
-                    else
-                        badTags.Add(reader.Name, 1);
+                    badTags.Increment(reader.Name);
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "opinion_mods")
                 {
@@ -244,7 +226,7 @@ namespace CourtIntrigue
             return opinionModifiers[identifier];
         }
 
-        private void ReadPrestigeModifiers(XmlReader reader, Dictionary<string, int> badTags)
+        private void ReadPrestigeModifiers(XmlReader reader, Counter<string> badTags)
         {
             while (reader.Read())
             {
@@ -255,10 +237,7 @@ namespace CourtIntrigue
                 }
                 else if (reader.NodeType == XmlNodeType.Element)
                 {
-                    if (badTags.ContainsKey(reader.Name))
-                        ++badTags[reader.Name];
-                    else
-                        badTags.Add(reader.Name, 1);
+                    badTags.Increment(reader.Name);
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "prestige_mods")
                 {

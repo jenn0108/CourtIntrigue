@@ -59,7 +59,7 @@ namespace CourtIntrigue
                 dynasties.Add(fam, new Dynasty(fam));
             }
 
-            Dictionary<string, int> badTags = new Dictionary<string, int>();
+            Counter<string> badTags = new Counter<string>();
 
             //Go load all the xml files in our events directory.
             foreach (var file in Directory.EnumerateFiles("Events", "*.xml"))
