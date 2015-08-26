@@ -49,6 +49,14 @@ namespace CourtIntrigue
             this.parameters = parameters;
         }
 
+        public EventContext(ActionDescriptor actionDescriptor)
+        {
+            Identifer = actionDescriptor.Identifer;
+            Target = actionDescriptor.Target;
+            scopes.Add(new KeyValuePair<string, object>("ROOT", actionDescriptor.Initiator));
+            parameters = new Dictionary<string, object>();
+        }
+
         public void PushScope(object newObject, string name = null)
         {
             scopes.Add(new KeyValuePair<string, object>(name, newObject));
@@ -98,6 +106,23 @@ namespace CourtIntrigue
                     characters.Add(pair.Value as Character);
             }
             return characters.ToArray();
+        }
+    }
+
+    // What we originally called "Action". This is now the thing that Character.Tick()
+    // returns to describe which action the character wants to take. It is then used
+    // to create an EventContext.
+    class ActionDescriptor
+    {
+        public string Identifer { get; private set; }
+        public Character Initiator { get; private set; }
+        public Character Target { get; private set; }
+
+        public ActionDescriptor(string identifier, Character initiator, Character target)
+        {
+            Identifer = identifier;
+            Initiator = initiator;
+            Target = target;
         }
     }
 

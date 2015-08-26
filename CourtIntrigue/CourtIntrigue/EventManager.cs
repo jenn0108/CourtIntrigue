@@ -16,14 +16,14 @@ namespace CourtIntrigue
         private Dictionary<string, Event> events = new Dictionary<string, Event>();
         private Dictionary<string, Action> actions = new Dictionary<string, Action>();
 
-        public Event FindEventForAction(EventContext context, Game game)
+        public Event FindEventForAction(ActionDescriptor actionDescriptor, Game game)
         {
             //Which events can we perform?
             List<Event> okToRun = new List<Event>();
             //We really should be smarter about this.
             foreach(var pair in events)
             {
-                if(pair.Value.ActionRequirements.Evaluate(context, game))
+                if(pair.Value.ActionRequirements.Evaluate(new EventContext(actionDescriptor), game))
                 {
                     okToRun.Add(pair.Value);
                 }

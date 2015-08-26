@@ -26,7 +26,7 @@ namespace CourtIntrigue
             return view.SelectedIndex;
         }
 
-        public override EventContext OnTick(Action[] soloActions, Dictionary<Character, Action[]> characterActions)
+        public override ActionDescriptor OnTick(Action[] soloActions, Dictionary<Character, Action[]> characterActions)
         {
             Character[] allCharacters = CurrentRoom.GetCharacters(this).ToArray();
             bool[] characterEnables = allCharacters.Select(c => characterActions.ContainsKey(c)).ToArray();
@@ -35,14 +35,14 @@ namespace CourtIntrigue
             main.LaunchView(view);
 
             if (!view.SelectedTop)
-                return new EventContext(soloActions[view.SelectedIndex].Identifier, this, null);
+                return new ActionDescriptor(soloActions[view.SelectedIndex].Identifier, this, null);
 
             Character selectedCharacter = allCharacters[view.SelectedIndex];
 
             //Player selected a character.
             TextTopBottomButton secondView = new TextTopBottomButton(new Character[] { selectedCharacter }, this, "What would you like to do with " + selectedCharacter.Fullname, characterActions[selectedCharacter].Select(a => a.Label).ToArray(), null, notificator);
             main.LaunchView(secondView);
-            return new EventContext(characterActions[selectedCharacter][secondView.SelectedIndex].Identifier, this, selectedCharacter);
+            return new ActionDescriptor(characterActions[selectedCharacter][secondView.SelectedIndex].Identifier, this, selectedCharacter);
         }
 
         public override int OnChooseOption(EventOption[] options, int[] willpowerCost, EventContext context, Event e)

@@ -240,7 +240,7 @@ namespace CourtIntrigue
             return rooms[index];
         }
 
-        public EventContext Tick()
+        public ActionDescriptor Tick()
         {
             //A Character's observe modifier is always reset to 1 at the start of a tick.
             //Many events will change this.  Remember that information is doled out at the
@@ -288,7 +288,7 @@ namespace CourtIntrigue
             return filteredCharacters[index];
         }
 
-        public virtual EventContext OnTick(Action[] soloActions, Dictionary<Character, Action[]> characterActions)
+        public virtual ActionDescriptor OnTick(Action[] soloActions, Dictionary<Character, Action[]> characterActions)
         {
             throw new NotImplementedException();
         }

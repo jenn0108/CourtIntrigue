@@ -212,7 +212,7 @@ namespace CourtIntrigue
             //We're going to need to delay solo actions until after the pair actions so those
             //characters can be interrupted.  This is an important gameplay idea so the last
             //character in the turn order has the opportunity to talk to other characters.
-            Dictionary<Character, EventContext> soloActions = new Dictionary<Character, EventContext>();
+            Dictionary<Character, ActionDescriptor> soloActions = new Dictionary<Character, ActionDescriptor>();
 
             //Give each player a turn according to turn order.
             foreach (var character in characters)
@@ -226,25 +226,25 @@ namespace CourtIntrigue
                 }
 
                 //Give the character their turn.
-                EventContext actionContext = character.Tick();
+                ActionDescriptor actionDescriptor = character.Tick();
 
-                if (actionContext.Target == null)
+                if (actionDescriptor.Target == null)
                 {
-                    debugLogger.PrintText(character.Name + " chose " + actionContext.Identifer);
+                    debugLogger.PrintText(character.Name + " chose " + actionDescriptor.Identifer);
 
                     //This character has chosen a solo action.  Queue it up and move on.
-                    soloActions.Add(character, actionContext);
+                    soloActions.Add(character, actionDescriptor);
                     continue;
                 }
                 else
                 {
-                    debugLogger.PrintText(character.Name + " chose " + actionContext.Identifer + " with " + actionContext.Target.Name);
+                    debugLogger.PrintText(character.Name + " chose " + actionDescriptor.Identifer + " with " + actionDescriptor.Target.Name);
 
                     //This character is unavailable for interaction because he is busy.
                     character.MarkBusy();
                 }
                 
-                ExecuteAction(character, actionContext, finishedCharacters, observableInformationByRoom);
+                ExecuteAction(character, actionDescriptor, finishedCharacters, observableInformationByRoom);
 
             }
 
@@ -333,12 +333,16 @@ namespace CourtIntrigue
             }
         }
 
-        private void ExecuteAction(Character character, EventContext context, ISet<Character> finishedCharacters, Dictionary<Room, List<ObservableInformation>> informations)
+        private void ExecuteAction(Character character, ActionDescriptor actionDescriptor, ISet<Character> finishedCharacters, Dictionary<Room, List<ObservableInformation>> informations)
         {
             //Find a matching event to execute.
-            Event eventToPlay = eventManager.FindEventForAction(context, this);
+            Event eventToPlay = eventManager.FindEventForAction(actionDescriptor, this);
+
             if (eventToPlay != null)
             {
+                // Create an event context to keep track of the event state as we execute.
+                EventContext context = new EventContext(actionDescriptor);
+
                 //We pass in an event results instead of accepting a return value because we want all
                 //the event logic along the way to touch the same instance instead of having to worry
                 //about merging a number of different instances.
@@ -346,12 +350,12 @@ namespace CourtIntrigue
                 eventToPlay.Execute(results, this, context);
 
                 //Did the target get their turn consumed?
-                if (!results.TargetGetsTurn && context.Target != null)
+                if (!results.TargetGetsTurn && actionDescriptor.Target != null)
                 {
                     //Remove the target from the room (since they are busy) and make sure they don't
                     //get their normal action.
-                    finishedCharacters.Add(context.Target);
-                    context.Target.MarkBusy();
+                    finishedCharacters.Add(actionDescriptor.Target);
+                    actionDescriptor.Target.MarkBusy();
                 }
 
                 if(results.HasInformation)

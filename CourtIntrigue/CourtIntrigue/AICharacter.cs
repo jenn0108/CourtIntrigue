@@ -12,20 +12,20 @@ namespace CourtIntrigue
         {
         }
 
-        public override EventContext OnTick(Action[] soloActions, Dictionary<Character, Action[]> characterActions)
+        public override ActionDescriptor OnTick(Action[] soloActions, Dictionary<Character, Action[]> characterActions)
         {
             CharacterLog("In room with: " + string.Join(", ", characterActions.Select(p => p.Key.Name)));
 
             int num = Game.GetRandom(soloActions.Length + characterActions.Count);
             if (num < soloActions.Length)
             {
-                return new EventContext(soloActions[num].Identifier, this, null);
+                return new ActionDescriptor(soloActions[num].Identifier, this, null);
             }
             else
             {
                 Character otherCharacter = characterActions.Keys.ElementAt(num - soloActions.Length);
                 string[] pairActions = characterActions[otherCharacter].Select(a => a.Identifier).ToArray();
-                return new EventContext(pairActions[Game.GetRandom(pairActions.Length)], this, otherCharacter);
+                return new ActionDescriptor(pairActions[Game.GetRandom(pairActions.Length)], this, otherCharacter);
             }
 
         }
