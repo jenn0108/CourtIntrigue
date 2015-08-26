@@ -53,6 +53,40 @@ namespace CourtIntrigue
             else
                 return 0.0;
         }
+
+        public double MeasureAllowEventSelection(Character currentCharacter)
+        {
+            if (perspective == currentCharacter)
+                return 0.0; // Nobody cares about getting their turn back.
+            else
+                return 0.0;
+        }
+
+        public double MeasureObserveInformation(InformationInstance info, Game game, Character observingCharacter)
+        {
+            // 1. Is info about the perspective character
+            // then we like it as much as we like whatever the OnObserve of that information does.
+            if (info.IsAbout(perspective))
+            {
+                return info.EvaluateOnObserve(perspective, game);
+            }
+            else if (observingCharacter == perspective)
+            {
+                return 100.0; // It's good to know things about people.
+            }
+            else
+            {
+                return 0.0; // Don't care about other people learning random information
+            }
+        }
+
+        public double MeasureObserveChance(Character currentCharacter, double multiplier)
+        {
+            if (perspective == currentCharacter)
+                return multiplier * 10.0; // It's better when the observe chance is getting higher
+            else
+                return 0.0;
+        }
     }
 
     interface IExecute
@@ -124,7 +158,7 @@ namespace CourtIntrigue
 
         public double Evaluate(Game game, EventContext context, Weights weights)
         {
-            return 0.0;
+            return weights.MeasureAllowEventSelection(context.CurrentCharacter);
         }
     }
 
@@ -185,7 +219,13 @@ namespace CourtIntrigue
 
         public double Evaluate(Game game, EventContext context, Weights weights)
         {
-            return 0.0;
+            Dictionary<string, object> computedParameters = new Dictionary<string, object>();
+            foreach (var pair in parameters)
+            {
+                computedParameters.Add(pair.Key, context.GetScopedObjectByName(pair.Value));
+            }
+            InformationInstance info = new InformationInstance(game.GetInformationById(informationId), computedParameters, game.CurrentTime);
+            return weights.MeasureObserveInformation(info, game, context.CurrentCharacter);
         }
     }
 
@@ -222,6 +262,7 @@ namespace CourtIntrigue
 
         public double Evaluate(Game game, EventContext context, Weights weights)
         {
+            // TODO: We need some way to be intelligent in ChooseInformationAbout for AI character before implementing this.
             return 0.0;
         }
     }
@@ -247,6 +288,7 @@ namespace CourtIntrigue
         }
         public double Evaluate(Game game, EventContext context, Weights weights)
         {
+            // TODO: We need some way to be intelligent in ChooseCharacter for AI character before implementing this.
             return 0.0;
         }
     }
@@ -283,6 +325,8 @@ namespace CourtIntrigue
         public double Evaluate(Game game, EventContext context, Weights weights)
         {
             //TODO: Start with random index.
+            // TODO: Should we be doing some average here instead of just stopping
+            // at the first one that works?
             for (int i = 0; i < context.CurrentCharacter.Children.Count; ++i)
             {
                 Character character = context.CurrentCharacter.Children[i];
@@ -549,10 +593,10 @@ namespace CourtIntrigue
         }
     }
 
-    class MultiplyOvserveChanceExecute : IExecute
+    class MultiplyObserveChanceExecute : IExecute
     {
         private double multiplier;
-        public MultiplyOvserveChanceExecute(double multiplier)
+        public MultiplyObserveChanceExecute(double multiplier)
         {
             this.multiplier = multiplier;
         }
@@ -564,7 +608,7 @@ namespace CourtIntrigue
 
         public double Evaluate(Game game, EventContext context, Weights weights)
         {
-            return 0.0;
+            return weights.MeasureObserveChance(context.CurrentCharacter, multiplier);
         }
     }
 

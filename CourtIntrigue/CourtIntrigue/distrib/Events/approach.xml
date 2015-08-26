@@ -390,10 +390,12 @@
     <options>
       <option>
         <label>OK</label>
-        <apply_opinion_mod>
-          <id>AGREE_THIRD_PARTY</id>
-          <character>TARGET</character>
-        </apply_opinion_mod>
+        <exec>
+          <apply_opinion_mod>
+            <id>AGREE_THIRD_PARTY</id>
+            <character>TARGET</character>
+          </apply_opinion_mod>
+        </exec>
       </option>
     </options>
   </event>
@@ -409,10 +411,12 @@
     <options>
       <option>
         <label>OK</label>
-        <apply_opinion_mod>
-          <id>DISAGREE_THIRD_PARTY</id>
-          <character>TARGET</character>
-        </apply_opinion_mod>
+        <exec>
+          <apply_opinion_mod>
+            <id>DISAGREE_THIRD_PARTY</id>
+            <character>TARGET</character>
+          </apply_opinion_mod>
+        </exec>
       </option>
     </options>
   </event>
@@ -428,10 +432,12 @@
     <options>
       <option>
         <label>OK</label>
-        <apply_opinion_mod>
-          <id>AGREE_THIRD_PARTY</id>
-          <character>TARGET</character>
-        </apply_opinion_mod>
+        <exec>
+          <apply_opinion_mod>
+            <id>AGREE_THIRD_PARTY</id>
+            <character>TARGET</character>
+          </apply_opinion_mod>
+        </exec>
       </option>
     </options>
   </event>
@@ -447,10 +453,12 @@
     <options>
       <option>
         <label>OK</label>
-        <apply_opinion_mod>
-          <id>DISAGREE_THIRD_PARTY</id>
-          <character>TARGET</character>
-        </apply_opinion_mod>
+        <exec>
+          <apply_opinion_mod>
+            <id>DISAGREE_THIRD_PARTY</id>
+            <character>TARGET</character>
+          </apply_opinion_mod>
+        </exec>
       </option>
     </options>
   </event>

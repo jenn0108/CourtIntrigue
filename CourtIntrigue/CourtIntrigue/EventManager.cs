@@ -273,6 +273,10 @@ namespace CourtIntrigue
                 {
                     desires.Add(new Desire(reader.GetAttribute("type"), int.Parse(reader.GetAttribute("cost"))));
                 }
+                else if (reader.NodeType == XmlNodeType.Element)
+                {
+                    badTags.Increment(reader.Name);
+                }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "option")
                 {
                     break;

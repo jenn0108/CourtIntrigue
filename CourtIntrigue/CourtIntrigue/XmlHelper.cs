@@ -213,7 +213,7 @@ namespace CourtIntrigue
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "multiply_observe_chance")
                 {
-                    expressions.Add(new MultiplyOvserveChanceExecute(reader.ReadElementContentAsDouble()));
+                    expressions.Add(new MultiplyObserveChanceExecute(reader.ReadElementContentAsDouble()));
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "debug")
                 {
