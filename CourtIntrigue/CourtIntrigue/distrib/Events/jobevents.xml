@@ -134,6 +134,126 @@
       </option>
     </options>
   </event>
+  <!-- CONVERSATION EVENTS-->
+  <!-- A initiates the approach to B. -->
+  <!-- Opening conversation event.
+  A = ROOT, B = TARGET.
+  ROOT is initiating and has chosen TARGET to talk to.-->
+  <event>
+    <id>COUNCILLOR_APPROACH_ACTION_START_EVENT</id>
+    <description>You approach on the King's business...</description>
+    <requirements>
+      <action_id>APPROACH_ACTION</action_id>
+      <or>
+        <!-- Currently, only the steward has -->
+        <has_job>STEWARD_JOB</has_job>
+      </or>
+    </requirements>
+    <options>
+      <option>
+        <label>OK</label>
+        <exec>
+          <set_scope name="TARGET">
+            <trigger_event>
+              <id>COUNCILLOR_APPROACH_ACTION_AGREE_EVENT</id>
+            </trigger_event>
+          </set_scope>
+        </exec>
+      </option>
+    </options>
+  </event>
+
+  <!-- Approach notification event.
+  B = ROOT, A = TARGET.
+  ROOT can refuse or accept to talk to TARGET.-->
+  <event>
+    <id>COUNCILLOR_APPROACH_ACTION_AGREE_EVENT</id>
+    <description>$Target.Name$ approaches on the King's business.</description>
+    <options>
+      <option>
+        <label>Refuse</label>
+        <willpower>
+          <!-- Refusing conversations is harder when you are shy -->
+          <trait_adversion type="SHY_TRAIT" cost="5"/>
+        </willpower>
+        <exec>
+          <!-- Event refusing costs some observation ability -->
+          <multiply_observe_chance>0.8</multiply_observe_chance>
+          <set_scope name="TARGET">
+            <!-- The initiator suffers from the same decrease -->
+            <multiply_observe_chance>0.8</multiply_observe_chance>
+            <trigger_event>
+              <id>COUNCILLOR_APPROACH_ACTION_REFUSE_EVENT</id>
+            </trigger_event>
+          </set_scope>
+          <allow_event_selection/>
+        </exec>
+      </option>
+      <option>
+        <label>Accept</label>
+        <willpower>
+          <!-- Gregarious people always want to talk! -->
+          <trait_desire type="GREGARIOUS_TRAIT" cost="5"/>
+        </willpower>
+        <exec>
+          <!-- An actual conversation drastically decreases your ability to overhear things -->
+          <multiply_observe_chance>0.1</multiply_observe_chance>
+          <set_scope name="TARGET">
+            <!-- An actual conversation drastically decreases your ability to overhear things -->
+            <multiply_observe_chance>0.1</multiply_observe_chance>
+            <trigger_event>
+              <id>COUNCILLOR_APPROACH_ACTION_ACCEPT_EVENT</id>
+            </trigger_event>
+          </set_scope>
+        </exec>
+      </option>
+    </options>
+  </event>
+  <!-- Approach rejection notification
+  A = ROOT, B = TARGET
+  Conversation is over. B gets a turn still and A does not.-->
+  <event>
+    <id>COUNCILLOR_APPROACH_ACTION_REFUSE_EVENT</id>
+    <description>$Target.Name$ refuses to speak with you!</description>
+    <options>
+      <option>
+        <label>There will be repercussions!</label>
+        <exec>
+          <apply_opinion_mod>
+            <id>REFUSED_TO_SPEAK_TO_OPINION_MOD</id>
+            <character>TARGET</character>
+          </apply_opinion_mod>
+        </exec>
+      </option>
+    </options>
+  </event>
+  <!-- Approach acceptance notification.
+  A = ROOT, B = TARGET
+  A now gets to choose a topic.-->
+  <event>
+    <id>COUNCILLOR_APPROACH_ACTION_ACCEPT_EVENT</id>
+    <description>$Target.Name$ accepts.  What would you like to discuss?</description>
+    <options>
+      <option>
+        <label>Ask for taxes</label>
+        <requirements>
+          <has_job>STEWARD_JOB</has_job>
+          <set_scope name="TARGET">
+            <not>
+              <has_job>KING_JOB</has_job>
+            </not>
+          </set_scope>
+        </requirements>
+        <exec>
+          <set_scope name="TARGET">
+            <trigger_event>
+              <id>STEWARD_COLLECT_TAXES_EVENT_0</id>
+            </trigger_event>
+          </set_scope>
+        </exec>
+      </option>
+    </options>
+  </event>
   <!-- King is choosing a job to give to someone
   A = King = ROOT B = Candidate -->
   <event>
