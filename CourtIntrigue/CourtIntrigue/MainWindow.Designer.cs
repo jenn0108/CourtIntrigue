@@ -37,18 +37,18 @@
             this.debugButton = new System.Windows.Forms.Button();
             this.dateLabel = new System.Windows.Forms.Label();
             this.nextButton = new System.Windows.Forms.Button();
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.playerStatusStrip = new System.Windows.Forms.StatusStrip();
+            this.playerNameLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.prestigeLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.goldLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.playerNameLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             ((System.ComponentModel.ISupportInitialize)(this.permanentSplit)).BeginInit();
             this.permanentSplit.Panel1.SuspendLayout();
             this.permanentSplit.Panel2.SuspendLayout();
             this.permanentSplit.SuspendLayout();
+            this.playerStatusStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.SuspendLayout();
-            this.playerStatusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // permanentSplit
@@ -158,22 +158,6 @@
             this.nextButton.UseVisualStyleBackColor = true;
             this.nextButton.Click += new System.EventHandler(this.nextButton_Click);
             // 
-            // splitContainer2
-            // 
-            this.splitContainer2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer2.IsSplitterFixed = true;
-            this.splitContainer2.Location = new System.Drawing.Point(0, 22);
-            this.splitContainer2.Name = "splitContainer2";
-            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer2.Panel1
-            // 
-            this.splitContainer2.Panel1.BackColor = System.Drawing.SystemColors.Control;
-            this.splitContainer2.Size = new System.Drawing.Size(910, 615);
-            this.splitContainer2.SplitterDistance = 550;
-            this.splitContainer2.TabIndex = 0;
-            // 
             // playerStatusStrip
             // 
             this.playerStatusStrip.BackColor = System.Drawing.Color.Transparent;
@@ -190,6 +174,12 @@
             this.playerStatusStrip.TabIndex = 1;
             this.playerStatusStrip.Text = "statusStrip1";
             // 
+            // playerNameLabel
+            // 
+            this.playerNameLabel.Name = "playerNameLabel";
+            this.playerNameLabel.Size = new System.Drawing.Size(74, 17);
+            this.playerNameLabel.Text = "Player Name";
+            // 
             // prestigeLabel
             // 
             this.prestigeLabel.AutoSize = false;
@@ -205,11 +195,22 @@
             this.goldLabel.Size = new System.Drawing.Size(100, 17);
             this.goldLabel.Text = "100";
             // 
-            // playerNameLabel
+            // splitContainer2
             // 
-            this.playerNameLabel.Name = "playerNameLabel";
-            this.playerNameLabel.Size = new System.Drawing.Size(74, 17);
-            this.playerNameLabel.Text = "Player Name";
+            this.splitContainer2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitContainer2.IsSplitterFixed = true;
+            this.splitContainer2.Location = new System.Drawing.Point(0, 22);
+            this.splitContainer2.Name = "splitContainer2";
+            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer2.Panel1
+            // 
+            this.splitContainer2.Panel1.AutoScroll = true;
+            this.splitContainer2.Panel1.BackColor = System.Drawing.SystemColors.Control;
+            this.splitContainer2.Size = new System.Drawing.Size(910, 615);
+            this.splitContainer2.SplitterDistance = 550;
+            this.splitContainer2.TabIndex = 0;
             // 
             // MainWindow
             // 
@@ -227,10 +228,10 @@
             this.permanentSplit.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.permanentSplit)).EndInit();
             this.permanentSplit.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
-            this.splitContainer2.ResumeLayout(false);
             this.playerStatusStrip.ResumeLayout(false);
             this.playerStatusStrip.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
+            this.splitContainer2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
