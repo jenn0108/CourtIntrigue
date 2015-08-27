@@ -142,7 +142,7 @@
     <id>COUNCILLOR_APPROACH_ACTION_START_EVENT</id>
     <description>You approach on the King's business...</description>
     <parameters>
-      <paramter type="character">SpeakTo</paramter>
+      <parameter type="character">SpeakTo</parameter>
     </parameters>
     <requirements>
       <or>

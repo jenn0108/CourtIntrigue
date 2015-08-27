@@ -73,6 +73,9 @@ namespace CourtIntrigue
                 eventManager.LoadActionsFromFile(file, badTags);
             }
 
+            //Look for errors in the events and actions
+            eventManager.Verify();
+
             //Go load all the xml files in our rooms directory.
             foreach (var file in Directory.EnumerateFiles("Rooms", "*.xml"))
             {

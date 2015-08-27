@@ -8,7 +8,7 @@
     <id>APPROACH_ACTION_EVENT_0</id>
     <description>You approach intent on starting a discussion...</description>
     <parameters>
-      <paramter type="character">SpeakTo</paramter>
+      <parameter type="character">SpeakTo</parameter>
     </parameters>
     <requirements>
       <is_male/>

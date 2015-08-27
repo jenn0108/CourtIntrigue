@@ -117,6 +117,43 @@ namespace CourtIntrigue
             }
         }
 
+        public void Verify()
+        {
+            foreach(var action in actions.Values)
+            {
+                if (action.Type == ActionType.Pair && action.ParameterName == null)
+                    throw new ActionIncorrectException("Pair actions must name a parameter");
+
+                if (action.Type != ActionType.Pair && action.ParameterName != null)
+                    throw new ActionIncorrectException("Only pair actions can name a parameter");
+
+                foreach (var id in action.Events)
+                {
+                    //Make sure the event exists
+                    Event e = events[id];
+                    
+                    if(action.Type == ActionType.Pair)
+                    {
+                        //Make sure parameters match the action parameter.  We're expecting a single
+                        //parameter with the name in the action.
+                        if (e.Parameters.Length != 1)
+                            throw new EventIncorrectException("Events for pair actions must have exactly one parameter");
+
+                        if (e.Parameters[0].Name != action.ParameterName)
+                            throw new EventIncorrectException("Event must have parameter:" + action.ParameterName);
+
+                        if (e.Parameters[0].Type != typeof(Character))
+                            throw new EventIncorrectException("Event must have parameter type character");
+                    }
+                    else
+                    {
+                        if (e.Parameters.Length != 0)
+                            throw new EventIncorrectException("Events for non-pair actions must have no parameters");
+                    }
+                }
+            }
+        }
+
         private void ReadEvents(XmlReader reader, Counter<string> badTags)
         {
             while (reader.Read())
@@ -371,6 +408,14 @@ namespace CourtIntrigue
     class EventIncorrectException : Exception
     {
         public EventIncorrectException(string reason) : base(reason)
+        {
+
+        }
+    }
+
+    class ActionIncorrectException : Exception
+    {
+        public ActionIncorrectException(string reason) : base(reason)
         {
 
         }
