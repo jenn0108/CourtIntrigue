@@ -219,7 +219,7 @@ namespace CourtIntrigue
 
         public IEnumerable<Room> GetRooms(Character character, Game game)
         {
-            EventContext context = new EventContext(null, character, null);
+            EventContext context = new EventContext(character, null);
             foreach(var room in rooms)
             {
                 if (room.Common && room.Requirements.Evaluate(context, game))

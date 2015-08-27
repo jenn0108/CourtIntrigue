@@ -25,7 +25,7 @@ namespace CourtIntrigue
 
         public bool EvaluateRequirements(Character character, Game game)
         {
-            return requirements.Evaluate(new EventContext(null, character, null), game);
+            return requirements.Evaluate(new EventContext(character, null), game);
         }
 
         public override string ToString()

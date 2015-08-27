@@ -10,7 +10,6 @@ namespace CourtIntrigue
 
     class EventContext
     {
-        public string Identifer { get; private set; }
         public Character Target { get; private set; }
         public Room Room { get { return (scopes.First().Value as Character).CurrentRoom; } }
         private Dictionary<string, object> parameters;
@@ -33,17 +32,15 @@ namespace CourtIntrigue
             }
         }
 
-        public EventContext(string ident, Character initiator, Character target)
+        public EventContext(Character initiator, Character target)
         {
-            Identifer = ident;
             Target = target;
             scopes.Add(new KeyValuePair<string, object>("ROOT", initiator));
             parameters = new Dictionary<string, object>();
         }
 
-        public EventContext(string ident, Character initiator, Character target, Dictionary<string, object> parameters)
+        public EventContext(Character initiator, Character target, Dictionary<string, object> parameters)
         {
-            Identifer = ident;
             Target = target;
             scopes.Add(new KeyValuePair<string, object>("ROOT", initiator));
             this.parameters = parameters;
@@ -51,7 +48,6 @@ namespace CourtIntrigue
 
         public EventContext(ActionDescriptor actionDescriptor)
         {
-            Identifer = actionDescriptor.Identifer;
             Target = actionDescriptor.Target;
             scopes.Add(new KeyValuePair<string, object>("ROOT", actionDescriptor.Initiator));
             parameters = new Dictionary<string, object>();

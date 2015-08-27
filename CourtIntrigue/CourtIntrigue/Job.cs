@@ -36,7 +36,7 @@ namespace CourtIntrigue
 
         public bool CanPerformJob(Character c, Game game)
         {
-            EventContext context = new EventContext(null, c, null);
+            EventContext context = new EventContext(c, null);
             return Requirements.Evaluate(context, game);
         }
     }
@@ -150,7 +150,7 @@ namespace CourtIntrigue
             {
                 foreach(var pair in uniqueJobs)
                 {
-                    if(pair.Value == null && pair.Key.Requirements.Evaluate(new EventContext(null, c, null), game))
+                    if(pair.Value == null && pair.Key.Requirements.Evaluate(new EventContext(c, null), game))
                     {
                         GiveJobTo(pair.Key, c, game);
                         break;
@@ -189,7 +189,7 @@ namespace CourtIntrigue
                     Event fireEvent = game.GetEventById(job.OnFire);
                     if (fireEvent != null)
                     {
-                        EventContext fireContext = new EventContext(null, oldHolder, null);
+                        EventContext fireContext = new EventContext(oldHolder, null);
                         fireEvent.Execute(new EventResults(), game, fireContext);
                     }
                 }
@@ -201,7 +201,7 @@ namespace CourtIntrigue
                     Event hireEvent = game.GetEventById(job.OnHire);
                     if (hireEvent != null)
                     {
-                        EventContext hireContext = new EventContext(null, newHolder, null);
+                        EventContext hireContext = new EventContext(newHolder, null);
                         hireEvent.Execute(new EventResults(), game, hireContext);
                     }
                 }
@@ -217,7 +217,7 @@ namespace CourtIntrigue
                     Event hireEvent = game.GetEventById(job.OnHire);
                     if (hireEvent != null)
                     {
-                        EventContext hireContext = new EventContext(null, newHolder, null);
+                        EventContext hireContext = new EventContext(newHolder, null);
                         hireEvent.Execute(new EventResults(), game, hireContext);
                     }
                 }

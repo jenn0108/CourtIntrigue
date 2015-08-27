@@ -314,7 +314,7 @@ namespace CourtIntrigue
             {
                 computedParameters.Add(pair.Key, context.GetScopedObjectByName(pair.Value));
             }
-            EventContext newContext = new EventContext(null, context.CurrentCharacter, context.GetScopedObjectByName("ROOT") as Character, computedParameters);
+            EventContext newContext = new EventContext(context.CurrentCharacter, context.GetScopedObjectByName("ROOT") as Character, computedParameters);
             return e.GetAvailableOptions(newContext, game).Length > 0;
         }
     }
