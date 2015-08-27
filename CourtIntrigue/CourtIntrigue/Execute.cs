@@ -11,6 +11,7 @@ namespace CourtIntrigue
     {
         public static IExecute NOOP = new NoOpExecute();
         public static IExecute DEBUG = new DebugExecute();
+        public static IExecute CONTINUE_TURN = new ContinueTurnExecute();
     }
 
     class Weights
@@ -159,6 +160,20 @@ namespace CourtIntrigue
         public double Evaluate(Game game, EventContext context, Weights weights)
         {
             return weights.MeasureAllowEventSelection(context.CurrentCharacter);
+        }
+    }
+
+    class ContinueTurnExecute : IExecute
+    {
+        public void Execute(EventResults result, Game game, EventContext context)
+        {
+            result.Continue();
+        }
+
+        public double Evaluate(Game game, EventContext context, Weights weights)
+        {
+            //The AI needs to understand that it'll get to go again.
+            return 0.0;
         }
     }
 

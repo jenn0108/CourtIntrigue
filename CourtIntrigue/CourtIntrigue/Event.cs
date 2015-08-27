@@ -187,6 +187,7 @@ namespace CourtIntrigue
     class EventResults
     {
         public bool TargetGetsTurn { get; private set; }
+        public bool ContinueTurn { get; private set; }
         public double ObserveModifier { get; set; }
 
         private List<ObservableInformation> information = new List<ObservableInformation>();
@@ -202,12 +203,18 @@ namespace CourtIntrigue
         public EventResults()
         {
             TargetGetsTurn = false;
+            ContinueTurn = false;
             ObserveModifier = 1.0;
         }
 
         public void GiveTargetTurn()
         {
             TargetGetsTurn = true;
+        }
+
+        public void Continue()
+        {
+            ContinueTurn = true;
         }
 
         public void AddObservableInfo(InformationInstance ii, int chance, Character teller)

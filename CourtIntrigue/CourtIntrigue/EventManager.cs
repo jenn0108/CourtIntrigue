@@ -138,7 +138,8 @@ namespace CourtIntrigue
             while (reader.Read())
             {
                 if (reader.NodeType == XmlNodeType.Element && 
-                    (reader.Name == "delayed_action" || reader.Name == "pair_action" || reader.Name == "internal_action"))
+                    (reader.Name == "delayed_action" || reader.Name == "pair_action" || reader.Name == "internal_action" || 
+                    reader.Name == "immediate_action"))
                 {
                     Action a = ReadAction(reader, badTags);
                     actions.Add(a.Identifier, a);
@@ -213,6 +214,8 @@ namespace CourtIntrigue
                 type = ActionType.Internal;
             else if (tag == "pair_action")
                 type = ActionType.Pair;
+            else if (tag == "immediate_action")
+                type = ActionType.Immediate;
             else
                 throw new KeyNotFoundException();
 
@@ -343,7 +346,8 @@ namespace CourtIntrigue
     {
         Internal,
         Delayed,
-        Pair
+        Pair,
+        Immediate
     }
 
     class Action

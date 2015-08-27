@@ -165,6 +165,10 @@ namespace CourtIntrigue
                 {
                     expressions.Add(new AllowEventSelectionExecute());
                 }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "continue_turn")
+                {
+                    expressions.Add(Execute.CONTINUE_TURN);
+                }
                 else if (reader.NodeType == XmlNodeType.Element && (reader.Name == "everyone_in_room" || reader.Name == "any_child"))
                 {
                     expressions.Add(ReadScopingLoop(reader, badTags));

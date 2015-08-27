@@ -225,40 +225,50 @@ namespace CourtIntrigue
                     continue;
                 }
 
-                //Give the character their turn.
-                ActionDescriptor actionDescriptor = character.Tick();
-
-                switch(actionDescriptor.Action.Type)
+                bool characterDone = true;
+                do
                 {
-                    case ActionType.Delayed:
-                        {
-                            debugLogger.PrintText(character.Name + " chose " + actionDescriptor.Action.Identifier);
+                    //Give the character their turn.
+                    ActionDescriptor actionDescriptor = character.Tick();
 
-                            //This character has chosen a solo action.  Queue it up and move on.
-                            soloActions.Add(character, actionDescriptor);
-                            continue;
-                        }
+                    switch (actionDescriptor.Action.Type)
+                    {
+                        case ActionType.Delayed:
+                            {
+                                debugLogger.PrintText(character.Name + " chose " + actionDescriptor.Action.Identifier);
 
-                    case ActionType.Pair:
-                        {
-                            debugLogger.PrintText(character.Name + " chose " + actionDescriptor.Action.Identifier + " with " + actionDescriptor.Target.Name);
+                                //This character has chosen a solo action.  Queue it up and move on.
+                                soloActions.Add(character, actionDescriptor);
+                                characterDone = true;
+                            }
+                            break;
 
-                            //This character is unavailable for interaction because he is busy.
-                            character.MarkBusy();
+                        case ActionType.Pair:
+                            {
+                                debugLogger.PrintText(character.Name + " chose " + actionDescriptor.Action.Identifier + " with " + actionDescriptor.Target.Name);
 
-                            //Do the action.
-                            ExecuteAction(character, actionDescriptor, finishedCharacters, observableInformationByRoom);
-                        }
-                        break;
+                                //Do the action.
+                                characterDone = ExecuteAction(character, actionDescriptor, finishedCharacters, observableInformationByRoom);
+                            }
+                            break;
 
-                    case ActionType.Internal:
-                        {
-                            //Characters aren't allowed to deliberately call Internal actions.
-                            throw new Exception("Event type not allowed");
-                        }
-                }
-                
+                        case ActionType.Immediate:
+                            {
+                                debugLogger.PrintText(character.Name + " chose " + actionDescriptor.Action.Identifier);
 
+                                //Do the action.
+                                characterDone = ExecuteAction(character, actionDescriptor, finishedCharacters, observableInformationByRoom);
+                            }
+                            break;
+
+                        case ActionType.Internal:
+                            {
+                                //Characters aren't allowed to deliberately call Internal actions.
+                                throw new Exception("Event type not allowed");
+                            }
+                    }
+
+                } while (!characterDone);
             }
 
             debugLogger.PrintText("Solo actions");
@@ -346,7 +356,7 @@ namespace CourtIntrigue
             }
         }
 
-        private void ExecuteAction(Character character, ActionDescriptor actionDescriptor, ISet<Character> finishedCharacters, Dictionary<Room, List<ObservableInformation>> informations)
+        private bool ExecuteAction(Character character, ActionDescriptor actionDescriptor, ISet<Character> finishedCharacters, Dictionary<Room, List<ObservableInformation>> informations)
         {
             //Find a matching event to execute.
             Event eventToPlay = eventManager.FindEventForAction(actionDescriptor, this);
@@ -379,6 +389,12 @@ namespace CourtIntrigue
                     }
                     infos.AddRange(results.ObservableInformation);
                 }
+
+                if (results.ContinueTurn)
+                {
+                    //The turn is incomplete.  The character isn't busy or finished yet.
+                    return false;
+                }
             }
 
             //This character is now done.
@@ -386,6 +402,9 @@ namespace CourtIntrigue
 
             // The initiator always gets their turn consumed so remove them from the room.
             character.MarkBusy();
+
+            //The turn completed successfully.
+            return true;
         }
 
         /// <summary>
