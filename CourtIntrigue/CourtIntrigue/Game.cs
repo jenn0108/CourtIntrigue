@@ -228,28 +228,36 @@ namespace CourtIntrigue
                 //Give the character their turn.
                 ActionDescriptor actionDescriptor = character.Tick();
 
-                if (actionDescriptor.Action.Type == ActionType.Delayed)
+                switch(actionDescriptor.Action.Type)
                 {
-                    debugLogger.PrintText(character.Name + " chose " + actionDescriptor.Action.Identifier);
+                    case ActionType.Delayed:
+                        {
+                            debugLogger.PrintText(character.Name + " chose " + actionDescriptor.Action.Identifier);
 
-                    //This character has chosen a solo action.  Queue it up and move on.
-                    soloActions.Add(character, actionDescriptor);
-                    continue;
-                }
-                else if(actionDescriptor.Action.Type == ActionType.Pair)
-                {
-                    debugLogger.PrintText(character.Name + " chose " + actionDescriptor.Action.Identifier + " with " + actionDescriptor.Target.Name);
+                            //This character has chosen a solo action.  Queue it up and move on.
+                            soloActions.Add(character, actionDescriptor);
+                            continue;
+                        }
 
-                    //This character is unavailable for interaction because he is busy.
-                    character.MarkBusy();
-                }
-                else
-                {
-                    //Characters aren't allowed to deliberately call Internal actions.
-                    throw new Exception("Event type not allowed");
+                    case ActionType.Pair:
+                        {
+                            debugLogger.PrintText(character.Name + " chose " + actionDescriptor.Action.Identifier + " with " + actionDescriptor.Target.Name);
+
+                            //This character is unavailable for interaction because he is busy.
+                            character.MarkBusy();
+
+                            //Do the action.
+                            ExecuteAction(character, actionDescriptor, finishedCharacters, observableInformationByRoom);
+                        }
+                        break;
+
+                    case ActionType.Internal:
+                        {
+                            //Characters aren't allowed to deliberately call Internal actions.
+                            throw new Exception("Event type not allowed");
+                        }
                 }
                 
-                ExecuteAction(character, actionDescriptor, finishedCharacters, observableInformationByRoom);
 
             }
 
