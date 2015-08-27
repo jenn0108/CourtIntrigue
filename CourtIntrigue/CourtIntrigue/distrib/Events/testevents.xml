@@ -2,6 +2,9 @@
   <event>
     <id>PUBLIC_URINATION_EVENT_0</id>
     <description>You are suddenly overcome with the urge to urinate.  You can't wait any longer!</description>
+    <requirements>
+      <true/>
+    </requirements>
     <options>
       <option>
         <label>Pee in a ditch</label>
