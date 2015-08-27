@@ -279,7 +279,7 @@ namespace CourtIntrigue
                             if (info.Teller == null)
                                 info.Info.ExecuteOnObserve(character, this, character.CurrentRoom);
                             else
-                                info.Info.ExecuteOnTold(character, info.Teller, this, character.CurrentRoom);
+                                info.Info.ExecuteOnTold(character, this, character.CurrentRoom);
                         }
                     }
                 }
@@ -340,14 +340,11 @@ namespace CourtIntrigue
 
             if (eventToPlay != null)
             {
-                // Create an event context to keep track of the event state as we execute.
-                EventContext context = new EventContext(actionDescriptor);
-
                 //We pass in an event results instead of accepting a return value because we want all
                 //the event logic along the way to touch the same instance instead of having to worry
                 //about merging a number of different instances.
                 EventResults results = new EventResults();
-                eventToPlay.Execute(results, this, context);
+                eventToPlay.Execute(results, this, new EventContext(actionDescriptor));
 
                 //Did the target get their turn consumed?
                 if (!results.TargetGetsTurn && actionDescriptor.Target != null)

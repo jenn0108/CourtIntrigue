@@ -34,10 +34,9 @@ namespace CourtIntrigue
         }
 
 
-        public bool CanPerformJob(Character c, Game game)
+        public bool CanPerformJob(Character character, Game game)
         {
-            EventContext context = new EventContext(c, null);
-            return Requirements.Evaluate(context, game);
+            return Requirements.Evaluate(new EventContext(character), game);
         }
     }
 
@@ -146,13 +145,13 @@ namespace CourtIntrigue
 
         public void InitializeJobs(List<Character> characters, Game game)
         {
-            foreach(var c in characters)
+            foreach(var character in characters)
             {
                 foreach(var pair in uniqueJobs)
                 {
-                    if(pair.Value == null && pair.Key.Requirements.Evaluate(new EventContext(c, null), game))
+                    if(pair.Value == null && pair.Key.Requirements.Evaluate(new EventContext(character), game))
                     {
-                        GiveJobTo(pair.Key, c, game);
+                        GiveJobTo(pair.Key, character, game);
                         break;
                     }
                 }
@@ -189,8 +188,7 @@ namespace CourtIntrigue
                     Event fireEvent = game.GetEventById(job.OnFire);
                     if (fireEvent != null)
                     {
-                        EventContext fireContext = new EventContext(oldHolder, null);
-                        fireEvent.Execute(new EventResults(), game, fireContext);
+                        fireEvent.Execute(new EventResults(), game, new EventContext(oldHolder));
                     }
                 }
 
@@ -201,8 +199,7 @@ namespace CourtIntrigue
                     Event hireEvent = game.GetEventById(job.OnHire);
                     if (hireEvent != null)
                     {
-                        EventContext hireContext = new EventContext(newHolder, null);
-                        hireEvent.Execute(new EventResults(), game, hireContext);
+                        hireEvent.Execute(new EventResults(), game, new EventContext(newHolder));
                     }
                 }
 
@@ -217,8 +214,7 @@ namespace CourtIntrigue
                     Event hireEvent = game.GetEventById(job.OnHire);
                     if (hireEvent != null)
                     {
-                        EventContext hireContext = new EventContext(newHolder, null);
-                        hireEvent.Execute(new EventResults(), game, hireContext);
+                        hireEvent.Execute(new EventResults(), game, new EventContext(newHolder));
                     }
                 }
             }

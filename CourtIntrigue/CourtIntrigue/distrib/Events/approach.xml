@@ -7,6 +7,7 @@
   <event>
     <id>APPROACH_ACTION_EVENT_0</id>
     <description>You approach intent on starting a discussion...</description>
+    <!-- Pair action so TARGET parameter is automatically passed in.-->
     <requirements>
       <is_male/>
       <is_adult/>
@@ -18,6 +19,7 @@
           <set_scope name="TARGET">
             <trigger_event>
               <id>APPROACH_ACTION_EVENT_1</id>
+              <parameters Approacher="ROOT"/>
             </trigger_event>
           </set_scope>
         </exec>
@@ -25,11 +27,13 @@
     </options>
   </event>
   <!-- Approach notification event.
-  B = ROOT, A = TARGET.
-  ROOT can refuse or accept to talk to TARGET.-->
+  ROOT can refuse or accept to talk to Approacher.-->
   <event>
     <id>APPROACH_ACTION_EVENT_1</id>
-    <description>$Target.Name$ would like to talk to you.</description>
+    <description>$Approacher.Name$ would like to talk to you.</description>
+    <parameters>
+      <parameter type="character">Approacher</parameter>
+    </parameters>
     <options>
       <option>
         <label>Refuse</label>
@@ -40,11 +44,12 @@
         <exec>
           <!-- Event refusing costs some observation ability -->
           <multiply_observe_chance>0.8</multiply_observe_chance>
-          <set_scope name="TARGET">
+          <set_scope name="Approacher">
             <!-- The initiator suffers from the same decrease -->
             <multiply_observe_chance>0.8</multiply_observe_chance>
             <trigger_event>
               <id>APPROACH_ACTION_EVENT_2</id>
+              <parameters Refuser="ROOT"/>
             </trigger_event>
           </set_scope>
           <allow_event_selection/>
@@ -59,11 +64,12 @@
         <exec>
           <!-- An actual conversation drastically decreases your ability to overhear things -->
           <multiply_observe_chance>0.1</multiply_observe_chance>
-          <set_scope name="TARGET">
+          <set_scope name="Approacher">
             <!-- An actual conversation drastically decreases your ability to overhear things -->
             <multiply_observe_chance>0.1</multiply_observe_chance>
             <trigger_event>
               <id>APPROACH_ACTION_EVENT_3</id>
+              <parameters Accepter="ROOT"/>
             </trigger_event>
           </set_scope>
         </exec>
@@ -71,36 +77,41 @@
     </options>
   </event>
   <!-- Approach rejection notification
-  A = ROOT, B = TARGET
   Conversation is over. B gets a turn still and A does not.-->
   <event>
     <id>APPROACH_ACTION_EVENT_2</id>
-    <description>$Target.Name$ refuses to speak with you!</description>
+    <description>$Refuser.Name$ refuses to speak with you!</description>
+    <parameters>
+      <parameter type="character">Refuser</parameter>
+    </parameters>
     <options>
       <option>
         <label>What a jerk...</label>
         <exec>
           <apply_opinion_mod>
             <id>REFUSED_TO_SPEAK_TO_OPINION_MOD</id>
-            <character>TARGET</character>
+            <character>Refuser</character>
           </apply_opinion_mod>
         </exec>
       </option>
     </options>
   </event>
   <!-- Approach acceptance notification.
-  A = ROOT, B = TARGET
   A now gets to choose a topic.-->
   <event>
     <id>APPROACH_ACTION_EVENT_3</id>
-    <description>$Target.Name$ accepts.  What would you like to discuss?</description>
+    <description>$Accepter.Name$ accepts.  What would you like to discuss?</description>
+    <parameters>
+      <parameter type="character">Accepter</parameter>
+    </parameters>
     <options>
       <option>
         <label>Weather</label>
         <exec>
-          <set_scope name="TARGET">
+          <set_scope name="Accepter">
             <trigger_event>
               <id>APPROACH_ACTION_WEATHER</id>
+              <parameters Approacher="ROOT"/>
             </trigger_event>
           </set_scope>
         </exec>
@@ -111,20 +122,20 @@
           <has_job>KING_JOB</has_job>
           <test_event_options>
             <id>KING_APPROACH_GIVE_JOB_0</id>
-            <parameters Candidate="TARGET"/>
+            <parameters Candidate="Accepter"/>
           </test_event_options>
         </requirements>
         <exec>
           <trigger_event>
             <id>KING_APPROACH_GIVE_JOB_0</id>
-            <parameters Candidate="TARGET"/>
+            <parameters Candidate="Accepter"/>
           </trigger_event>
         </exec>
       </option>
       <option>
         <label>Pay taxes</label>
         <requirements>
-          <set_scope name="TARGET">
+          <set_scope name="Accepter">
             <has_job>STEWARD_JOB</has_job>
           </set_scope>
           <var_ge name="GOLD">20</var_ge>
@@ -132,11 +143,12 @@
         </requirements>
         <exec>
           <spend_gold>20</spend_gold>
-          <set_scope name="TARGET">
+          <set_scope name="Accepter">
             <get_gold>20</get_gold>
             <offset_variable name="TaxesCollected">1</offset_variable>
             <trigger_event>
               <id>STEWARD_GIVEN_OUTSTANDING_TAXES_EVENT</id>
+              <parameters TaxPayer="ROOT"/>
             </trigger_event>
           </set_scope>
           <set_variable name="TaxDelinquent">0</set_variable>
@@ -151,7 +163,7 @@
         <label>Remit taxes to the King</label>
         <requirements>
           <has_job>STEWARD_JOB</has_job>
-          <set_scope name="TARGET">
+          <set_scope name="Accepter">
             <has_job>KING_JOB</has_job>
           </set_scope>
           <var_ge name="GOLD">100</var_ge>
@@ -159,11 +171,12 @@
         </requirements>
         <exec>
           <spend_gold>100</spend_gold>
-          <set_scope name="TARGET">
+          <set_scope name="Accepter">
             <get_gold>100</get_gold>
             <offset_variable name="TaxesReceived">50</offset_variable>
             <trigger_event>
               <id>KING_GIVEN_TAXES_FROM_STEWARD_EVENT</id>
+              <parameters Steward="ROOT"/>
             </trigger_event>
           </set_scope>
           <offset_variable name="TaxesCollected">-5</offset_variable>
@@ -177,7 +190,7 @@
               <set_scope name="ROOT">
                 <trigger_event>
                   <id>POSITIVE_TALK_EVENT</id>
-                  <parameters To="TARGET" About="ABOUT"/>
+                  <parameters To="Accepter" About="ABOUT"/>
                 </trigger_event>
               </set_scope>
             </exec>
@@ -187,12 +200,12 @@
       <option>
         <label>Speak about someone negatively</label>
         <exec>
-          <choose_character name="ABOUT">
+          <choose_character name="About">
             <exec>
               <set_scope name="ROOT">
                 <trigger_event>
                   <id>NEGATIVE_TALK_EVENT</id>
-                  <parameters To="TARGET" About="ABOUT"/>
+                  <parameters To="Accepter" About="About"/>
                 </trigger_event>
               </set_scope>
             </exec>
@@ -215,7 +228,7 @@
           <set_scope name="To">
             <trigger_event>
               <id>SAY_NICE_THINGS</id>
-              <parameters About="About"/>
+              <parameters Initiator="ROOT" About="About"/>
             </trigger_event>
           </set_scope>
         </exec>
@@ -252,7 +265,7 @@
           <set_scope name="To">
             <trigger_event>
               <id>SAY_MEAN_THINGS</id>
-              <parameters About="About"/>
+              <parameters Initiator="ROOT" About="About"/>
             </trigger_event>
           </set_scope>
         </exec>
@@ -276,12 +289,12 @@
     </options>
   </event>
   <!-- Initiating character just said nice things about.
-  A = ROOT, B = TARGET
   A has just told B nice things about "About".-->
   <event>
     <id>SAY_NICE_THINGS</id>
-    <description>$TARGET.Name$ says nice things about $About.Name$</description>
+    <description>$Initiator.Name$ says nice things about $About.Name$</description>
     <parameters>
+      <parameter type="character">Initiator</parameter>
       <parameter type="character">About</parameter>
     </parameters>
     <options>
@@ -290,12 +303,12 @@
         <exec>
           <apply_opinion_mod>
             <id>AGREE_THIRD_PARTY</id>
-            <character>TARGET</character>
+            <character>Initiator</character>
           </apply_opinion_mod>
-          <set_scope name="TARGET">
+          <set_scope name="Initiator">
             <trigger_event>
               <id>AGREE_NICE_THINGS</id>
-              <parameters About="About"/>
+              <parameters To="ROOT" About="About"/>
             </trigger_event>
           </set_scope>
         </exec>
@@ -305,12 +318,12 @@
         <exec>
           <apply_opinion_mod>
             <id>DISAGREE_THIRD_PARTY</id>
-            <character>TARGET</character>
+            <character>Initiator</character>
           </apply_opinion_mod>
-          <set_scope name="TARGET">
+          <set_scope name="Initiator">
             <trigger_event>
               <id>DISAGREE_NICE_THINGS</id>
-              <parameters About="About"/>
+              <parameters To="ROOT" About="About"/>
             </trigger_event>
           </set_scope>
         </exec>
@@ -318,12 +331,12 @@
     </options>
   </event>
   <!-- Initiating character just said mean things about.
-  A = ROOT, B = TARGET
   A has just told B nice things about "About".-->
   <event>
     <id>SAY_MEAN_THINGS</id>
-    <description>$TARGET.Name$ says mean things about $About.Name$</description>
+    <description>$Initiator.Name$ says mean things about $About.Name$</description>
     <parameters>
+      <parameter type="character">Initiator</parameter>
       <parameter type="character">About</parameter>
     </parameters>
     <options>
@@ -332,12 +345,12 @@
         <exec>
           <apply_opinion_mod>
             <id>AGREE_THIRD_PARTY</id>
-            <character>TARGET</character>
+            <character>Initiator</character>
           </apply_opinion_mod>
-          <set_scope name="TARGET">
+          <set_scope name="Initiator">
             <trigger_event>
               <id>AGREE_MEAN_THINGS</id>
-              <parameters About="About"/>
+              <parameters To="ROOT" About="About"/>
             </trigger_event>
           </set_scope>
         </exec>
@@ -347,12 +360,12 @@
         <exec>
           <apply_opinion_mod>
             <id>DISAGREE_THIRD_PARTY</id>
-            <character>TARGET</character>
+            <character>Initiator</character>
           </apply_opinion_mod>
-          <set_scope name="TARGET">
+          <set_scope name="Initiator">
             <trigger_event>
               <id>DISAGREE_MEAN_THINGS</id>
-              <parameters About="About"/>
+              <parameters To="ROOT" About="About"/>
             </trigger_event>
           </set_scope>
         </exec>
@@ -360,12 +373,12 @@
     </options>
   </event>
   <!-- Initiating character just said nice things about.
-  A = TARGET, B = ROOT
   A agrees with nice things B said about "About".-->
   <event>
     <id>AGREE_NICE_THINGS</id>
-    <description>$TARGET.Name$ agrees with the nice things you said about $About.Name$</description>
+    <description>$To.Name$ agrees with the nice things you said about $About.Name$</description>
     <parameters>
+      <parameter type="character">To</parameter>
       <parameter type="character">About</parameter>
     </parameters>
     <options>
@@ -374,19 +387,19 @@
         <exec>
           <apply_opinion_mod>
             <id>AGREE_THIRD_PARTY</id>
-            <character>TARGET</character>
+            <character>To</character>
           </apply_opinion_mod>
         </exec>
       </option>
     </options>
   </event>
   <!-- Initiating character just said nice things about.
-  A = TARGET, B = ROOT
   A agress with nice things B said about "About".-->
   <event>
     <id>DISAGREE_NICE_THINGS</id>
-    <description>$TARGET.Name$ disagrees with the nice things you said about $About.Name$</description>
+    <description>$To.Name$ disagrees with the nice things you said about $About.Name$</description>
     <parameters>
+      <parameter type="character">To</parameter>
       <parameter type="character">About</parameter>
     </parameters>
     <options>
@@ -395,19 +408,19 @@
         <exec>
           <apply_opinion_mod>
             <id>DISAGREE_THIRD_PARTY</id>
-            <character>TARGET</character>
+            <character>To</character>
           </apply_opinion_mod>
         </exec>
       </option>
     </options>
   </event>
   <!-- Initiating character just said mean things about.
-  A = TARGET, B = ROOT
   A agrees with nice things B said about "About".-->
   <event>
     <id>AGREE_MEAN_THINGS</id>
-    <description>$TARGET.Name$ agrees with the mean things you said about $About.Name$</description>
+    <description>$To.Name$ agrees with the mean things you said about $About.Name$</description>
     <parameters>
+      <parameter type="character">To</parameter>
       <parameter type="character">About</parameter>
     </parameters>
     <options>
@@ -416,19 +429,19 @@
         <exec>
           <apply_opinion_mod>
             <id>AGREE_THIRD_PARTY</id>
-            <character>TARGET</character>
+            <character>To</character>
           </apply_opinion_mod>
         </exec>
       </option>
     </options>
   </event>
   <!-- Initiating character just said mean things about.
-  A = TARGET, B = ROOT
   A agress with nice things B said about "About".-->
   <event>
     <id>DISAGREE_MEAN_THINGS</id>
-    <description>$TARGET.Name$ disagrees with the mean things you said about $About.Name$</description>
+    <description>$To.Name$ disagrees with the mean things you said about $About.Name$</description>
     <parameters>
+      <parameter type="character">To</parameter>
       <parameter type="character">About</parameter>
     </parameters>
     <options>
@@ -437,14 +450,13 @@
         <exec>
           <apply_opinion_mod>
             <id>DISAGREE_THIRD_PARTY</id>
-            <character>TARGET</character>
+            <character>To</character>
           </apply_opinion_mod>
         </exec>
       </option>
     </options>
   </event>
   <!-- Recieving information.
-  B = ROOT, A = TARGET
   A has just told B a piece of information.-->
   <event>
     <id>LEARNED_INFOMATION_EVENT</id>
@@ -459,11 +471,13 @@
     </options>
   </event>
   <!-- Talking about weather.
-  B = ROOT, A = TARGET
   A has just decided to talk about weather.-->
   <event>
     <id>APPROACH_ACTION_WEATHER</id>
-    <description>You chat about the weather with $Target.Name$.</description>
+    <description>You chat about the weather with $Approacher.Name$.</description>
+    <parameters>
+      <parameter type="character">Approacher</parameter>
+    </parameters>
     <options>
       <option>
         <label>OK</label>

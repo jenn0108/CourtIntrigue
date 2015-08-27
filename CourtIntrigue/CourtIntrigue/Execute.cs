@@ -179,7 +179,7 @@ namespace CourtIntrigue
             {
                 computedParameters.Add(pair.Key, context.GetScopedObjectByName(pair.Value));
             }
-            EventContext newContext = new EventContext(context.CurrentCharacter, context.GetScopedObjectByName("ROOT") as Character, computedParameters);
+            EventContext newContext = new EventContext(context.CurrentCharacter, computedParameters);
             game.GetEventById(eventid).Execute(result, game, newContext);
         }
 
@@ -190,7 +190,7 @@ namespace CourtIntrigue
             {
                 computedParameters.Add(pair.Key, context.GetScopedObjectByName(pair.Value));
             }
-            EventContext newContext = new EventContext(context.CurrentCharacter, context.GetScopedObjectByName("ROOT") as Character, computedParameters);
+            EventContext newContext = new EventContext(context.CurrentCharacter, computedParameters);
             return game.GetEventById(eventid).Evaluate(game, newContext, weights);
         }
     }
@@ -256,7 +256,7 @@ namespace CourtIntrigue
             if (isNewInformation)
             {
                 game.Log(context.CurrentCharacter.Name + " learned an information.");
-                informationInstance.ExecuteOnTold(context.CurrentCharacter, tellingCharacter, game, context.Room);
+                informationInstance.ExecuteOnTold(context.CurrentCharacter, game, context.CurrentCharacter.CurrentRoom);
             }
         }
 
@@ -357,7 +357,7 @@ namespace CourtIntrigue
 
         public void Execute(EventResults result, Game game, EventContext context)
         {
-            foreach (var character in context.Room.GetCharacters(context.CurrentCharacter))
+            foreach (var character in context.CurrentCharacter.CurrentRoom.GetCharacters(context.CurrentCharacter))
             {
                 context.PushScope(character);
                 if (requirements.Evaluate(context, game))
@@ -371,7 +371,7 @@ namespace CourtIntrigue
         public double Evaluate(Game game, EventContext context, Weights weights)
         {
             double result = 0.0;
-            foreach (var character in context.Room.GetCharacters(context.CurrentCharacter))
+            foreach (var character in context.CurrentCharacter.CurrentRoom.GetCharacters(context.CurrentCharacter))
             {
                 context.PushScope(character);
                 if (requirements.Evaluate(context, game))

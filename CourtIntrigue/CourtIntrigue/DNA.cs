@@ -142,14 +142,14 @@ namespace CourtIntrigue
 
         private int SelectRandomAllowed(List<PortraitRule> rules, Character character, Game game)
         {
-            EventContext context = new EventContext(character, null);
+            EventContext context = new EventContext(character);
             PortraitRule[] allowed = rules.Where(r => r.Requirements.Evaluate(context, game)).ToArray();
             return allowed[game.GetRandom(allowed.Length)].Index;
         }
 
         private int SelectRandomAllowed(List<PortraitRule> rules, Character character, int father, int mother, Game game)
         {
-            EventContext context = new EventContext(character, null);
+            EventContext context = new EventContext(character);
 
             List<PortraitRule> allowed = new List<PortraitRule>();
             if(rules[father].Requirements.Evaluate(context, game))

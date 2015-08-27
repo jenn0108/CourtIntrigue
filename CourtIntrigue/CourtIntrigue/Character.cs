@@ -272,9 +272,9 @@ namespace CourtIntrigue
         {
             InformationInstance[] information;
             if (type == InformationType.Positive)
-                information = KnownInformation.Where(info => info.EvaluateOnTold(about, this, Game) > 0.0).ToArray();
+                information = KnownInformation.Where(info => info.EvaluateOnTold(about, Game) > 0.0).ToArray();
             else if (type == InformationType.Negative)
-                information = KnownInformation.Where(info => info.EvaluateOnTold(about, this, Game) < 0.0).ToArray();
+                information = KnownInformation.Where(info => info.EvaluateOnTold(about, Game) < 0.0).ToArray();
             else
                 information = KnownInformation.ToArray();
             int index = OnChooseInformation(information);
@@ -348,7 +348,7 @@ namespace CourtIntrigue
             {
                 if (info.IsAbout(about))
                 {
-                    double result = info.EvaluateOnTold(about, this, Game);
+                    double result = info.EvaluateOnTold(about, Game);
                     if (type == InformationType.Positive && result > 0.0)
                         return true;
                     else if (type == InformationType.Negative && result < 0.0)

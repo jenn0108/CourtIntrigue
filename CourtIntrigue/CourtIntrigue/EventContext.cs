@@ -10,8 +10,6 @@ namespace CourtIntrigue
 
     class EventContext
     {
-        public Character Target { get; private set; }
-        public Room Room { get { return (scopes.First().Value as Character).CurrentRoom; } }
         private Dictionary<string, object> parameters;
         private List<KeyValuePair<string,object>> scopes = new List<KeyValuePair<string, object>>();
         public object CurrentScope
@@ -32,25 +30,25 @@ namespace CourtIntrigue
             }
         }
 
-        public EventContext(Character initiator, Character target)
+        public EventContext(Character initiator)
         {
-            Target = target;
             scopes.Add(new KeyValuePair<string, object>("ROOT", initiator));
             parameters = new Dictionary<string, object>();
         }
 
-        public EventContext(Character initiator, Character target, Dictionary<string, object> parameters)
+        public EventContext(Character initiator, Dictionary<string, object> parameters)
         {
-            Target = target;
             scopes.Add(new KeyValuePair<string, object>("ROOT", initiator));
             this.parameters = parameters;
         }
 
         public EventContext(ActionDescriptor actionDescriptor)
         {
-            Target = actionDescriptor.Target;
             scopes.Add(new KeyValuePair<string, object>("ROOT", actionDescriptor.Initiator));
             parameters = new Dictionary<string, object>();
+            if (actionDescriptor.Target != null)
+                parameters.Add("TARGET", actionDescriptor.Target);
+
         }
 
         public void PushScope(object newObject, string name = null)
@@ -65,11 +63,7 @@ namespace CourtIntrigue
 
         public object GetScopedObjectByName(string name)
         {
-            if (name == "TARGET")
-            {
-                return Target;
-            }
-            else if (name == "TOP")
+            if (name == "TOP")
             {
                 return CurrentScope;
             }
@@ -89,8 +83,6 @@ namespace CourtIntrigue
         public Character[] GetCharacters()
         {
             List<Character> characters = new List<Character>();
-            if (Target != null)
-                characters.Add(Target);
             for(int i = scopes.Count-1; i > 1; --i)
             {
                 if (scopes[i].Value is Character)
@@ -132,7 +124,7 @@ namespace CourtIntrigue
         /// <param name="working">The object to pull values from.</param>
         /// <returns>A string with all $ denominated substrings replaced</returns>
         /// <example>
-        /// $Target.Name$ will be replaced with the target's name if working is an Action
+        /// $ROOT.Name$ will be replaced with the root character's name if working is an EventContext
         /// $$ is replaced with only a single $ allowing escaping of the $
         /// </example>
         /// <remarks>

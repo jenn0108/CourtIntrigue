@@ -137,11 +137,11 @@
   <!-- CONVERSATION EVENTS-->
   <!-- A initiates the approach to B. -->
   <!-- Opening conversation event.
-  A = ROOT, B = TARGET.
   ROOT is initiating and has chosen TARGET to talk to.-->
   <event>
     <id>COUNCILLOR_APPROACH_ACTION_START_EVENT</id>
     <description>You approach on the King's business...</description>
+    <!-- Pair action so TARGET parameter is automatically passed in.-->
     <requirements>
       <or>
         <!-- Currently, only the steward has -->
@@ -155,6 +155,7 @@
           <set_scope name="TARGET">
             <trigger_event>
               <id>COUNCILLOR_APPROACH_ACTION_AGREE_EVENT</id>
+              <parameters Approacher="ROOT"/>
             </trigger_event>
           </set_scope>
         </exec>
@@ -163,11 +164,13 @@
   </event>
 
   <!-- Approach notification event.
-  B = ROOT, A = TARGET.
-  ROOT can refuse or accept to talk to TARGET.-->
+  ROOT can refuse or accept to talk to Approacher.-->
   <event>
     <id>COUNCILLOR_APPROACH_ACTION_AGREE_EVENT</id>
-    <description>$Target.Name$ approaches on the King's business.</description>
+    <description>$Approacher.Name$ approaches on the King's business.</description>
+    <parameters>
+      <parameter type="character">Approacher</parameter>
+    </parameters>
     <options>
       <option>
         <label>Refuse</label>
@@ -178,11 +181,12 @@
         <exec>
           <!-- Event refusing costs some observation ability -->
           <multiply_observe_chance>0.8</multiply_observe_chance>
-          <set_scope name="TARGET">
+          <set_scope name="Approacher">
             <!-- The initiator suffers from the same decrease -->
             <multiply_observe_chance>0.8</multiply_observe_chance>
             <trigger_event>
               <id>COUNCILLOR_APPROACH_ACTION_REFUSE_EVENT</id>
+              <parameters Refuser="ROOT"/>
             </trigger_event>
           </set_scope>
           <allow_event_selection/>
@@ -197,11 +201,12 @@
         <exec>
           <!-- An actual conversation drastically decreases your ability to overhear things -->
           <multiply_observe_chance>0.1</multiply_observe_chance>
-          <set_scope name="TARGET">
+          <set_scope name="Approacher">
             <!-- An actual conversation drastically decreases your ability to overhear things -->
             <multiply_observe_chance>0.1</multiply_observe_chance>
             <trigger_event>
               <id>COUNCILLOR_APPROACH_ACTION_ACCEPT_EVENT</id>
+              <parameters Accepter="ROOT"/>
             </trigger_event>
           </set_scope>
         </exec>
@@ -209,44 +214,49 @@
     </options>
   </event>
   <!-- Approach rejection notification
-  A = ROOT, B = TARGET
   Conversation is over. B gets a turn still and A does not.-->
   <event>
     <id>COUNCILLOR_APPROACH_ACTION_REFUSE_EVENT</id>
-    <description>$Target.Name$ refuses to speak with you!</description>
+    <description>$Refuser.Name$ refuses to speak with you!</description>
+    <parameters>
+      <parameter type="character">Refuser</parameter>
+    </parameters>
     <options>
       <option>
         <label>There will be repercussions!</label>
         <exec>
           <apply_opinion_mod>
             <id>REFUSED_TO_SPEAK_TO_OPINION_MOD</id>
-            <character>TARGET</character>
+            <character>Refuser</character>
           </apply_opinion_mod>
         </exec>
       </option>
     </options>
   </event>
   <!-- Approach acceptance notification.
-  A = ROOT, B = TARGET
   A now gets to choose a topic.-->
   <event>
     <id>COUNCILLOR_APPROACH_ACTION_ACCEPT_EVENT</id>
-    <description>$Target.Name$ accepts.  What would you like to discuss?</description>
+    <description>$Accepter.Name$ accepts.  What would you like to discuss?</description>
+    <parameters>
+      <parameter type="character">Accepter</parameter>
+    </parameters>
     <options>
       <option>
         <label>Ask for taxes</label>
         <requirements>
           <has_job>STEWARD_JOB</has_job>
-          <set_scope name="TARGET">
+          <set_scope name="Accepter">
             <not>
               <has_job>KING_JOB</has_job>
             </not>
           </set_scope>
         </requirements>
         <exec>
-          <set_scope name="TARGET">
+          <set_scope name="Accepter">
             <trigger_event>
               <id>STEWARD_COLLECT_TAXES_EVENT_0</id>
+              <parameters Steward="ROOT"/>
             </trigger_event>
           </set_scope>
         </exec>
@@ -377,11 +387,13 @@
     </options>
   </event>
   <!-- From approach event
-  ROOT = person being collected from
-  TARGET = steward -->
+  ROOT = person being collected from -->
   <event>
     <id>STEWARD_COLLECT_TAXES_EVENT_0</id>
-    <description>$Target.Name$ is asking for the king's taxes.</description>
+    <description>$Steward.Name$ is asking for the king's taxes.</description>
+    <parameters>
+      <parameter type="character">Steward</parameter>
+    </parameters>
     <options>
       <option>
         <label>Hand them over</label>
@@ -390,11 +402,12 @@
         </requirements>
         <exec>
           <spend_gold>20</spend_gold>
-          <set_scope name="TARGET">
+          <set_scope name="Steward">
             <get_gold>20</get_gold>
             <offset_variable name="TaxesCollected">1</offset_variable>
             <trigger_event>
               <id>STEWARD_NOTIFY_TAXES_PAID_EVENT</id>
+              <parameters TaxPayer="ROOT"/>
             </trigger_event>
           </set_scope>
           <set_variable name="TaxDelinquent">0</set_variable>
@@ -409,9 +422,10 @@
         <label>Refuse to pay!</label>
         <exec>
           <set_variable name="TaxDelinquent">1</set_variable>
-          <set_scope name="TARGET">
+          <set_scope name="Steward">
             <trigger_event>
               <id>STEWARD_NOTIFY_REFUSED_TO_PAY_TAXES_EVENT</id>
+              <parameters Refuser="ROOT"/>
             </trigger_event>
           </set_scope>
         </exec>
@@ -420,7 +434,10 @@
   </event>
   <event>
     <id>STEWARD_GIVEN_OUTSTANDING_TAXES_EVENT</id>
-    <description>$Target.Name$ wants to pay their outstanding taxes</description>
+    <parameters>
+      <parameter type="character">TaxPayer</parameter>
+    </parameters>
+    <description>$TaxPayer.Name$ wants to pay their outstanding taxes</description>
     <options>
       <option>
         <label>OK</label>
@@ -429,7 +446,10 @@
   </event>
   <event>
     <id>KING_GIVEN_TAXES_FROM_STEWARD_EVENT</id>
-    <description>$Target.Name$, your steward, hands you the taxes they've collected</description>
+    <description>$Steward.Name$, your steward, hands you the taxes they've collected</description>
+    <parameters>
+      <parameter type="character">Steward</parameter>
+    </parameters>
     <options>
       <option>
         <label>OK</label>
@@ -438,7 +458,10 @@
   </event>
   <event>
     <id>STEWARD_NOTIFY_TAXES_PAID_EVENT</id>
-    <description>$Target.Name$ hands over the taxes</description>
+    <description>$TaxPayer.Name$ hands over the taxes</description>
+    <parameters>
+      <parameter type="character">TaxPayer</parameter>
+    </parameters>
     <options>
       <option>
         <label>OK</label>
@@ -447,7 +470,10 @@
   </event>
   <event>
     <id>STEWARD_NOTIFY_REFUSED_TO_PAY_TAXES_EVENT</id>
-    <description>$Target.Name$ refused to pay!</description>
+    <description>$Refuser.Name$ refused to pay!</description>
+    <parameters>
+      <parameter type="character">Refuser</parameter>
+    </parameters>
     <options>
       <option>
         <label>OK</label>

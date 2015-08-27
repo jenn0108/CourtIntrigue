@@ -47,29 +47,30 @@ namespace CourtIntrigue
 
             //The current character is the root of the new context so that they will be the
             //default scope in the on_observe we are about to run.
-            EventContext observeContext = new EventContext(currentCharacter, null, parameters);
+            EventContext observeContext = new EventContext(currentCharacter, parameters);
             information.OnObserve.Execute(new EventResults(), game, observeContext);
         }
 
-        public void ExecuteOnTold(Character currentCharacter, Character tellingCharacter, Game game, Room room)
+        public void ExecuteOnTold(Character currentCharacter, Game game, Room room)
         {
             //The current character is the root of the new context so that they will be the
             //default scope in the on_told we are about to run.
-            EventContext observeContext = new EventContext(currentCharacter, tellingCharacter, parameters);
+            // We might need tellingCharacter here but removing it for now since it's never used.
+            EventContext observeContext = new EventContext(currentCharacter, parameters);
             information.OnTold.Execute(new EventResults(), game, observeContext);
         }
 
-        public double EvaluateOnTold(Character currentCharacter, Character tellingCharacter, Game game)
+        public double EvaluateOnTold(Character currentCharacter, Game game)
         {
             //The current character is the character whose opinion on the information we care about.
-            EventContext observeContext = new EventContext(currentCharacter, tellingCharacter, parameters);
+            EventContext observeContext = new EventContext(currentCharacter, parameters);
             return information.OnTold.Evaluate(game, observeContext, currentCharacter.GetWeights());
         }
 
         public double EvaluateOnObserve(Character currentCharacter, Game game)
         {
             //The current character is the character whose opinion on the information we care about.
-            EventContext observeContext = new EventContext(currentCharacter, null, parameters);
+            EventContext observeContext = new EventContext(currentCharacter, parameters);
             return information.OnObserve.Evaluate(game, observeContext, currentCharacter.GetWeights());
         }
 
