@@ -122,24 +122,6 @@
         </exec>
       </option>
       <option>
-        <label>Ask for taxes</label>
-        <requirements>
-          <has_job>STEWARD_JOB</has_job>
-          <set_scope name="TARGET">
-            <not>
-              <has_job>KING_JOB</has_job>
-            </not>
-          </set_scope>
-        </requirements>
-        <exec>
-          <set_scope name="TARGET">
-            <trigger_event>
-              <id>STEWARD_COLLECT_TAXES_EVENT_0</id>
-            </trigger_event>
-          </set_scope>
-        </exec>
-      </option>
-      <option>
         <label>Pay taxes</label>
         <requirements>
           <set_scope name="TARGET">
