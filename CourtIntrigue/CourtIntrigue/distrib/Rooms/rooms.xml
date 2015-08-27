@@ -1,8 +1,14 @@
 <rooms>
+  <!-- 
+  Higher priority rooms have their characters evaluated sooner on
+  a tick.  This means that if it is possible to move between rooms
+  during a tick, the target must have a lower priority
+  -->
   <room>
     <id>TOWN_ROOM</id>
     <name>Town</name>
     <common>Yes</common>
+    <priority>90</priority>
     <requirements>
       <is_male/>
       <is_adult/>
@@ -16,6 +22,7 @@
     <id>COURT_ROOM</id>
     <name>Court</name>
     <common>Yes</common>
+    <priority>100</priority>
     <requirements>
       <is_male/>
       <is_adult/>
@@ -31,6 +38,7 @@
     <id>ESTATE_ROOM</id>
     <name>Home</name>
     <common>No</common>
+    <priority>0</priority>
     <solo_actions>
       <action>COLLECT_TAXES_ACTION_ID</action>
       <action>SPEND_TIME_WITH_WIFE_ACTION_ID</action>

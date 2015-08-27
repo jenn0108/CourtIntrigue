@@ -17,6 +17,7 @@ namespace CourtIntrigue
         public string[] SoloActions { get; private set; }
         public string[] PairActions { get; private set; }
         public ILogic Requirements { get; private set; }
+        public int Priority { get; private set; }
 
         public IEnumerable<Character> GetCharacters(Character skip = null)
         {
@@ -40,12 +41,13 @@ namespace CourtIntrigue
             }
         }
 
-        public Room(string id, string name, bool common, string[] soloActions, string[] pairActions, ILogic requirements)
+        public Room(string id, string name, bool common, int priority, string[] soloActions, string[] pairActions, ILogic requirements)
         {
             Identifier = id;
             Name = name;
             PairActions = pairActions;
             Common = common;
+            Priority = priority;
             SoloActions = soloActions;
             Requirements = requirements;
             if (soloActions == null || soloActions.Length == 0)
@@ -85,7 +87,7 @@ namespace CourtIntrigue
 
         public Room Clone()
         {
-            return new Room(Identifier, Name, Common, SoloActions, PairActions, Requirements);
+            return new Room(Identifier, Name, Common, Priority, SoloActions, PairActions, Requirements);
         }
 
         public override string ToString()
@@ -152,6 +154,7 @@ namespace CourtIntrigue
             string identifier = null;
             string name = null;
             bool common = false;
+            int priority = 0;
             List<string> soloActions = new List<string>();
             List<string> pairActions = new List<string>();
             ILogic requirements = Logic.TRUE;
@@ -168,6 +171,10 @@ namespace CourtIntrigue
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "common")
                 {
                     common = reader.ReadElementContentAsString() == "Yes";
+                }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "priority")
+                {
+                    priority = reader.ReadElementContentAsInt();
                 }
                 else if (reader.NodeType == XmlNodeType.Element && reader.Name == "solo_actions")
                 {
@@ -190,7 +197,7 @@ namespace CourtIntrigue
                     break;
                 }
             }
-            return new Room(identifier, name, common, soloActions.ToArray(), pairActions.ToArray(), requirements);
+            return new Room(identifier, name, common, priority, soloActions.ToArray(), pairActions.ToArray(), requirements);
         }
 
 

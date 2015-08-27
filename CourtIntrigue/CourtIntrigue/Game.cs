@@ -214,61 +214,68 @@ namespace CourtIntrigue
             //character in the turn order has the opportunity to talk to other characters.
             Dictionary<Character, ActionDescriptor> soloActions = new Dictionary<Character, ActionDescriptor>();
 
-            //Give each player a turn according to turn order.
-            foreach (var character in characters)
+            var charactersByRoom = characters.GroupBy(c => c.CurrentRoom).OrderByDescending(g=>g.Key.Priority);
+
+            foreach (var pair in charactersByRoom)
             {
-
-                //Check for characters that accepted another action.
-                if (finishedCharacters.Contains(character))
+                Log("Handling Room: " + pair.Key);
+                var roomCharacters = pair.OrderBy(c => c.PrestigeRank);
+                //Give each player a turn according to turn order.
+                foreach (var character in roomCharacters)
                 {
-                    debugLogger.PrintText("Skipping " + character.Name);
-                    continue;
-                }
 
-                bool characterDone = true;
-                do
-                {
-                    //Give the character their turn.
-                    ActionDescriptor actionDescriptor = character.Tick();
-
-                    switch (actionDescriptor.Action.Type)
+                    //Check for characters that accepted another action.
+                    if (finishedCharacters.Contains(character))
                     {
-                        case ActionType.Delayed:
-                            {
-                                debugLogger.PrintText(character.Name + " chose " + actionDescriptor.Action.Identifier);
-
-                                //This character has chosen a solo action.  Queue it up and move on.
-                                soloActions.Add(character, actionDescriptor);
-                                characterDone = true;
-                            }
-                            break;
-
-                        case ActionType.Pair:
-                            {
-                                debugLogger.PrintText(character.Name + " chose " + actionDescriptor.Action.Identifier + " with " + actionDescriptor.Target.Name);
-
-                                //Do the action.
-                                characterDone = ExecuteAction(character, actionDescriptor, finishedCharacters, observableInformationByRoom);
-                            }
-                            break;
-
-                        case ActionType.Immediate:
-                            {
-                                debugLogger.PrintText(character.Name + " chose " + actionDescriptor.Action.Identifier);
-
-                                //Do the action.
-                                characterDone = ExecuteAction(character, actionDescriptor, finishedCharacters, observableInformationByRoom);
-                            }
-                            break;
-
-                        case ActionType.Internal:
-                            {
-                                //Characters aren't allowed to deliberately call Internal actions.
-                                throw new Exception("Event type not allowed");
-                            }
+                        debugLogger.PrintText("Skipping " + character.Name);
+                        continue;
                     }
 
-                } while (!characterDone);
+                    bool characterDone = true;
+                    do
+                    {
+                        //Give the character their turn.
+                        ActionDescriptor actionDescriptor = character.Tick();
+
+                        switch (actionDescriptor.Action.Type)
+                        {
+                            case ActionType.Delayed:
+                                {
+                                    debugLogger.PrintText(character.Name + " chose " + actionDescriptor.Action.Identifier);
+
+                                    //This character has chosen a solo action.  Queue it up and move on.
+                                    soloActions.Add(character, actionDescriptor);
+                                    characterDone = true;
+                                }
+                                break;
+
+                            case ActionType.Pair:
+                                {
+                                    debugLogger.PrintText(character.Name + " chose " + actionDescriptor.Action.Identifier + " with " + actionDescriptor.Target.Name);
+
+                                    //Do the action.
+                                    characterDone = ExecuteAction(character, actionDescriptor, finishedCharacters, observableInformationByRoom);
+                                }
+                                break;
+
+                            case ActionType.Immediate:
+                                {
+                                    debugLogger.PrintText(character.Name + " chose " + actionDescriptor.Action.Identifier);
+
+                                    //Do the action.
+                                    characterDone = ExecuteAction(character, actionDescriptor, finishedCharacters, observableInformationByRoom);
+                                }
+                                break;
+
+                            case ActionType.Internal:
+                                {
+                                    //Characters aren't allowed to deliberately call Internal actions.
+                                    throw new Exception("Event type not allowed");
+                                }
+                        }
+
+                    } while (!characterDone);
+                }
             }
 
             debugLogger.PrintText("Solo actions");
