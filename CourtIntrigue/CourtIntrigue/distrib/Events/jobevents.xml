@@ -141,7 +141,9 @@
   <event>
     <id>COUNCILLOR_APPROACH_ACTION_START_EVENT</id>
     <description>You approach on the King's business...</description>
-    <!-- Pair action so TARGET parameter is automatically passed in.-->
+    <parameters>
+      <paramter type="character">SpeakTo</paramter>
+    </parameters>
     <requirements>
       <or>
         <!-- Currently, only the steward has -->
@@ -152,7 +154,7 @@
       <option>
         <label>OK</label>
         <exec>
-          <set_scope name="TARGET">
+          <set_scope name="SpeakTo">
             <trigger_event>
               <id>COUNCILLOR_APPROACH_ACTION_AGREE_EVENT</id>
               <parameters Approacher="ROOT"/>

@@ -228,20 +228,25 @@ namespace CourtIntrigue
                 //Give the character their turn.
                 ActionDescriptor actionDescriptor = character.Tick();
 
-                if (actionDescriptor.Target == null)
+                if (actionDescriptor.Action.Type == ActionType.Delayed)
                 {
-                    debugLogger.PrintText(character.Name + " chose " + actionDescriptor.Identifer);
+                    debugLogger.PrintText(character.Name + " chose " + actionDescriptor.Action.Identifier);
 
                     //This character has chosen a solo action.  Queue it up and move on.
                     soloActions.Add(character, actionDescriptor);
                     continue;
                 }
-                else
+                else if(actionDescriptor.Action.Type == ActionType.Pair)
                 {
-                    debugLogger.PrintText(character.Name + " chose " + actionDescriptor.Identifer + " with " + actionDescriptor.Target.Name);
+                    debugLogger.PrintText(character.Name + " chose " + actionDescriptor.Action.Identifier + " with " + actionDescriptor.Target.Name);
 
                     //This character is unavailable for interaction because he is busy.
                     character.MarkBusy();
+                }
+                else
+                {
+                    //Characters aren't allowed to deliberately call Internal actions.
+                    throw new Exception("Event type not allowed");
                 }
                 
                 ExecuteAction(character, actionDescriptor, finishedCharacters, observableInformationByRoom);

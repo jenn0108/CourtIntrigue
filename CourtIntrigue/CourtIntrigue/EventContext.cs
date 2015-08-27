@@ -46,8 +46,10 @@ namespace CourtIntrigue
         {
             scopes.Add(new KeyValuePair<string, object>("ROOT", actionDescriptor.Initiator));
             parameters = new Dictionary<string, object>();
-            if (actionDescriptor.Target != null)
-                parameters.Add("TARGET", actionDescriptor.Target);
+            if (actionDescriptor.Action.Type == ActionType.Pair && actionDescriptor.Target != null && actionDescriptor.Action.ParameterName != null)
+            {
+                parameters.Add(actionDescriptor.Action.ParameterName, actionDescriptor.Target);
+            }
 
         }
 
@@ -102,13 +104,13 @@ namespace CourtIntrigue
     // to create an EventContext.
     class ActionDescriptor
     {
-        public string Identifer { get; private set; }
+        public Action Action { get; private set; }
         public Character Initiator { get; private set; }
         public Character Target { get; private set; }
 
-        public ActionDescriptor(string identifier, Character initiator, Character target)
+        public ActionDescriptor(Action action, Character initiator, Character target)
         {
-            Identifer = identifier;
+            Action = action;
             Initiator = initiator;
             Target = target;
         }

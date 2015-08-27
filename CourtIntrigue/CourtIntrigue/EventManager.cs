@@ -21,7 +21,7 @@ namespace CourtIntrigue
             //Which events can we perform?
             List<Event> okToRun = new List<Event>();
             // Smarter now, we look through only the events that are listed under the requested action.
-            foreach(string eventId in actions[actionDescriptor.Identifer].Events)
+            foreach(string eventId in actionDescriptor.Action.Events)
             {
                 Event e = events[eventId];
                 if(e.EvaluateActionRequirements(actionDescriptor, game))
@@ -39,11 +39,12 @@ namespace CourtIntrigue
 
         public void ExecuteDayEvents(Character character, Game game)
         {
-            ActionDescriptor actionDescriptor = new ActionDescriptor(BEGIN_DAY_ACTION_ID, character, null);
+            ActionDescriptor actionDescriptor = new ActionDescriptor(actions[BEGIN_DAY_ACTION_ID], character, null);
 
             foreach (string eventId in actions[BEGIN_DAY_ACTION_ID].Events)
             {
                 Event e = events[eventId];
+
                 if (e.EvaluateActionRequirements(actionDescriptor, game))
                 {
                     e.Execute(new EventResults(), game, new EventContext(actionDescriptor));
@@ -56,7 +57,8 @@ namespace CourtIntrigue
             List<Action> allowableActions = new List<Action>();
             foreach(var actionId in room.PairActions)
             {
-                ActionDescriptor actionDescriptor = new ActionDescriptor(actionId, initiator, target);
+                Action pairAction = actions[actionId];
+                ActionDescriptor actionDescriptor = new ActionDescriptor(pairAction, initiator, target);
                 foreach (string eventId in actions[actionId].Events)
                 {
                     Event e = events[eventId];
@@ -135,7 +137,8 @@ namespace CourtIntrigue
         {
             while (reader.Read())
             {
-                if (reader.NodeType == XmlNodeType.Element && reader.Name == "action")
+                if (reader.NodeType == XmlNodeType.Element && 
+                    (reader.Name == "delayed_action" || reader.Name == "pair_action" || reader.Name == "internal_action"))
                 {
                     Action a = ReadAction(reader, badTags);
                     actions.Add(a.Identifier, a);
@@ -201,9 +204,22 @@ namespace CourtIntrigue
 
         private Action ReadAction(XmlReader reader, Counter<string> badTags)
         {
+            ActionType type = ActionType.Internal;
+            string tag = reader.Name;
+
+            if (tag == "delayed_action")
+                type = ActionType.Delayed;
+            else if (tag == "internal_action")
+                type = ActionType.Internal;
+            else if (tag == "pair_action")
+                type = ActionType.Pair;
+            else
+                throw new KeyNotFoundException();
+
             string identifier = null;
             string label = null;
             List<string> eventIds = new List<string>();
+            string parameter = null;
             while (reader.Read())
             {
                 if (reader.NodeType == XmlNodeType.Element && reader.Name == "id")
@@ -218,12 +234,16 @@ namespace CourtIntrigue
                 {
                     eventIds = ReadEventIds(reader, badTags);
                 }
-                else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "action")
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "parameter")
+                {
+                    parameter = reader.ReadElementContentAsString();
+                }
+                else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == tag)
                 {
                     break;
                 }
             }
-            return new Action(identifier, label, eventIds);
+            return new Action(identifier, type, label, eventIds, parameter);
         }
 
         private List<string> ReadEventIds(XmlReader reader, Counter<string> badTags)
@@ -319,17 +339,28 @@ namespace CourtIntrigue
         
     }
 
+    enum ActionType
+    {
+        Internal,
+        Delayed,
+        Pair
+    }
+
     class Action
     {
         public string Identifier { get; private set; }
         public string Label { get; private set; }
+        public ActionType Type { get; private set; }
+        public string ParameterName { get; private set; }
         public List<string> Events { get; private set; }
 
-        public Action(string id, string label, List<string> events )
+        public Action(string id, ActionType type, string label, List<string> events, string parameterName )
         {
             Identifier = id;
+            Type = type;
             Label = label;
             Events = events;
+            ParameterName = parameterName;
         }
     }
 

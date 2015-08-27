@@ -19,12 +19,12 @@ namespace CourtIntrigue
             int num = Game.GetRandom(soloActions.Length + characterActions.Count);
             if (num < soloActions.Length)
             {
-                return new ActionDescriptor(soloActions[num].Identifier, this, null);
+                return new ActionDescriptor(soloActions[num], this, null);
             }
             else
             {
                 Character otherCharacter = characterActions.Keys.ElementAt(num - soloActions.Length);
-                string[] pairActions = characterActions[otherCharacter].Select(a => a.Identifier).ToArray();
+                Action[] pairActions = characterActions[otherCharacter];
                 return new ActionDescriptor(pairActions[Game.GetRandom(pairActions.Length)], this, otherCharacter);
             }
 

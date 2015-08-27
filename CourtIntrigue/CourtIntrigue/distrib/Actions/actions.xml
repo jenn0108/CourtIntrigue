@@ -1,56 +1,57 @@
 <actions>
-  <action>
+  <delayed_action>
     <id>PUBLIC_URINATION_ACTION</id>
     <label>Go for a tinkle...</label>
     <event_ids>
       <id>PUBLIC_URINATION_EVENT_0</id>
     </event_ids>
-  </action>
-  <action>
+  </delayed_action>
+  <pair_action>
     <id>APPROACH_ACTION</id>
     <label>Speak with...</label>
+    <parameter>SpeakTo</parameter>
     <event_ids>
       <id>APPROACH_ACTION_EVENT_0</id>
       <id>COUNCILLOR_APPROACH_ACTION_START_EVENT</id>
     </event_ids>
-  </action>
-  <action>
+  </pair_action>
+  <delayed_action>
     <id>COLLECT_TAXES_ACTION_ID</id>
     <label>Collect taxes...</label>
     <event_ids>
       <id>COLLECT_TAXES_EVENT_ID_0</id>
     </event_ids>
-  </action>
-  <action>
+  </delayed_action>
+  <delayed_action>
     <id>SPEND_TIME_WITH_WIFE_ACTION_ID</id>
     <label>Spent time with your wife...</label>
     <event_ids>
       <id>SPEND_TIME_WITH_WIFE_EVENT_0</id>
       <id>SPEND_TIME_WITH_WIFE_EVENT_1</id>
     </event_ids>
-  </action>
-  <action>
+  </delayed_action>
+  <delayed_action>
     <id>EAVESDROP_ACTION</id>
     <label>See if you can hear anything interesting...</label>
     <event_ids>
       <id>EAVESDROP_ACTION_0</id>
     </event_ids>
-  </action>
-  <action>
+  </delayed_action>
+  <delayed_action>
     <id>VISIT_TAILOR_ACTION</id>
     <label>Visit the tailor...</label>
     <event_ids>
       <id>VISIT_TAILOR_EVENT_0</id>
     </event_ids>
-  </action>
-  <action>
+  </delayed_action>
+  <delayed_action>
     <id>DO_NOTHING_ACTION_ID</id>
     <label>Do nothing...</label>
     <event_ids>
       <id>DO_NOTHING_EVENT</id>
     </event_ids>
-  </action>
-  <action>
+  </delayed_action>
+  <internal_action>
     <!-- Special Action ID, all events with matching requirements execute-->
     <id>BEGIN_DAY_ACTION_ID</id>
     <label>Begin day</label>
@@ -59,5 +60,5 @@
       <id>GIVE_BIRTH_DAILY_EVENT</id>
       <id>PREGNANCY_CHECK_DAILY_EVENT</id>
     </event_ids>
-  </action>
+  </internal_action>
 </actions>

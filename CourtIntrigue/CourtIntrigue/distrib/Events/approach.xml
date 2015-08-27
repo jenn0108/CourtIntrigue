@@ -7,7 +7,9 @@
   <event>
     <id>APPROACH_ACTION_EVENT_0</id>
     <description>You approach intent on starting a discussion...</description>
-    <!-- Pair action so TARGET parameter is automatically passed in.-->
+    <parameters>
+      <paramter type="character">SpeakTo</paramter>
+    </parameters>
     <requirements>
       <is_male/>
       <is_adult/>
@@ -16,7 +18,7 @@
       <option>
         <label>OK</label>
         <exec>
-          <set_scope name="TARGET">
+          <set_scope name="SpeakTo">
             <trigger_event>
               <id>APPROACH_ACTION_EVENT_1</id>
               <parameters Approacher="ROOT"/>
