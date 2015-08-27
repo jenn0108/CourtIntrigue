@@ -2,9 +2,6 @@
   <event>
     <id>PUBLIC_URINATION_EVENT_0</id>
     <description>You are suddenly overcome with the urge to urinate.  You can't wait any longer!</description>
-    <requirements>
-      <action_id>PUBLIC_URINATION_ACTION</action_id>
-    </requirements>
     <options>
       <option>
         <label>Pee in a ditch</label>
@@ -50,7 +47,6 @@
     <id>EAVESDROP_ACTION_0</id>
     <description>You wander around trying to pick up useful tidbits of information.</description>
     <requirements>
-      <action_id>EAVESDROP_ACTION</action_id>
       <is_male/>
       <is_adult/>
     </requirements>

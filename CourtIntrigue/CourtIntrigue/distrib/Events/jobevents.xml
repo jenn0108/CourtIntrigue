@@ -143,7 +143,6 @@
     <id>COUNCILLOR_APPROACH_ACTION_START_EVENT</id>
     <description>You approach on the King's business...</description>
     <requirements>
-      <action_id>APPROACH_ACTION</action_id>
       <or>
         <!-- Currently, only the steward has -->
         <has_job>STEWARD_JOB</has_job>

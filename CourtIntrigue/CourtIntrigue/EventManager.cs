@@ -20,12 +20,13 @@ namespace CourtIntrigue
         {
             //Which events can we perform?
             List<Event> okToRun = new List<Event>();
-            //We really should be smarter about this.
-            foreach(var pair in events)
+            // Smarter now, we look through only the events that are listed under the requested action.
+            foreach(string eventId in actions[actionDescriptor.Identifer].Events)
             {
-                if(pair.Value.ActionRequirements.Evaluate(new EventContext(actionDescriptor), game))
+                Event e = events[eventId];
+                if(e.EvaluateActionRequirements(actionDescriptor, game))
                 {
-                    okToRun.Add(pair.Value);
+                    okToRun.Add(e);
                 }
             }
             if (okToRun.Count == 0)
@@ -38,34 +39,36 @@ namespace CourtIntrigue
 
         public void ExecuteDayEvents(Character character, Game game)
         {
-            EventContext context = new EventContext(BEGIN_DAY_ACTION_ID, character, null);
+            ActionDescriptor actionDescriptor = new ActionDescriptor(BEGIN_DAY_ACTION_ID, character, null);
 
-            foreach (var pair in events)
+            foreach (string eventId in actions[BEGIN_DAY_ACTION_ID].Events)
             {
-                if (pair.Value.ActionRequirements.Evaluate(context, game))
+                Event e = events[eventId];
+                if (e.EvaluateActionRequirements(actionDescriptor, game))
                 {
-                    pair.Value.Execute(new EventResults(), game, context);
+                    e.Execute(new EventResults(), game, new EventContext(actionDescriptor));
                 }
             }
         }
 
         public Action[] FindAllowableActions(Room room, Character initiator, Character target, Game game)
         {
-            List<Action> actions = new List<Action>();
+            List<Action> allowableActions = new List<Action>();
             foreach(var actionId in room.PairActions)
             {
-                EventContext context = new EventContext(actionId, initiator, target);
-                foreach (var pair in events)
+                ActionDescriptor actionDescriptor = new ActionDescriptor(actionId, initiator, target);
+                foreach (string eventId in actions[actionId].Events)
                 {
-                    if (pair.Value.ActionRequirements.Evaluate(context, game))
+                    Event e = events[eventId];
+                    if (e.EvaluateActionRequirements(actionDescriptor, game))
                     {
-                        actions.Add(this.actions[actionId]);
+                        allowableActions.Add(actions[actionId]);
                         break;
                     }
                 }
             }
 
-            return actions.ToArray();
+            return allowableActions.ToArray();
         }
 
         public Action[] GetActionsById(string[] ids)
@@ -200,6 +203,7 @@ namespace CourtIntrigue
         {
             string identifier = null;
             string label = null;
+            List<string> eventIds = new List<string>();
             while (reader.Read())
             {
                 if (reader.NodeType == XmlNodeType.Element && reader.Name == "id")
@@ -210,13 +214,39 @@ namespace CourtIntrigue
                 {
                     label = reader.ReadElementContentAsString();
                 }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "event_ids")
+                {
+                    eventIds = ReadEventIds(reader, badTags);
+                }
                 else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "action")
                 {
                     break;
                 }
             }
-            return new Action(identifier, label);
+            return new Action(identifier, label, eventIds);
         }
+
+        private List<string> ReadEventIds(XmlReader reader, Counter<string> badTags)
+        {
+            List<string> eventIds = new List<string>();
+            while (reader.Read())
+            {
+                if (reader.NodeType == XmlNodeType.Element && reader.Name == "id")
+                {
+                    eventIds.Add(reader.ReadElementContentAsString());
+                }
+                else if (reader.NodeType == XmlNodeType.Element)
+                {
+                    badTags.Increment(reader.Name);
+                }
+                else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "event_ids")
+                {
+                    break;
+                }
+            }
+            return eventIds;
+        }
+
 
         private List<EventOption> ReadOptions(XmlReader reader, Counter<string> badTags)
         {
@@ -293,11 +323,13 @@ namespace CourtIntrigue
     {
         public string Identifier { get; private set; }
         public string Label { get; private set; }
+        public List<string> Events { get; private set; }
 
-        public Action(string id, string label)
+        public Action(string id, string label, List<string> events )
         {
             Identifier = id;
             Label = label;
+            Events = events;
         }
     }
 

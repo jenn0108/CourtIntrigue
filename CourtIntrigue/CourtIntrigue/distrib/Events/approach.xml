@@ -8,7 +8,6 @@
     <id>APPROACH_ACTION_EVENT_0</id>
     <description>You approach intent on starting a discussion...</description>
     <requirements>
-      <action_id>APPROACH_ACTION</action_id>
       <is_male/>
       <is_adult/>
     </requirements>

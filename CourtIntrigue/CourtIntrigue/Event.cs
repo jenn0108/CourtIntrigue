@@ -61,6 +61,11 @@ namespace CourtIntrigue
             }
         }
 
+        public bool EvaluateActionRequirements(ActionDescriptor actionDescriptor, Game game)
+        {
+            return ActionRequirements.Evaluate(new EventContext(actionDescriptor), game);
+        }
+
         public double Evaluate(Game game, EventContext context, Weights weights)
         {
             double result = 0.0;

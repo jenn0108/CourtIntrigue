@@ -3,7 +3,6 @@
     <id>INITIALIZE_CHARACTER</id>
     <description>Welcome!  Your goal is to gain prestige.</description>
     <requirements>
-      <action_id>BEGIN_DAY_ACTION_ID</action_id>
       <is_adult/>
       <var_eq name="TIME">0</var_eq>
     </requirements>
@@ -23,7 +22,6 @@
     <id>PREGNANCY_CHECK_DAILY_EVENT</id>
     <description>You're realize today that you must be pregnant!</description>
     <requirements>
-      <action_id>BEGIN_DAY_ACTION_ID</action_id>
       <is_adult/>
       <is_female/>
       <var_eq name="IsPregnant">1</var_eq>
@@ -42,7 +40,6 @@
     <id>GIVE_BIRTH_DAILY_EVENT</id>
     <description>You popped out a kid!</description>
     <requirements>
-      <action_id>BEGIN_DAY_ACTION_ID</action_id>
       <is_adult/>
       <is_female/>
       <var_eq name="IsPregnant">1</var_eq>

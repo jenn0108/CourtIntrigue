@@ -73,19 +73,6 @@ namespace CourtIntrigue
         }
     }
 
-    class ActionIdentifierTestLogic : ILogic
-    {
-        private string identifier;
-        public ActionIdentifierTestLogic(string lookingFor)
-        {
-            identifier = lookingFor;
-        }
-        public bool Evaluate(EventContext context, Game game)
-        {
-            return context.Identifer == identifier;
-        }
-    }
-
     class HasInformationTestLogic : ILogic
     {
         private string about;

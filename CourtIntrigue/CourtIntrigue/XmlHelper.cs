@@ -304,11 +304,7 @@ namespace CourtIntrigue
 
         private static ILogic ReadSingleLogic(XmlReader reader, Counter<string> badTags)
         {
-            if (reader.NodeType == XmlNodeType.Element && reader.Name == "action_id")
-            {
-                return new ActionIdentifierTestLogic(reader.ReadElementContentAsString());
-            }
-            else if (reader.NodeType == XmlNodeType.Element && reader.Name == "has_information")
+            if (reader.NodeType == XmlNodeType.Element && reader.Name == "has_information")
             {
                 string about = reader.GetAttribute("about");
                 string typeName = reader.GetAttribute("type");
