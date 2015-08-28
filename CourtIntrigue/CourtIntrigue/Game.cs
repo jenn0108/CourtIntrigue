@@ -147,6 +147,11 @@ namespace CourtIntrigue
             return eventManager.FindAllowableActions(room, initiator, target, this);
         }
 
+        public Action[] FindAllowableActions(Room room, Character initiator)
+        {
+            return eventManager.FindAllowableActions(room, initiator, this);
+        }
+
         public Action[] GetActionsById(string[] ids)
         {
             return eventManager.GetActionsById(ids);
@@ -326,6 +331,11 @@ namespace CourtIntrigue
         public IEnumerable<Room> GetRooms(Character character)
         {
             return roomManager.GetRooms(character, this);
+        }
+
+        public Room GetRoomById(string roomId)
+        {
+            return roomManager.GetRoomById(roomId);
         }
 
         public Character[] FilterCharacters(ILogic requirements, EventContext context)

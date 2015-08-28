@@ -52,6 +52,20 @@
     </event_ids>
   </delayed_action>
   <delayed_action>
+    <id>ATTEND_CHURCH_ACTION</id>
+    <label>Attend Church...</label>
+    <event_ids>
+      <id>ATTEND_MASS_START_EVENT</id>
+    </event_ids>
+  </delayed_action>
+  <immediate_action>
+    <id>ENTER_CHURCH_ACTION</id>
+    <label>Enter Church</label>
+    <event_ids>
+      <id>ENTER_CHURCH_ACTION</id>
+    </event_ids>
+  </immediate_action>
+  <delayed_action>
     <id>DO_NOTHING_ACTION_ID</id>
     <label>Do nothing...</label>
     <event_ids>

@@ -98,4 +98,22 @@
       </option>
     </options>
   </event>
+  <event>
+    <id>ENTER_CHURCH_EVENT</id>
+    <description>You enter the church.</description>
+    <requirements>
+      <not>
+        <is_earlymorning/>
+      </not>
+    </requirements>
+    <options>
+      <option>
+        <label>OK</label>
+        <exec>
+          <continue_turn/>
+          <move_to>CHURCH_ROOM</move_to>
+        </exec>
+      </option>
+    </options>
+  </event>
 </events>

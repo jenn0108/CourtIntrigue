@@ -245,6 +245,10 @@ namespace CourtIntrigue
                 {
                     expressions.Add(new CreateChildExecute());
                 }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "move_to")
+                {
+                    expressions.Add(new MoveToExecute(reader.ReadElementContentAsString()));
+                }
                 else if (reader.NodeType == XmlNodeType.Element)
                 {
                     badTags.Increment(reader.Name);
@@ -337,6 +341,10 @@ namespace CourtIntrigue
             {
                 //ReadLogic will just or whatever it finds.
                 return ReadOrLogic(reader, badTags);
+            }
+            else if (reader.NodeType == XmlNodeType.Element && reader.Name == "is_earlymorning")
+            {
+                return Logic.IS_EARLYMORNING;
             }
             else if (reader.NodeType == XmlNodeType.Element && reader.Name == "has_spouse")
             {

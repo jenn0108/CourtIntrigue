@@ -16,6 +16,8 @@
     <solo_actions>
       <action>PUBLIC_URINATION_ACTION</action>
       <action>VISIT_TAILOR_ACTION</action>
+      <action>ATTEND_CHURCH_ACTION</action>
+      <action>ENTER_CHURCH_ACTION</action>
     </solo_actions>
   </room>
   <room>
@@ -33,6 +35,20 @@
     <pair_actions>
       <action>APPROACH_ACTION</action>
       <action>COUNCILLOR_APPROACH_ACTION</action>
+    </pair_actions>
+  </room>
+  <room>
+    <id>CHURCH_ROOM</id>
+    <name>Church</name>
+    <common>Yes</common>
+    <requirements>
+      <false/>
+    </requirements>
+    <solo_actions>
+      <action>EAVESDROP_ACTION</action>
+    </solo_actions>
+    <pair_actions>
+      <action>APPROACH_ACTION</action>
     </pair_actions>
   </room>
   <room>

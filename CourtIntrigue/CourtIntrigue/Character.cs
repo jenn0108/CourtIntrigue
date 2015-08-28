@@ -258,7 +258,8 @@ namespace CourtIntrigue
                     characterActions.Add(otherCharacter, pairActions);
             }
 
-            Action[] soloActions = Game.GetActionsById(room.SoloActions);
+            //We need to apply requirement logic to the solo actions as well as the pair actions.
+            Action[] soloActions = Game.FindAllowableActions(room, this);
 
             return OnTick(soloActions, characterActions);
         }

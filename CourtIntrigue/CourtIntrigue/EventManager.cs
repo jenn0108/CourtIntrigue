@@ -73,6 +73,27 @@ namespace CourtIntrigue
             return allowableActions.ToArray();
         }
 
+        public Action[] FindAllowableActions(Room room, Character initiator, Game game)
+        {
+            List<Action> allowableActions = new List<Action>();
+            foreach (var actionId in room.SoloActions)
+            {
+                Action pairAction = actions[actionId];
+                ActionDescriptor actionDescriptor = new ActionDescriptor(pairAction, initiator, null);
+                foreach (string eventId in actions[actionId].Events)
+                {
+                    Event e = events[eventId];
+                    if (e.EvaluateActionRequirements(actionDescriptor, game))
+                    {
+                        allowableActions.Add(actions[actionId]);
+                        break;
+                    }
+                }
+            }
+
+            return allowableActions.ToArray();
+        }
+
         public Action[] GetActionsById(string[] ids)
         {
             return ids.Select(id => actions[id]).ToArray();

@@ -15,6 +15,7 @@ namespace CourtIntrigue
         public static ILogic IS_MALE = new IsMaleTestLogic();
         public static ILogic IS_FEMALE = new IsFemaleTestLogic();
         public static ILogic IS_ADULT = new IsAdultTestLogic();
+        public static ILogic IS_EARLYMORNING = new IsEarlyMorningTestLogic();
 
         public static double EPSILON = 1.0e-5;
     }
@@ -88,6 +89,14 @@ namespace CourtIntrigue
         {
             Character aboutCharacter = context.GetScopedObjectByName(about) as Character;
             return context.CurrentCharacter.HasInformationAbout(aboutCharacter, type);
+        }
+    }
+
+    class IsEarlyMorningTestLogic : ILogic
+    {
+        public bool Evaluate(EventContext context, Game game)
+        {
+            return game.CurrentTime == game.CurrentDay;
         }
     }
 

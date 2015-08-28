@@ -679,4 +679,26 @@ namespace CourtIntrigue
             return 0.0;
         }
     }
+
+    class MoveToExecute : IExecute
+    {
+        private string roomId;
+        public MoveToExecute(string id)
+        {
+            roomId = id;
+        }
+
+        public void Execute(EventResults result, Game game, EventContext context)
+        {
+            Room targetRoom = game.GetRoomById(roomId);
+            if (context.CurrentCharacter.CurrentRoom.Priority < targetRoom.Priority)
+                throw new Exception("Can only move from a higher priority room to a lower one.");
+            context.CurrentCharacter.CurrentRoom = targetRoom;
+        }
+
+        public double Evaluate(Game game, EventContext context, Weights weights)
+        {
+            return 0.0;
+        }
+    }
 }

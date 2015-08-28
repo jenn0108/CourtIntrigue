@@ -1,0 +1,123 @@
+﻿<events>
+  <event>
+    <id>ATTEND_MASS_START_EVENT</id>
+    <description>
+      The priest enters and approaches the alter.  He makes the sign of the cross and begins...
+    </description>
+    <requirements>
+      <is_earlymorning/>
+    </requirements>
+    <options>
+      <option>
+        <label>Listen</label>
+        <exec>
+          <set_variable name="LastTimeAtChurch">TIME+20</set_variable>
+          <trigger_event>
+            <id>ATTEND_MASS_BORING_EVENT</id>
+          </trigger_event>
+        </exec>
+      </option>
+    </options>
+  </event>
+  <event>
+    <id>ATTEND_MASS_BORING_EVENT</id>
+    <description>
+      ...Amen.
+    </description>
+    <options>
+      <option>
+        <label>Amen</label>
+        <exec>
+          <trigger_event>
+            <id>ATTEND_MASS_COLLECT_EVENT</id>
+          </trigger_event>
+        </exec>
+      </option>
+    </options>
+  </event>
+  <event>
+    <id>ATTEND_MASS_COLLECT_EVENT</id>
+    <description>
+      Collections are being taken.  How much will you give?
+    </description>
+    <options>
+      <option>
+        <label>Nothing</label>
+        <willpower>
+          <!-- Greedy people always want to keep their money! -->
+          <trait_desire type="GREEDY_TRAIT" cost="5"/>
+          <trait_aversion type="ZEALOUS_TRAIT" cost="5"/>
+        </willpower>
+        <exec>
+          <offset_variable name="Piety">-5</offset_variable>
+          <trigger_event>
+            <id>ATTEND_MASS_END_EVENT</id>
+          </trigger_event>
+        </exec>
+      </option>
+      <option>
+        <label>1 Gold</label>
+        <requirements>
+          <var_ge name="GOLD">1</var_ge>
+        </requirements>
+        <exec>
+          <spend_gold>1</spend_gold>
+          <trigger_event>
+            <id>ATTEND_MASS_END_EVENT</id>
+          </trigger_event>
+        </exec>
+      </option>
+      <option>
+        <label>5 Gold</label>
+        <willpower>
+          <!-- Charitable people always want to give their money! -->
+          <trait_desire type="CHARITABLE_TRAIT" cost="5"/>
+        </willpower>
+        <requirements>
+          <var_ge name="GOLD">5</var_ge>
+        </requirements>
+        <exec>
+          <spend_gold>5</spend_gold>
+          <offset_variable name="Piety">5</offset_variable>
+          <trigger_event>
+            <id>ATTEND_MASS_END_EVENT</id>
+          </trigger_event>
+        </exec>
+      </option>
+    </options>
+  </event>
+  <event>
+    <id>ATTEND_MASS_END_EVENT</id>
+    <description>
+      The mass is over.  You can leave if you wish.  Or you can stay and chat with other church goers.
+    </description>
+    <options>
+      <option>
+        <label>Stay</label>
+        <exec>
+          <move_to>CHURCH_ROOM</move_to>
+        </exec>
+      </option>
+      <option>
+        <label>Leave</label>
+      </option>
+    </options>
+  </event>
+  <event>
+    <id>ENTER_CHURCH_ACTION</id>
+    <description>You enter the church.</description>
+    <requirements>
+      <not>
+        <is_earlymorning/>
+      </not>
+    </requirements>
+    <options>
+      <option>
+        <label>OK</label>
+        <exec>
+          <move_to>CHURCH_ROOM</move_to>
+        </exec>
+      </option>
+    </options>
+  </event>
+</events>
