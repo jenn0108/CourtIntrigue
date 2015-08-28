@@ -55,9 +55,13 @@ namespace CourtIntrigue
         public Action[] FindAllowableActions(Room room, Character initiator, Character target, Game game)
         {
             List<Action> allowableActions = new List<Action>();
-            foreach(var actionId in room.PairActions)
+            foreach(var actionId in room.Actions)
             {
                 Action pairAction = actions[actionId];
+
+                if (pairAction.Type != ActionType.Pair)
+                    continue;
+
                 ActionDescriptor actionDescriptor = new ActionDescriptor(pairAction, initiator, target);
                 foreach (string eventId in actions[actionId].Events)
                 {
@@ -76,10 +80,14 @@ namespace CourtIntrigue
         public Action[] FindAllowableActions(Room room, Character initiator, Game game)
         {
             List<Action> allowableActions = new List<Action>();
-            foreach (var actionId in room.SoloActions)
+            foreach (var actionId in room.Actions)
             {
-                Action pairAction = actions[actionId];
-                ActionDescriptor actionDescriptor = new ActionDescriptor(pairAction, initiator, null);
+                Action soloAction = actions[actionId];
+
+                if (soloAction.Type != ActionType.Delayed && soloAction.Type != ActionType.Immediate)
+                    continue;
+
+                ActionDescriptor actionDescriptor = new ActionDescriptor(soloAction, initiator, null);
                 foreach (string eventId in actions[actionId].Events)
                 {
                     Event e = events[eventId];

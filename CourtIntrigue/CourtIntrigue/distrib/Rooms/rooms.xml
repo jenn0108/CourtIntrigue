@@ -13,12 +13,12 @@
       <is_male/>
       <is_adult/>
     </requirements>
-    <solo_actions>
+    <actions>
       <action>PUBLIC_URINATION_ACTION</action>
       <action>VISIT_TAILOR_ACTION</action>
       <action>ATTEND_CHURCH_ACTION</action>
       <action>ENTER_CHURCH_ACTION</action>
-    </solo_actions>
+    </actions>
   </room>
   <room>
     <id>COURT_ROOM</id>
@@ -29,13 +29,11 @@
       <is_male/>
       <is_adult/>
     </requirements>
-    <solo_actions>
+    <actions>
       <action>EAVESDROP_ACTION</action>
-    </solo_actions>
-    <pair_actions>
       <action>APPROACH_ACTION</action>
       <action>COUNCILLOR_APPROACH_ACTION</action>
-    </pair_actions>
+    </actions>
   </room>
   <room>
     <id>CHURCH_ROOM</id>
@@ -47,22 +45,20 @@
     <requirements>
       <false/>
     </requirements>
-    <solo_actions>
+    <actions>
       <action>EAVESDROP_ACTION</action>
-    </solo_actions>
-    <pair_actions>
       <action>APPROACH_ACTION</action>
-    </pair_actions>
+    </actions>
   </room>
   <room>
     <id>ESTATE_ROOM</id>
     <name>Home</name>
     <common>No</common>
     <priority>0</priority>
-    <solo_actions>
+    <actions>
       <action>COLLECT_TAXES_ACTION_ID</action>
       <action>SPEND_TIME_WITH_WIFE_ACTION_ID</action>
       <action>DO_NOTHING_ACTION_ID</action>
-    </solo_actions>
+    </actions>
   </room>
 </rooms>
