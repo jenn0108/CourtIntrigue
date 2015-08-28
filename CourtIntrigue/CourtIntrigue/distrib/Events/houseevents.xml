@@ -58,18 +58,112 @@
     </options>
   </event>
   <event>
-    <id>SPEND_TIME_WITH_WIFE_EVENT_0</id>
-    <description>Spend time with $ROOT.Spouse.Name$ in bed...</description>
+    <id>SPEND_TIME_WITH_WIFE_START_EVENT</id>
+    <description>How would you like to spend time with your wife?</description>
+    <parameters>
+      <parameter type="character">Wife</parameter>
+    </parameters>
     <requirements>
-      <has_spouse/>
-      <is_male/>
       <is_adult/>
+      <is_male/>
+      <set_scope name="Wife">
+        <is_spouse_of>ROOT</is_spouse_of>
+      </set_scope>
     </requirements>
     <options>
       <option>
-        <label>OK</label>
+        <label>Invite $Wife.Name$ to bed</label>
+        <willpower>
+          <trait_adversion type="CHASTE_TRAIT" cost="5"/>
+          <trait_desire type="LUSTFUL_TRAIT" cost="5"/>
+        </willpower>
         <exec>
-          <set_scope name="SPOUSE">
+          <set_scope name="Wife">
+            <trigger_event>
+              <id>WIFE_INVITED_TO_BED</id>
+              <parameters Husband="ROOT"/>
+            </trigger_event>
+          </set_scope>
+        </exec>
+      </option>
+      <option>
+        <label>Invite $Wife.Name$ to go riding</label>
+        <exec>
+          <set_scope name="Wife">
+            <trigger_event>
+              <id>WIFE_INVITED_TO_RIDE</id>
+              <parameters Husband="ROOT"/>
+            </trigger_event>
+          </set_scope>
+        </exec>
+      </option>
+    </options>
+  </event>
+  <event>
+    <id>WIFE_INVITED_TO_BED</id>
+    <description>$Husband.Name$ invites you to bed.</description>
+    <parameters>
+      <parameter type="character">Husband</parameter>
+    </parameters>
+    <options>
+      <option>
+        <label>Accept Enthusiastically</label>
+        <willpower>
+          <trait_adversion type="CHASTE_TRAIT" cost="5"/>
+          <trait_desire type="LUSTFUL_TRAIT" cost="5"/>
+        </willpower>
+        <exec>
+          <set_scope name="Husband">
+            <trigger_event>
+              <id>WIFE_ENTHUSIASTIC_SEX</id>
+              <parameters Wife="ROOT"/>
+            </trigger_event>
+          </set_scope>
+        </exec>
+      </option>
+      <option>
+        <label>Perform your wifely duties</label>
+        <willpower>
+          <trait_adversion type="CHASTE_TRAIT" cost="5"/>
+          <trait_desire type="LUSTFUL_TRAIT" cost="5"/>
+        </willpower>
+        <exec>
+          <set_scope name="Husband">
+            <trigger_event>
+              <id>WIFE_BORING_SEX</id>
+              <parameters Wife="ROOT"/>
+            </trigger_event>
+          </set_scope>
+        </exec>
+      </option>
+      <option>
+        <label>Refuse!</label>
+        <exec>
+          <set_scope name="Husband">
+            <trigger_event>
+              <id>WIFE_REFUSES_SEX</id>
+              <parameters Wife="ROOT"/>
+            </trigger_event>
+          </set_scope>
+        </exec>
+      </option>
+    </options>
+  </event>
+  <event>
+    <id>WIFE_ENTHUSIASTIC_SEX</id>
+    <description>$Wife.Name$ enthusiastically agrees.</description>
+    <parameters>
+      <parameter type="character">Wife</parameter>
+    </parameters>
+    <options>
+      <option>
+        <label>That was great!</label>
+        <exec>
+          <apply_opinion_mod>
+            <id>GREAT_MARRIED_SEX_MOD</id>
+            <character>Wife</character>
+          </apply_opinion_mod>
+          <set_scope name="Wife">
             <if>
               <requirements>
                 <var_lt name="PregnancyEnd">TIME</var_lt>
@@ -90,19 +184,103 @@
     </options>
   </event>
   <event>
-    <id>SPEND_TIME_WITH_WIFE_EVENT_1</id>
-    <description>You go riding with $ROOT.Spouse.Name$.</description>
-    <requirements>
-      <has_spouse/>
-      <is_male/>
-      <is_adult/>
-    </requirements>
+    <id>WIFE_BORING_SEX</id>
+    <description>$Wife.Name$ begruginly agrees.  Her performance reminds you of a starfish.</description>
+    <parameters>
+      <parameter type="character">Wife</parameter>
+    </parameters>
     <options>
       <option>
-        <label>OK</label>
+        <label>Could be better</label>
+        <exec>
+          <set_scope name="Wife">
+            <if>
+              <requirements>
+                <var_lt name="PregnancyEnd">TIME</var_lt>
+              </requirements>
+              <then>
+                <!-- Wife can get pregnant again -->
+                <random>
+                  <outcome chance="0.5">
+                    <set_variable name="IsPregnant">1</set_variable>
+                    <set_variable name="PregnancyEnd">TIME+150</set_variable>
+                  </outcome>
+                </random>
+              </then>
+            </if>
+          </set_scope>
+        </exec>
       </option>
     </options>
   </event>
+  <event>
+    <id>WIFE_REFUSES_SEX</id>
+    <description>$Wife.Name$ refuses!</description>
+    <parameters>
+      <parameter type="character">Wife</parameter>
+    </parameters>
+    <options>
+      <option>
+        <label>Can she do that?</label>
+        <exec>
+          <apply_opinion_mod>
+            <id>REFUSED_MARRIED_SEX_MOD</id>
+            <character>Wife</character>
+          </apply_opinion_mod>
+        </exec>
+      </option>
+    </options>
+  </event>
+  <event>
+    <id>WIFE_INVITED_TO_RIDE</id>
+    <description>$Husband.Name$ invites you to to go riding with him.</description>
+    <parameters>
+      <parameter type="character">Husband</parameter>
+    </parameters>
+    <options>
+      <option>
+        <label>Accept</label>
+        <willpower>
+          <trait_adversion type="SLOTHFUL_TRAIT" cost="5"/>
+        </willpower>
+        <exec>
+          <set_scope name="Husband">
+            <trigger_event>
+              <id>RIDE_WITH_OTHER_EVENT</id>
+              <parameters Other="ROOT"/>
+            </trigger_event>
+          </set_scope>
+          <trigger_event>
+            <id>RIDE_WITH_OTHER_EVENT</id>
+            <parameters Other="Husband"/>
+          </trigger_event>
+        </exec>
+      </option>
+      <options>
+        <label>Refuse</label>
+      </options>
+    </options>
+  </event>
+  
+  <event>
+    <id>RIDE_WITH_OTHER_EVENT</id>
+    <description>You go riding with $Other.Name$.</description>
+    <parameters>
+      <parameter type="character">Other</parameter>
+    </parameters>
+    <options>
+      <option>
+        <label>That was fun</label>
+        <exec>
+          <apply_opinion_mod>
+            <id>HAD_FUN_TOGETHER_MOD</id>
+            <character>Other</character>
+          </apply_opinion_mod>
+        </exec>
+      </option>
+    </options>
+  </event>
+  
   <event>
     <id>DO_NOTHING_EVENT</id>
     <description>You spend some time sitting down.</description>

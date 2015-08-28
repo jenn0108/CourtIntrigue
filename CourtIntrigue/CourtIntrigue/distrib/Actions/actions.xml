@@ -22,19 +22,19 @@
       <id>COUNCILLOR_APPROACH_ACTION_START_EVENT</id>
     </event_ids>
   </pair_action>
+  <pair_action>
+    <id>SPEND_TIME_WITH_WIFE_ACTION</id>
+    <label>Spend time with wife...</label>
+    <parameter>Wife</parameter>
+    <event_ids>
+      <id>SPEND_TIME_WITH_WIFE_START_EVENT</id>
+    </event_ids>
+  </pair_action>
   <delayed_action>
     <id>COLLECT_TAXES_ACTION_ID</id>
     <label>Collect taxes...</label>
     <event_ids>
       <id>COLLECT_TAXES_EVENT_ID_0</id>
-    </event_ids>
-  </delayed_action>
-  <delayed_action>
-    <id>SPEND_TIME_WITH_WIFE_ACTION_ID</id>
-    <label>Spent time with your wife...</label>
-    <event_ids>
-      <id>SPEND_TIME_WITH_WIFE_EVENT_0</id>
-      <id>SPEND_TIME_WITH_WIFE_EVENT_1</id>
     </event_ids>
   </delayed_action>
   <delayed_action>

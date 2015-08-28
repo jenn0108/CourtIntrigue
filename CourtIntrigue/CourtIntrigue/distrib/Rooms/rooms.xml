@@ -57,7 +57,7 @@
     <priority>0</priority>
     <actions>
       <action>COLLECT_TAXES_ACTION_ID</action>
-      <action>SPEND_TIME_WITH_WIFE_ACTION_ID</action>
+      <action>SPEND_TIME_WITH_WIFE_ACTION</action>
       <action>DO_NOTHING_ACTION_ID</action>
     </actions>
   </room>

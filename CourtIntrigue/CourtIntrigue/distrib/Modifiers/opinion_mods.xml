@@ -41,4 +41,25 @@
     <duration>20</duration>
     <opinion_change>-20</opinion_change>
   </opinion_mod>
+  <opinion_mod>
+    <id>REFUSED_MARRIED_SEX_MOD</id>
+    <label>Refused Wifely duties</label>
+    <description>Your wife refused her wifely duties.</description>
+    <duration>20</duration>
+    <opinion_change>-20</opinion_change>
+  </opinion_mod>
+  <opinion_mod>
+    <id>GREAT_MARRIED_SEX_MOD</id>
+    <label>Great Sex</label>
+    <description>You had great sex with your wife.</description>
+    <duration>20</duration>
+    <opinion_change>20</opinion_change>
+  </opinion_mod>
+  <opinion_mod>
+    <id>HAD_FUN_TOGETHER_MOD</id>
+    <label>Fun</label>
+    <description>You had fun together.</description>
+    <duration>20</duration>
+    <opinion_change>10</opinion_change>
+  </opinion_mod>
 </opinion_mods>
