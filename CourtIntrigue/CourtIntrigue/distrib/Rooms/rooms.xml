@@ -41,6 +41,9 @@
     <id>CHURCH_ROOM</id>
     <name>Church</name>
     <common>Yes</common>
+    <!-- Priority needs to be less than the Town 
+    priority since some events move to church from town.-->
+    <priority>50</priority>
     <requirements>
       <false/>
     </requirements>
