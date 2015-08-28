@@ -15,21 +15,23 @@ namespace CourtIntrigue
         public override ActionDescriptor OnTick(Action[] soloActions, Dictionary<Character, Action[]> characterActions)
         {
             CharacterLog("In room with: " + string.Join(", ", characterActions.Select(p => p.Key.Name)));
+            
+            //We can describe an action using its action descriptor.
+            List<ActionDescriptor> allActions = new List<ActionDescriptor>();
 
-            // Flatten the pair actions into a list of KeyValuePairs so we can easily index it.
-            var flattenedPairActions = characterActions.ToList().SelectMany(p => p.Value, (p,action) => new KeyValuePair<Character,Action>(p.Key, action));
-
-            int num = GetBestAction(soloActions, flattenedPairActions.ToList());
-            if (num < soloActions.Length)
+            //Solo actions are easy.  Each descriptor is just an action plus this character.
+            allActions.AddRange(soloActions.Select(action => new ActionDescriptor(action, this, null)));
+            
+            //Pair actions require another character in addition to this character.
+            foreach(var pair in characterActions)
             {
-                return new ActionDescriptor(soloActions[num], this, null);
-            }
-            else
-            {
-                KeyValuePair<Character, Action> pair = flattenedPairActions.ElementAt(num - soloActions.Length);
-                return new ActionDescriptor(pair.Value, this, pair.Key);
+                var targetCharacter = pair.Key;
+                //Each action for this character produces another ActionDescriptor using the action, this character and the target.
+                allActions.AddRange(pair.Value.Select(action => new ActionDescriptor(action, this, targetCharacter)));
             }
 
+            //Go find the best one.
+            return GetBestAction(allActions);
         }
 
         public override int OnBeginDay(Room[] rooms)
@@ -100,63 +102,38 @@ namespace CourtIntrigue
             return bestCharacters[Game.GetRandom(bestCharacters.Count())];
         }
 
-        private int GetBestAction(Action[] soloActions, List<KeyValuePair<Character, Action>> pairActions)
+        private ActionDescriptor GetBestAction(IEnumerable<ActionDescriptor> actionDescriptors)
         {
             // For each action, evaluate the possible events and average their outcomes.
             double bestValue = double.NegativeInfinity;
-            List<int> bestActions = new List<int>();
-            EventContext soloContext = new EventContext(this);
-            // First go through all the solo actions.
-            for (int iAction = 0; iAction < soloActions.Length; ++iAction)
+            List<ActionDescriptor> bestActions = new List<ActionDescriptor>();
+
+            //Consider each possibility in turn.
+            foreach(var actionDescriptor in actionDescriptors)
             {
+                EventContext context = new EventContext(actionDescriptor);
+
                 double actionValue = 0.0;
                 // Average the value of each event that can be triggered by the action.
-                foreach (string eventId in soloActions[iAction].Events) {
+                foreach (string eventId in actionDescriptor.Action.Events)
+                {
                     Event ev = Game.GetEventById(eventId);
-                    if (ev.ActionRequirements.Evaluate(soloContext, Game))
+                    if (ev.ActionRequirements.Evaluate(context, Game))
                     {
-                        actionValue += Game.GetEventById(eventId).Evaluate(Game, soloContext, GetWeights()) / soloActions[iAction].Events.Count();
+                        actionValue += ev.Evaluate(Game, context, GetWeights()) / actionDescriptor.Action.Events.Count();
                     }
                 }
+
+                //Are we the best?
                 if (actionValue > bestValue)
                 {
                     bestActions.Clear();
-                    bestActions.Add(iAction);
+                    bestActions.Add(actionDescriptor);
                     bestValue = actionValue;
                 }
                 else if (actionValue == bestValue)
                 {
-                    bestActions.Add(iAction);
-                }
-            }
-
-            for (int iAction = 0; iAction < pairActions.Count(); ++iAction)
-            {
-                Character character = pairActions[iAction].Key;
-                Action action = pairActions[iAction].Value;
-                // Ew this line is horrible, maybe we should make an exception and create an event context
-                // with a target directly here...
-                EventContext pairContext = new EventContext(new ActionDescriptor(action, this, character));
-
-                double actionValue = 0.0;
-                // Average the value of each event that can be triggered by the action.
-                // First figure out which events we can actually do and only average those.
-                foreach (string eventId in action.Events)
-                {
-                    Event ev = Game.GetEventById(eventId);
-                    if (ev.ActionRequirements.Evaluate(pairContext, Game)) {
-                        actionValue += Game.GetEventById(eventId).Evaluate(Game, pairContext, GetWeights()) / action.Events.Count();
-                    }
-                }
-                if (actionValue > bestValue)
-                {
-                    bestActions.Clear();
-                    bestActions.Add(iAction + soloActions.Length);
-                    bestValue = actionValue;
-                }
-                else if (actionValue == bestValue)
-                {
-                    bestActions.Add(iAction + soloActions.Length);
+                    bestActions.Add(actionDescriptor);
                 }
             }
 
