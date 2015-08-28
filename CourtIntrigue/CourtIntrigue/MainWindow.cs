@@ -110,6 +110,9 @@ namespace CourtIntrigue
 
             goldLabel.Text = player.Money.ToString();
             goldLabel.ToolTipText = string.Format("You have {0} gold", player.Money);
+
+            willPowerProgress.Value = player.WillPower;
+            willPowerProgress.ToolTipText = string.Format("You have {0} Will Power", player.WillPower);
         }
 
         class TextBoxLogger : Logger

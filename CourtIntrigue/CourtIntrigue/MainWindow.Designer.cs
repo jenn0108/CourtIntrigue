@@ -42,6 +42,8 @@
             this.prestigeLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.goldLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.willPowerProgress = new System.Windows.Forms.ToolStripProgressBar();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)(this.permanentSplit)).BeginInit();
             this.permanentSplit.Panel1.SuspendLayout();
             this.permanentSplit.Panel2.SuspendLayout();
@@ -165,7 +167,9 @@
             this.playerStatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.playerNameLabel,
             this.prestigeLabel,
-            this.goldLabel});
+            this.goldLabel,
+            this.toolStripStatusLabel1,
+            this.willPowerProgress});
             this.playerStatusStrip.Location = new System.Drawing.Point(0, 0);
             this.playerStatusStrip.Name = "playerStatusStrip";
             this.playerStatusStrip.ShowItemToolTips = true;
@@ -212,6 +216,21 @@
             this.splitContainer2.SplitterDistance = 550;
             this.splitContainer2.TabIndex = 0;
             // 
+            // willPowerProgress
+            // 
+            this.willPowerProgress.Maximum = 50;
+            this.willPowerProgress.Name = "willPowerProgress";
+            this.willPowerProgress.Size = new System.Drawing.Size(100, 16);
+            this.willPowerProgress.Step = 1;
+            this.willPowerProgress.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.willPowerProgress.Value = 50;
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(66, 17);
+            this.toolStripStatusLabel1.Text = "Will Power:";
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -252,6 +271,8 @@
         private System.Windows.Forms.ToolStripStatusLabel prestigeLabel;
         private System.Windows.Forms.ToolStripStatusLabel goldLabel;
         private System.Windows.Forms.ToolStripStatusLabel playerNameLabel;
+        private System.Windows.Forms.ToolStripProgressBar willPowerProgress;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
     }
 }
 
