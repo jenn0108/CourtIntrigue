@@ -116,6 +116,7 @@
         <label>OK</label>
         <exec>
           <move_to>CHURCH_ROOM</move_to>
+          <continue_turn/>
         </exec>
       </option>
     </options>
