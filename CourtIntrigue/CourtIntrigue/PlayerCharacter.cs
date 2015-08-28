@@ -47,7 +47,16 @@ namespace CourtIntrigue
 
         public override int OnChooseOption(EventOption[] options, int[] willpowerCost, EventContext context, Event e)
         {
-            string[] texts = options.Select(op => EventHelper.ReplaceStrings(op.Label, context)).ToArray();
+            string[] texts = new string[options.Length];
+            for(int i = 0; i < options.Length; ++i)
+            {
+                if (willpowerCost[i] > 0)
+                {
+                    texts[i] = EventHelper.ReplaceStrings(options[i].Label, context) + " (Cost: " + willpowerCost[i] + " WP)";
+                }
+                else
+                    texts[i] = EventHelper.ReplaceStrings(options[i].Label, context);
+            }
             bool[] enabled = willpowerCost.Select(cost => cost <= WillPower).ToArray();
             TextTopBottomButton view = new TextTopBottomButton(context.GetCharacters(), this, e.CreateActionDescription(context), texts, enabled, notificator);
             main.LaunchView(view);
