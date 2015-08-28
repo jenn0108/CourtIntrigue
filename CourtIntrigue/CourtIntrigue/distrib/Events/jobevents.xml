@@ -9,6 +9,15 @@
     </options>
   </event>
   <event>
+    <id>QUEEN_ON_HIRE_EVENT</id>
+    <description>You've married well!</description>
+    <options>
+      <option>
+        <label>OK</label>
+      </option>
+    </options>
+  </event>
+  <event>
     <id>CHANCELLOR_ON_HIRE_EVENT</id>
     <description>You've just been hired as the chancellor.</description>
     <options>

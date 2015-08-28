@@ -31,6 +31,15 @@
     <daily_change>20</daily_change>
   </prestige_mod>
   <prestige_mod>
+    <id>QUEEN_PRESTIGE_MOD</id>
+    <label>Queen</label>
+    <description>You're the queen.</description>
+    <requirements>
+      <has_job>QUEEN_JOB</has_job>
+    </requirements>
+    <daily_change>5</daily_change>
+  </prestige_mod>
+  <prestige_mod>
     <id>CHANCELLOR_PRESTIGE_MOD</id>
     <label>Chancellor</label>
     <description>The chancellor is a prestigeous position.</description>

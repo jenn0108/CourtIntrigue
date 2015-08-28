@@ -13,6 +13,22 @@
     <on_hire>KING_ON_HIRE_EVENT</on_hire>
   </job>
   <job>
+    <id>QUEEN_JOB</id>
+    <label>Queen</label>
+    <description>The ruler of all the things!!</description>
+    <image>Graphics/Jobs/KingJob.png</image>
+    <unique/>
+    <permanent/>
+    <requirements>
+      <is_female/>
+      <is_adult/>
+      <set_scope name="SPOUSE">
+        <has_job>KING_JOB</has_job>
+      </set_scope>
+    </requirements>
+    <on_hire>QUEEN_ON_HIRE_EVENT</on_hire>
+  </job>
+  <job>
     <id>CHANCELLOR_JOB</id>
     <label>Chancellor</label>
     <description>He does stuff</description>
