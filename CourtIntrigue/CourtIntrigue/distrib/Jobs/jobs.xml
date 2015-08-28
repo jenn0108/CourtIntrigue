@@ -6,6 +6,10 @@
     <image>Graphics/Jobs/KingJob.png</image>
     <unique/>
     <permanent/>
+    <requirements>
+      <is_male/>
+      <is_adult/>
+    </requirements>
     <on_hire>KING_ON_HIRE_EVENT</on_hire>
   </job>
   <job>
