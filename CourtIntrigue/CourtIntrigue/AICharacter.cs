@@ -16,16 +16,18 @@ namespace CourtIntrigue
         {
             CharacterLog("In room with: " + string.Join(", ", characterActions.Select(p => p.Key.Name)));
 
-            int num = Game.GetRandom(soloActions.Length + characterActions.Count);
+            // Flatten the pair actions into a list of KeyValuePairs so we can easily index it.
+            var flattenedPairActions = characterActions.ToList().SelectMany(p => p.Value, (p,action) => new KeyValuePair<Character,Action>(p.Key, action));
+
+            int num = GetBestAction(soloActions, flattenedPairActions.ToList());
             if (num < soloActions.Length)
             {
                 return new ActionDescriptor(soloActions[num], this, null);
             }
             else
             {
-                Character otherCharacter = characterActions.Keys.ElementAt(num - soloActions.Length);
-                Action[] pairActions = characterActions[otherCharacter];
-                return new ActionDescriptor(pairActions[Game.GetRandom(pairActions.Length)], this, otherCharacter);
+                KeyValuePair<Character, Action> pair = flattenedPairActions.ElementAt(num - soloActions.Length);
+                return new ActionDescriptor(pair.Value, this, pair.Key);
             }
 
         }
@@ -49,23 +51,7 @@ namespace CourtIntrigue
             if (options.Length == 1)
                 return 0;
 
-            double bestValue = double.NegativeInfinity;
-            List<int> bestOptions = new List<int>();
-            for (int iOption = 0; iOption < options.Length; ++iOption)
-            {
-                double optionValue = options[iOption].DirectExecute.Evaluate(Game, context, GetWeights());
-                if (optionValue > bestValue)
-                {
-                    bestOptions.Clear();
-                    bestOptions.Add(iOption);
-                    bestValue = optionValue;
-                }
-                else if (optionValue == bestValue)
-                {
-                    bestOptions.Add(iOption);
-                }
-            }
-            int chosenIndex = bestOptions[Game.GetRandom(bestOptions.Count())];
+            int chosenIndex = GetBestOption(options, context);
 
             while(willpowerCost[chosenIndex] > WillPower)
             {
@@ -89,6 +75,91 @@ namespace CourtIntrigue
         public override void OnLearnInformation(InformationInstance info)
         {
             //Don't care
+        }
+
+        private int GetBestAction(Action[] soloActions, List<KeyValuePair<Character, Action>> pairActions)
+        {
+            // For each action, evaluate the possible events and average their outcomes.
+            double bestValue = double.NegativeInfinity;
+            List<int> bestActions = new List<int>();
+            EventContext soloContext = new EventContext(this);
+            // First go through all the solo actions.
+            for (int iAction = 0; iAction < soloActions.Length; ++iAction)
+            {
+                double actionValue = 0.0;
+                // Average the value of each event that can be triggered by the action.
+                foreach (string eventId in soloActions[iAction].Events) {
+                    Event ev = Game.GetEventById(eventId);
+                    if (ev.ActionRequirements.Evaluate(soloContext, Game))
+                    {
+                        actionValue += Game.GetEventById(eventId).Evaluate(Game, soloContext, GetWeights()) / soloActions[iAction].Events.Count();
+                    }
+                }
+                if (actionValue > bestValue)
+                {
+                    bestActions.Clear();
+                    bestActions.Add(iAction);
+                    bestValue = actionValue;
+                }
+                else if (actionValue == bestValue)
+                {
+                    bestActions.Add(iAction);
+                }
+            }
+
+            for (int iAction = 0; iAction < pairActions.Count(); ++iAction)
+            {
+                Character character = pairActions[iAction].Key;
+                Action action = pairActions[iAction].Value;
+                // Ew this line is horrible, maybe we should make an exception and create an event context
+                // with a target directly here...
+                EventContext pairContext = new EventContext(new ActionDescriptor(action, this, character));
+
+                double actionValue = 0.0;
+                // Average the value of each event that can be triggered by the action.
+                // First figure out which events we can actually do and only average those.
+                foreach (string eventId in action.Events)
+                {
+                    Event ev = Game.GetEventById(eventId);
+                    if (ev.ActionRequirements.Evaluate(pairContext, Game)) {
+                        actionValue += Game.GetEventById(eventId).Evaluate(Game, pairContext, GetWeights()) / action.Events.Count();
+                    }
+                }
+                if (actionValue > bestValue)
+                {
+                    bestActions.Clear();
+                    bestActions.Add(iAction + soloActions.Length);
+                    bestValue = actionValue;
+                }
+                else if (actionValue == bestValue)
+                {
+                    bestActions.Add(iAction + soloActions.Length);
+                }
+            }
+
+            return bestActions[Game.GetRandom(bestActions.Count())];
+        }
+
+        private int GetBestOption(EventOption[] options, EventContext context)
+        {
+            double bestValue = double.NegativeInfinity;
+            List<int> bestOptions = new List<int>();
+            for (int iOption = 0; iOption < options.Length; ++iOption)
+            {
+                // Don't need to look at requirements because we're only give the options we can choose.
+                double optionValue = options[iOption].DirectExecute.Evaluate(Game, context, GetWeights());
+                if (optionValue > bestValue)
+                {
+                    bestOptions.Clear();
+                    bestOptions.Add(iOption);
+                    bestValue = optionValue;
+                }
+                else if (optionValue == bestValue)
+                {
+                    bestOptions.Add(iOption);
+                }
+            }
+            return bestOptions[Game.GetRandom(bestOptions.Count())];
         }
 
     }

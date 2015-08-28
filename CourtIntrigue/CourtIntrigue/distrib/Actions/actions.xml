@@ -12,6 +12,13 @@
     <parameter>SpeakTo</parameter>
     <event_ids>
       <id>APPROACH_ACTION_EVENT_0</id>
+    </event_ids>
+  </pair_action>
+  <pair_action>
+    <id>COUNCILLOR_APPROACH_ACTION</id>
+    <label>Speak with on king's business...</label>
+    <parameter>SpeakTo</parameter>
+    <event_ids>
       <id>COUNCILLOR_APPROACH_ACTION_START_EVENT</id>
     </event_ids>
   </pair_action>

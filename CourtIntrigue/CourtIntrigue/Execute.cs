@@ -83,10 +83,10 @@ namespace CourtIntrigue
 
         public double MeasureObserveChance(Character currentCharacter, double multiplier)
         {
-            if (perspective == currentCharacter)
-                return multiplier * 10.0; // It's better when the observe chance is getting higher
-            else
-                return 0.0;
+            // Not caring about these right now because figuring out good weights is difficult
+            // and having bad weights really messes with the AI (ie. Steward thinking Eavesdrop is
+            // always better than getting taxes).
+            return 0.0;
         }
     }
 

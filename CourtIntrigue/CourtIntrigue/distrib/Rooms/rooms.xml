@@ -32,6 +32,7 @@
     </solo_actions>
     <pair_actions>
       <action>APPROACH_ACTION</action>
+      <action>COUNCILLOR_APPROACH_ACTION</action>
     </pair_actions>
   </room>
   <room>
