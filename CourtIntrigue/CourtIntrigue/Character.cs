@@ -282,11 +282,10 @@ namespace CourtIntrigue
             return information[index];
         }
 
-        public Character ChooseCharacter(ILogic requirements, EventContext context)
+        public Character ChooseCharacter(Character[] characters, IExecute operation, EventContext context, string chosenName)
         {
-            Character[] filteredCharacters = Game.FilterCharacters(requirements, context);
-            int index = OnChooseCharacter(filteredCharacters);
-            return filteredCharacters[index];
+            int index = OnChooseCharacter(characters, operation, context, chosenName);
+            return characters[index];
         }
 
         public virtual ActionDescriptor OnTick(Action[] soloActions, Dictionary<Character, Action[]> characterActions)
@@ -309,7 +308,7 @@ namespace CourtIntrigue
             throw new NotImplementedException();
         }
 
-        public virtual int OnChooseCharacter(Character[] characters)
+        public virtual int OnChooseCharacter(Character[] characters, IExecute operation, EventContext context, string chosenName)
         {
             throw new NotImplementedException();
         }

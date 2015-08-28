@@ -67,14 +67,37 @@ namespace CourtIntrigue
             return Game.GetRandom(informations.Length);
         }
 
-        public override int OnChooseCharacter(Character[] characters)
+        public override int OnChooseCharacter(Character[] characters, IExecute operation, EventContext context, string chosenName)
         {
-            return Game.GetRandom(characters.Length);
+            return GetBestCharacter(characters, operation, context, chosenName);
         }
 
         public override void OnLearnInformation(InformationInstance info)
         {
             //Don't care
+        }
+
+        private int GetBestCharacter(Character[] characters, IExecute operation, EventContext context, string chosenName)
+        {
+            double bestValue = double.NegativeInfinity;
+            List<int> bestCharacters = new List<int>();
+            for (int iCharacter = 0; iCharacter < characters.Length; ++iCharacter)
+            {
+                context.PushScope(characters[iCharacter], chosenName);
+                double characterValue = operation.Evaluate(Game, context, GetWeights());
+                context.PopScope();
+                if (characterValue > bestValue)
+                {
+                    bestCharacters.Clear();
+                    bestCharacters.Add(iCharacter);
+                    bestValue = characterValue;
+                }
+                else if (characterValue == bestValue)
+                {
+                    bestCharacters.Add(iCharacter);
+                }
+            }
+            return bestCharacters[Game.GetRandom(bestCharacters.Count())];
         }
 
         private int GetBestAction(Action[] soloActions, List<KeyValuePair<Character, Action>> pairActions)

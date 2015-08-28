@@ -62,7 +62,7 @@ namespace CourtIntrigue
             return view.SelectedIndex;
         }
 
-        public override int OnChooseCharacter(Character[] characters)
+        public override int OnChooseCharacter(Character[] characters, IExecute operation, EventContext context, string chosenName)
         {
             SelectCharacterView view = new SelectCharacterView(this, characters, null, "Choose a character", notificator);
             main.LaunchView(view);

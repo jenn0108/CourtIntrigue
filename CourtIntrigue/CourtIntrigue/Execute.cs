@@ -88,6 +88,14 @@ namespace CourtIntrigue
             // always better than getting taxes).
             return 0.0;
         }
+
+        // Returns true if the perspective is the current character.
+        // This allows us to average other people's decisions and be smart
+        // about what our own will be.
+        public bool IsMyDecision(Character currentCharacter)
+        {
+            return perspective == currentCharacter;
+        }
     }
 
     interface IExecute
@@ -296,15 +304,38 @@ namespace CourtIntrigue
 
         public void Execute(EventResults result, Game game, EventContext context)
         {
-            Character chosen = context.CurrentCharacter.ChooseCharacter(requirements, context);
+            Character chosen = context.CurrentCharacter.ChooseCharacter(game.FilterCharacters(requirements, context), operation, context, scopeName);
             context.PushScope(chosen, scopeName);
             operation.Execute(result, game, context);
             context.PopScope();
         }
         public double Evaluate(Game game, EventContext context, Weights weights)
         {
-            // TODO: We need some way to be intelligent in ChooseCharacter for AI character before implementing this.
-            return 0.0;
+            if (weights.IsMyDecision(context.CurrentCharacter))
+            {
+                // This will always be called with CurrentCharacter as an AI so we don't need to worry about showing
+                // character pickers randomly but throw an exception just incase
+                if (context.CurrentCharacter is PlayerCharacter)
+                    throw new EventIncorrectException("Player character is making a decision using weights!!");
+
+                Character chosen = context.CurrentCharacter.ChooseCharacter(game.FilterCharacters(requirements, context), operation, context, scopeName);
+                context.PushScope(chosen, scopeName);
+                double result = operation.Evaluate(game, context, weights);
+                context.PopScope();
+                return result;
+            }
+            else
+            {
+                double result = 0.0;
+                Character[] filteredCharacters = game.FilterCharacters(requirements, context);
+                foreach (Character character in filteredCharacters)
+                {
+                    context.PushScope(character, scopeName);
+                    result += operation.Evaluate(game, context, weights) / filteredCharacters.Length;
+                    context.PopScope();
+                }
+                return result;
+            }
         }
     }
 
