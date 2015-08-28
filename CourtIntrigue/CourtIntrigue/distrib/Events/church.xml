@@ -103,22 +103,4 @@
       </option>
     </options>
   </event>
-  <event>
-    <id>ENTER_CHURCH_ACTION</id>
-    <description>You enter the church.</description>
-    <requirements>
-      <not>
-        <is_earlymorning/>
-      </not>
-    </requirements>
-    <options>
-      <option>
-        <label>OK</label>
-        <exec>
-          <move_to>CHURCH_ROOM</move_to>
-          <continue_turn/>
-        </exec>
-      </option>
-    </options>
-  </event>
 </events>

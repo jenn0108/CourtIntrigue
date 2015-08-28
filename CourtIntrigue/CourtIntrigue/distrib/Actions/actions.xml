@@ -62,7 +62,7 @@
     <id>ENTER_CHURCH_ACTION</id>
     <label>Enter Church</label>
     <event_ids>
-      <id>ENTER_CHURCH_ACTION</id>
+      <id>ENTER_CHURCH_EVENT</id>
     </event_ids>
   </immediate_action>
   <delayed_action>
