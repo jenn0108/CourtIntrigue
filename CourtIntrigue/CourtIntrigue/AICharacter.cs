@@ -49,8 +49,10 @@ namespace CourtIntrigue
         {
             if(interestingCharacters.Count == 0)
             {
+                //You are your own family.
+                interestingCharacters.Add(this, Relationship.Family);
                 //Add family
-                if(Spouse != null)
+                if (Spouse != null)
                     interestingCharacters.Add(Spouse, Relationship.Family);
                 if (Father != null)
                     interestingCharacters.Add(Father, Relationship.Family);
@@ -130,7 +132,12 @@ namespace CourtIntrigue
 
         public override int OnChooseCharacter(Character[] characters, IExecute operation, EventContext context, string chosenName)
         {
-            return GetBestCharacter(characters, operation, context, chosenName);
+            bool[] allowed = new bool[characters.Length];
+            for(int i = 0; i < characters.Length; ++i)
+            {
+                allowed[i] = interestingCharacters.ContainsKey(characters[i]);
+            }
+            return GetBestCharacter(characters, allowed, operation, context, chosenName);
         }
 
         public override void OnLearnInformation(InformationInstance info)
@@ -138,12 +145,15 @@ namespace CourtIntrigue
             //Don't care
         }
 
-        private int GetBestCharacter(Character[] characters, IExecute operation, EventContext context, string chosenName)
+        private int GetBestCharacter(Character[] characters, bool[] allowed, IExecute operation, EventContext context, string chosenName)
         {
             double bestValue = double.NegativeInfinity;
             List<int> bestCharacters = new List<int>();
             for (int iCharacter = 0; iCharacter < characters.Length; ++iCharacter)
             {
+                if (!allowed[iCharacter])
+                    continue;
+
                 context.PushScope(characters[iCharacter], chosenName);
                 double characterValue = operation.Evaluate(Game, context, GetWeights());
                 context.PopScope();
@@ -158,6 +168,10 @@ namespace CourtIntrigue
                     bestCharacters.Add(iCharacter);
                 }
             }
+
+            if (bestCharacters.Count == 0)
+                return Game.GetRandom(characters.Length);
+
             return bestCharacters[Game.GetRandom(bestCharacters.Count())];
         }
 
