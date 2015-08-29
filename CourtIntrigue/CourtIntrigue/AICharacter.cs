@@ -6,8 +6,19 @@ using System.Threading.Tasks;
 
 namespace CourtIntrigue
 {
+    enum Relationship
+    {
+        Family,
+        Rival,
+        Powerful,
+        Friend
+    }
+
     class AICharacter : Character
     {
+        private List<StrategyInstance> strategies = new List<StrategyInstance>();
+        private Dictionary<Character, Relationship> interestingCharacters = new Dictionary<Character, Relationship>();
+
         public AICharacter(string name, int birthdate, Dynasty dynasty, int money, Game game, Gender gender) : base(name, birthdate, dynasty, money, game, gender)
         {
         }
@@ -36,6 +47,54 @@ namespace CourtIntrigue
 
         public override int OnBeginDay(Room[] rooms)
         {
+            if(interestingCharacters.Count == 0)
+            {
+                //Add family
+                if(Spouse != null)
+                    interestingCharacters.Add(Spouse, Relationship.Family);
+                if (Father != null)
+                    interestingCharacters.Add(Father, Relationship.Family);
+                if (Mother != null)
+                    interestingCharacters.Add(Mother, Relationship.Family);
+                foreach (var child in Children)
+                {
+                    interestingCharacters.Add(child, Relationship.Family);
+                }
+                bool foundRival = false;
+                bool foundFriend = false;
+                foreach(var character in Game.AllCharacters)
+                {
+                    //Don't add yourself
+                    if (character == this)
+                        continue;
+
+                    //Adults should only rival/friend adults, likewise with children.
+                    if (character.Age < 20 && Age >= 20)
+                        continue;
+                    if (character.Age >= 20 && Age < 20)
+                        continue;
+
+                    if (character.HasJob("KING_JOB") && !interestingCharacters.ContainsKey(character))
+                        interestingCharacters.Add(character, Relationship.Powerful);
+
+                    //Woman and men are separate.
+                    if (character.Gender != Gender)
+                        continue;
+
+                    if (GetOpinionOf(character) > 0 && !foundFriend && !interestingCharacters.ContainsKey(character))
+                    {
+                        interestingCharacters.Add(character, Relationship.Friend);
+                        foundFriend = true;
+                    }
+                    else if (GetOpinionOf(character) < 0 && !foundRival && !interestingCharacters.ContainsKey(character))
+                    {
+                        interestingCharacters.Add(character, Relationship.Rival);
+                        foundRival = true;
+                    }
+                }
+
+                CharacterLog("Interesting Characters:" + string.Join(", ", interestingCharacters.Keys));
+            }
             return Game.GetRandom(rooms.Length);
         }
 
