@@ -387,7 +387,11 @@ namespace CourtIntrigue
                 //the event logic along the way to touch the same instance instead of having to worry
                 //about merging a number of different instances.
                 EventResults results = new EventResults();
-                eventToPlay.Execute(results, this, new EventContext(actionDescriptor));
+                EventContext context = new EventContext(actionDescriptor);
+                eventToPlay.Execute(results, this, context);
+
+                //We need to commit any changes that occurred.
+                context.Commit();
 
                 //Did the target get their turn consumed?
                 if (!results.TargetGetsTurn && actionDescriptor.Target != null)
