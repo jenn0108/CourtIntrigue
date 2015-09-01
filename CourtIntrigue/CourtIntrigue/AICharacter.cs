@@ -99,6 +99,11 @@ namespace CourtIntrigue
             return Game.GetRandom(rooms.Length);
         }
 
+        public IEnumerable<KeyValuePair<Character, Relationship>> GetImportantCharacters()
+        {
+            return interestingCharacters;
+        }
+
         public override int OnChooseOption(EventOption[] options, int[] willpowerCost, EventContext context, Event e)
         {
             int allowedCount = willpowerCost.Count(cost => cost <= WillPower);

@@ -28,6 +28,11 @@ namespace CourtIntrigue
             return requirements.Evaluate(new EventContext(character), game);
         }
 
+        public bool EvaluateRequirements(EventContext context, Game game)
+        {
+            return requirements.Evaluate(context, game);
+        }
+
         public override string ToString()
         {
             return Identifier;

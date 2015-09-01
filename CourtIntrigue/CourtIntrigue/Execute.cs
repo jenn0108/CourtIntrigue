@@ -89,6 +89,53 @@ namespace CourtIntrigue
             return 0.0;
         }
 
+        public double MeasureChangedVariable(EventContext context, Game game)
+        {
+            //Do the changed variables belong to us?
+            if(perspective is AICharacter)
+            {
+                double result = 0.0;
+                AICharacter me = perspective as AICharacter;
+                foreach(var pair in me.GetImportantCharacters())
+                {
+                    double change = EvaluateChangedModifiers(pair.Key, context, game);
+                    if (pair.Value == Relationship.Family)
+                        result += change;
+                    else if (pair.Value == Relationship.Friend)
+                        result += change * 0.5;
+                    else if (pair.Value == Relationship.Rival)
+                        result -= change;
+                }
+                return result;
+            }
+
+            return 0.0;
+        }
+
+        private double EvaluateChangedModifiers(Character character, EventContext context, Game game)
+        {
+            context.PushScope(character);
+            List<PrestigeModifier> addedModifiers = new List<PrestigeModifier>();
+            List<PrestigeModifier> removedModifiers = new List<PrestigeModifier>();
+            game.GetChangedModifiers(context, addedModifiers, removedModifiers);
+
+            double result = 0.0;
+            if (addedModifiers.Count > 0 && removedModifiers.Count > 0)
+            {
+                foreach (var added in addedModifiers)
+                {
+                    result += added.DailyChange;
+                }
+                foreach (var removed in removedModifiers)
+                {
+                    result -= removed.DailyChange;
+                }
+
+            }
+            context.PopScope();
+            return result * 100.0 * 10.0;
+        }
+
         // Returns true if the perspective is the current character.
         // This allows us to average other people's decisions and be smart
         // about what our own will be.
@@ -614,7 +661,11 @@ namespace CourtIntrigue
 
         public double Evaluate(Game game, EventContext context, Weights weights)
         {
-            return 0.0;
+            if (XmlHelper.IsSpecialName(varName))
+                throw new InvalidOperationException("Cannot assign to special properties: " + varName);
+
+            context.SetVariable(context.CurrentCharacter, varName, newValue.Calculate(context, game));
+            return weights.MeasureChangedVariable(context, game);
         }
     }
 
@@ -638,7 +689,11 @@ namespace CourtIntrigue
 
         public double Evaluate(Game game, EventContext context, Weights weights)
         {
-            return 0.0;
+            if (XmlHelper.IsSpecialName(varName))
+                throw new InvalidOperationException("Cannot assign to special properties: " + varName);
+
+            context.OffsetVariable(context.CurrentCharacter, varName, offset.Calculate(context, game));
+            return weights.MeasureChangedVariable(context, game);
         }
     }
 

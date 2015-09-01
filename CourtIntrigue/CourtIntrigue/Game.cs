@@ -431,6 +431,11 @@ namespace CourtIntrigue
             return true;
         }
 
+        public void GetChangedModifiers(EventContext context, List<PrestigeModifier> added, List<PrestigeModifier> removed)
+        {
+            modifierManager.GetChangedModifiers(context, this, added, removed);
+        }
+
         /// <summary>
         /// Returns a random number between 0 and max-1.
         /// </summary>

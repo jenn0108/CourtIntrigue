@@ -400,6 +400,11 @@ namespace CourtIntrigue
             prestigeModifiers.Remove(modifier);
         }
 
+        public bool HasModifier(PrestigeModifier modifier)
+        {
+            return prestigeModifiers.Contains(modifier);
+        }
+
         public void AddOpinionModifier(OpinionModifierInstance mod)
         {
             ISet<OpinionModifierInstance> list;

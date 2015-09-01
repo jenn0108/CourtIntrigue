@@ -262,6 +262,24 @@ namespace CourtIntrigue
             }
         }
 
+        public void GetChangedModifiers(EventContext context, Game game, List<PrestigeModifier> added, List<PrestigeModifier> removed)
+        {
+
+            foreach (var modifier in prestigeModifiers)
+            {
+                if (modifier.EvaluateRequirements(context, game))
+                {
+                    if (!context.CurrentCharacter.HasModifier(modifier))
+                        added.Add(modifier);
+                }
+                else
+                {
+                    if(context.CurrentCharacter.HasModifier(modifier))
+                        removed.Add(modifier);
+                }
+            }
+        }
+
         public void AssignInitialTraits(Game game, Character character, int maxInitialTraits)
         {
             ISet<string> banned = new HashSet<string>();
