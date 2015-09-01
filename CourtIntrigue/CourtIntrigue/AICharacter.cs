@@ -16,7 +16,6 @@ namespace CourtIntrigue
 
     class AICharacter : Character
     {
-        private List<StrategyInstance> strategies = new List<StrategyInstance>();
         private Dictionary<Character, Relationship> interestingCharacters = new Dictionary<Character, Relationship>();
 
         public AICharacter(string name, int birthdate, Dynasty dynasty, int money, Game game, Gender gender) : base(name, birthdate, dynasty, money, game, gender)
