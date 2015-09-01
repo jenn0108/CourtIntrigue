@@ -808,7 +808,7 @@ namespace CourtIntrigue
             if (double.TryParse(value, out dValue))
                 return dValue;
 
-            return context.CurrentCharacter.GetVariable(value);
+            return context.GetVariable(context.CurrentCharacter, value);
         }
 
         public static bool IsSpecialName(string value)

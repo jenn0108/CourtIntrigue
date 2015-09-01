@@ -49,6 +49,7 @@ namespace CourtIntrigue
             //default scope in the on_observe we are about to run.
             EventContext observeContext = new EventContext(currentCharacter, parameters);
             information.OnObserve.Execute(new EventResults(), game, observeContext);
+            observeContext.Commit();
         }
 
         public void ExecuteOnTold(Character currentCharacter, Game game, Room room)
@@ -58,6 +59,7 @@ namespace CourtIntrigue
             // We might need tellingCharacter here but removing it for now since it's never used.
             EventContext observeContext = new EventContext(currentCharacter, parameters);
             information.OnTold.Execute(new EventResults(), game, observeContext);
+            observeContext.Commit();
         }
 
         public double EvaluateOnTold(Character currentCharacter, Game game)

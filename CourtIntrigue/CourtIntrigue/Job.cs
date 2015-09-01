@@ -188,7 +188,10 @@ namespace CourtIntrigue
                     Event fireEvent = game.GetEventById(job.OnFire);
                     if (fireEvent != null)
                     {
-                        fireEvent.Execute(new EventResults(), game, new EventContext(oldHolder));
+                        EventContext context = new EventContext(oldHolder);
+                        fireEvent.Execute(new EventResults(), game, context);
+                        //We need to commit any changes.
+                        context.Commit();
                     }
                 }
 
@@ -199,7 +202,10 @@ namespace CourtIntrigue
                     Event hireEvent = game.GetEventById(job.OnHire);
                     if (hireEvent != null)
                     {
-                        hireEvent.Execute(new EventResults(), game, new EventContext(newHolder));
+                        EventContext context = new EventContext(newHolder);
+                        hireEvent.Execute(new EventResults(), game, context);
+                        //We need to commit any changes.
+                        context.Commit();
                     }
                 }
 
@@ -214,7 +220,10 @@ namespace CourtIntrigue
                     Event hireEvent = game.GetEventById(job.OnHire);
                     if (hireEvent != null)
                     {
-                        hireEvent.Execute(new EventResults(), game, new EventContext(newHolder));
+                        EventContext context = new EventContext(newHolder);
+                        hireEvent.Execute(new EventResults(), game, context);
+                        //We need to commit any changes.
+                        context.Commit();
                     }
                 }
             }
