@@ -47,7 +47,10 @@ namespace CourtIntrigue
 
                 if (e.EvaluateActionRequirements(actionDescriptor, game))
                 {
-                    e.Execute(new EventResults(), game, new EventContext(actionDescriptor));
+                    EventContext context = new EventContext(actionDescriptor);
+                    e.Execute(new EventResults(), game, context);
+                    //Commit the day changes.
+                    context.Commit();
                 }
             }
         }

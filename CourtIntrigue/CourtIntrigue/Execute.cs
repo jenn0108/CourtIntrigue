@@ -204,6 +204,9 @@ namespace CourtIntrigue
             }
             EventContext newContext = new EventContext(context.CurrentCharacter, computedParameters);
             game.GetEventById(eventid).Execute(result, game, newContext);
+
+            //We need to commit any changes that were performed on the new context to our old one.
+            newContext.CommitTo(context);
         }
 
         public double Evaluate(Game game, EventContext context, Weights weights)
@@ -606,7 +609,7 @@ namespace CourtIntrigue
             if (XmlHelper.IsSpecialName(varName))
                 throw new InvalidOperationException("Cannot assign to special properties: " + varName);
 
-            context.CurrentCharacter.SetVariable(varName, newValue.Calculate(context, game));
+            context.SetVariable(context.CurrentCharacter, varName, newValue.Calculate(context, game));
         }
 
         public double Evaluate(Game game, EventContext context, Weights weights)
@@ -630,7 +633,7 @@ namespace CourtIntrigue
             if (XmlHelper.IsSpecialName(varName))
                 throw new InvalidOperationException("Cannot assign to special properties: " + varName);
 
-            context.CurrentCharacter.SetVariable(varName, context.CurrentCharacter.GetVariable(varName) + offset.Calculate(context, game));
+            context.OffsetVariable(context.CurrentCharacter, varName, offset.Calculate(context, game));
         }
 
         public double Evaluate(Game game, EventContext context, Weights weights)

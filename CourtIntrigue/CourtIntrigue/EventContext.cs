@@ -12,6 +12,9 @@ namespace CourtIntrigue
     {
         private Dictionary<string, object> parameters;
         private List<KeyValuePair<string,object>> scopes = new List<KeyValuePair<string, object>>();
+        private Dictionary<Character, Dictionary<string, double>> changedVariables = new Dictionary<Character, Dictionary<string, double>>();
+
+
         public object CurrentScope
         {
             get { return scopes.Last().Value; }
@@ -96,6 +99,91 @@ namespace CourtIntrigue
                     characters.Add(pair.Value as Character);
             }
             return characters.ToArray();
+        }
+
+        public void Commit()
+        {
+            foreach(var charVarPair in changedVariables)
+            {
+                var character = charVarPair.Key;
+                foreach(var varPair in charVarPair.Value)
+                {
+                    var name = varPair.Key;
+                    var value = varPair.Value;
+                    character.SetVariable(name, value);
+                }
+            }
+        }
+
+        public void CommitTo(EventContext parent)
+        {
+            foreach (var charVarPair in changedVariables)
+            {
+                var character = charVarPair.Key;
+                foreach (var varPair in charVarPair.Value)
+                {
+                    var name = varPair.Key;
+                    var value = varPair.Value;
+                    parent.SetVariable(character, name, value);
+                }
+            }
+        }
+
+        public double GetVariable(Character character, string variable)
+        {
+            Dictionary<string, double> variables = null;
+            if (!changedVariables.TryGetValue(character, out variables))
+            {
+                return character.GetVariable(variable);
+            }
+
+            double val = 0.0;
+            if(variables.TryGetValue(variable, out val))
+            {
+                return val;
+            }
+
+            return character.GetVariable(variable);
+        }
+
+        public void OffsetVariable(Character character, string variable, double offset)
+        {
+            Dictionary<string, double> variables = null;
+            if(!changedVariables.TryGetValue(character, out variables))
+            {
+                variables = new Dictionary<string, double>();
+                changedVariables.Add(character, variables);
+            }
+
+            double prevValue = 0.0;
+            if(variables.TryGetValue(variable, out prevValue))
+            {
+                variables[variable] = prevValue + offset;
+            }
+            else
+            {
+                variables.Add(variable, character.GetVariable(variable) + offset);
+            }
+        }
+
+        public void SetVariable(Character character, string variable, double newValue)
+        {
+            Dictionary<string, double> variables = null;
+            if (!changedVariables.TryGetValue(character, out variables))
+            {
+                variables = new Dictionary<string, double>();
+                changedVariables.Add(character, variables);
+            }
+
+            double prevValue = 0.0;
+            if (variables.TryGetValue(variable, out prevValue))
+            {
+                variables[variable] = newValue;
+            }
+            else
+            {
+                variables.Add(variable, newValue);
+            }
         }
     }
 
