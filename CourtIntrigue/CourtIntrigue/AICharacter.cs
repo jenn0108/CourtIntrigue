@@ -246,6 +246,12 @@ namespace CourtIntrigue
             //Consider each possibility in turn.
             for (int iItem = 0; iItem < items.Length; ++iItem)
             {
+                //Skip items that we aren't allowed to actually select.  We do this here instead of reducing the
+                //actual input list so that we don't need to remap the indices after the fact (for when our caller
+                //needs to return an index.)
+                if (!allowed[iItem])
+                    continue;
+
                 double itemValue = eval(items[iItem], weights);
 
                 //Are we the best?

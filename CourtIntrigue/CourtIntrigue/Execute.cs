@@ -367,8 +367,28 @@ namespace CourtIntrigue
             //Get the weights for the character that will be choosing the character.
             Weights charWeights = context.CurrentCharacter.GetWeights(weights.Perspective);
 
+            Character[] availableCharacters = game.FilterCharacters(requirements, context).ToArray();
+            bool[] allowed = new bool[availableCharacters.Length];
+            if (context.CurrentCharacter is AICharacter)
+            {
+                //AICharacter will only select characters from his important character's list.
+                var important = (context.CurrentCharacter as AICharacter).GetImportantCharacters().Select(pair => pair.Key).ToList();
+                for (int i = 0; i < availableCharacters.Length; ++i)
+                {
+                    allowed[i] = important.Contains(availableCharacters[i]);
+                }
+            }
+            else
+            {
+                //The player could select anything.  We don't know anything about his preferences.
+                for (int i = 0; i < availableCharacters.Length; ++i)
+                {
+                    allowed[i] = true;
+                }
+            }
+
             //Figure out which ones we think he will choose.
-            Character[] bestChars = AIHelper.GetBest(game.FilterCharacters(requirements, context), charWeights, (character, localWeights) =>
+            int[] bestIndices = AIHelper.GetBest(availableCharacters, allowed, charWeights, (character, localWeights) =>
             {
                 //We are only considering things theoretically: Don't make any changes to the context
                 //we are given.  We want a new local context for each character so variable changes for
@@ -382,8 +402,9 @@ namespace CourtIntrigue
             });
             //Evaluate each of those character using our weights
             double result = 0.0;
-            foreach(var best in bestChars)
+            foreach(var bestIndex in bestIndices)
             {
+                Character best = availableCharacters[bestIndex];
                 //We are only considering things theoretically: Don't make any changes to the context
                 //we are given.  We want a new local context for each character so variable changes for
                 //one character don't influence the others.
@@ -394,7 +415,7 @@ namespace CourtIntrigue
                 //the local context now.
                 result += weights.MeasureAfter(localContext, game);
             }
-            return result / bestChars.Length;
+            return result / bestIndices.Length;
         }
     }
 

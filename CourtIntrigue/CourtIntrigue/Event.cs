@@ -75,7 +75,21 @@ namespace CourtIntrigue
                 result += DirectExecute.Evaluate(game, context, weights);
 
             EventOption[] options = GetAvailableOptions(context, game);
-            if (options.Length > 0)
+            if(options.Length == 1)
+            {
+                //This is an optimization.  We don't need to evaluate another character's perspective
+                //if they only have a single option.
+
+                //We are only considering things theoretically: Don't make any changes to the context
+                //we are given.  We want a new local context for each option so variable changes for
+                //one option don't influence the others.
+                EventContext localContext = new EventContext(context);
+                result += options[0].DirectExecute.Evaluate(game, localContext, weights);
+                //We need to take into account any prestige modifiers because we are throwing away
+                //the local context now.
+                result += weights.MeasureAfter(localContext, game);
+            }
+            else if (options.Length > 0)
             {
                 //Get the weights that will be used to decide the best option.
                 Weights optionWeights = context.CurrentCharacter.GetWeights(weights.Perspective);
