@@ -240,7 +240,7 @@
     <requirements>
       <var_gt name="WellDressed">TIME</var_gt>
     </requirements>
-    <daily_change>2</daily_change>
+    <daily_change>3</daily_change>
   </prestige_mod>
 
   <prestige_mod>
@@ -250,7 +250,7 @@
     <requirements>
       <var_lt name="WellDressed">TIME</var_lt>
     </requirements>
-    <daily_change>-2</daily_change>
+    <daily_change>-3</daily_change>
   </prestige_mod>
 
   <prestige_mod>
