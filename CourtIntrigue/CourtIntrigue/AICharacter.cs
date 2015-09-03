@@ -117,13 +117,26 @@ namespace CourtIntrigue
 
             if (options.Length == 1)
                 return 0;
-
-            int chosenIndex = GetBestOption(options, context);
-
-            while(willpowerCost[chosenIndex] > WillPower)
+            
+            //Only options we have enough willpower for are valid choices
+            bool[] allowed = new bool[options.Length];
+            for (int i = 0; i < options.Length; ++i)
             {
-                chosenIndex = Game.GetRandom(options.Length);
+                allowed[i] = willpowerCost[i] <= WillPower;
             }
+            int[] bestIndexes = AIHelper.GetBest(options, allowed, GetWeights(this), (option, weights)=>
+            {
+                //We are only considering things theoretically: Don't make any changes to the context
+                //we are given.  We want a new local context for each option so variable changes for
+                //one option don't influence the others.
+                EventContext localContext = new EventContext(context);
+                double localResult = option.DirectExecute.Evaluate(Game, localContext, weights);
+                //We need to take into account any prestige modifiers because we are throwing away
+                //the local context now.
+                return localResult + weights.MeasureAfter(localContext, Game);
+            });
+
+            int chosenIndex = bestIndexes[Game.GetRandom(bestIndexes.Length)];
             EventOption chosen = options[chosenIndex];
             CharacterLog("Choosing " + EventHelper.ReplaceStrings(chosen.Label, context));
             return chosenIndex;
@@ -151,93 +164,104 @@ namespace CourtIntrigue
 
         private int GetBestCharacter(Character[] characters, bool[] allowed, IExecute operation, EventContext context, string chosenName)
         {
-            double bestValue = double.NegativeInfinity;
-            List<int> bestCharacters = new List<int>();
-            for (int iCharacter = 0; iCharacter < characters.Length; ++iCharacter)
+            int[] bestCharacters = AIHelper.GetBest(characters, allowed, GetWeights(this), (character, weights) =>
             {
-                if (!allowed[iCharacter])
-                    continue;
+                //We are only considering things theoretically: Don't make any changes to the context
+                //we are given.  We want a new local context for each character so variable changes for
+                //one character don't influence the others.
+                EventContext localContext = new EventContext(context);
+                localContext.PushScope(character, chosenName);
+                double result =  operation.Evaluate(Game, localContext, weights);
+                //We need to take into account any prestige modifiers because we are throwing away
+                //the local context now.
+                return result + weights.MeasureAfter(localContext, Game);
+            });
 
-                context.PushScope(characters[iCharacter], chosenName);
-                double characterValue = operation.Evaluate(Game, context, GetWeights());
-                context.PopScope();
-                if (characterValue > bestValue)
-                {
-                    bestCharacters.Clear();
-                    bestCharacters.Add(iCharacter);
-                    bestValue = characterValue;
-                }
-                else if (characterValue == bestValue)
-                {
-                    bestCharacters.Add(iCharacter);
-                }
-            }
-
-            if (bestCharacters.Count == 0)
+            if (bestCharacters.Length == 0)
                 return Game.GetRandom(characters.Length);
 
-            return bestCharacters[Game.GetRandom(bestCharacters.Count())];
+            return bestCharacters[Game.GetRandom(bestCharacters.Length)];
         }
 
         private ActionDescriptor GetBestAction(IEnumerable<ActionDescriptor> actionDescriptors)
         {
-            // For each action, evaluate the possible events and average their outcomes.
-            double bestValue = double.NegativeInfinity;
-            List<ActionDescriptor> bestActions = new List<ActionDescriptor>();
-
-            //Consider each possibility in turn.
-            foreach(var actionDescriptor in actionDescriptors)
+            ActionDescriptor[] bestActions = AIHelper.GetBest(actionDescriptors, GetWeights(this), (actionDescriptor, weights) =>
             {
-                EventContext context = new EventContext(actionDescriptor);
-
                 double actionValue = 0.0;
                 // Average the value of each event that can be triggered by the action.
                 foreach (string eventId in actionDescriptor.Action.Events)
                 {
+                    //We want a new local context for each event so variable changes for
+                    //one event don't influence the others.
+                    EventContext context = new EventContext(actionDescriptor);
                     Event ev = Game.GetEventById(eventId);
                     if (ev.ActionRequirements.Evaluate(context, Game))
                     {
-                        actionValue += ev.Evaluate(Game, context, GetWeights()) / actionDescriptor.Action.Events.Count();
+                        actionValue += ev.Evaluate(Game, context, weights) / actionDescriptor.Action.Events.Count();
                     }
                 }
-
-                //Are we the best?
-                if (actionValue > bestValue)
-                {
-                    bestActions.Clear();
-                    bestActions.Add(actionDescriptor);
-                    bestValue = actionValue;
-                }
-                else if (actionValue == bestValue)
-                {
-                    bestActions.Add(actionDescriptor);
-                }
-            }
+                return actionValue;
+            });
 
             return bestActions[Game.GetRandom(bestActions.Count())];
         }
 
-        private int GetBestOption(EventOption[] options, EventContext context)
+    }
+
+    static class AIHelper
+    {
+        public static Item[] GetBest<Item>(IEnumerable<Item> items, Weights weights, Func<Item, Weights, double> eval)
         {
+            // For each action, evaluate the possible events and average their outcomes.
             double bestValue = double.NegativeInfinity;
-            List<int> bestOptions = new List<int>();
-            for (int iOption = 0; iOption < options.Length; ++iOption)
+            List<Item> bestItems = new List<Item>();
+
+            //Consider each possibility in turn.
+            foreach (var item in items)
             {
-                // Don't need to look at requirements because we're only give the options we can choose.
-                double optionValue = options[iOption].DirectExecute.Evaluate(Game, context, GetWeights());
-                if (optionValue > bestValue)
+                double itemValue = eval(item, weights);
+
+                //Are we the best?
+                if (itemValue > bestValue)
                 {
-                    bestOptions.Clear();
-                    bestOptions.Add(iOption);
-                    bestValue = optionValue;
+                    bestItems.Clear();
+                    bestItems.Add(item);
+                    bestValue = itemValue;
                 }
-                else if (optionValue == bestValue)
+                else if (itemValue == bestValue)
                 {
-                    bestOptions.Add(iOption);
+                    bestItems.Add(item);
                 }
             }
-            return bestOptions[Game.GetRandom(bestOptions.Count())];
+
+            return bestItems.ToArray();
         }
 
+        public static int[] GetBest<Item>(Item[] items, bool[] allowed, Weights weights, Func<Item, Weights, double> eval)
+        {
+            // For each action, evaluate the possible events and average their outcomes.
+            double bestValue = double.NegativeInfinity;
+            List<int> bestItems = new List<int>();
+
+            //Consider each possibility in turn.
+            for (int iItem = 0; iItem < items.Length; ++iItem)
+            {
+                double itemValue = eval(items[iItem], weights);
+
+                //Are we the best?
+                if (itemValue > bestValue)
+                {
+                    bestItems.Clear();
+                    bestItems.Add(iItem);
+                    bestValue = itemValue;
+                }
+                else if (itemValue == bestValue)
+                {
+                    bestItems.Add(iItem);
+                }
+            }
+
+            return bestItems.ToArray();
+        }
     }
 }

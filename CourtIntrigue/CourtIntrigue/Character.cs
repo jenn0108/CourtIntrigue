@@ -35,6 +35,10 @@ namespace CourtIntrigue
         protected Dictionary<Character, ISet<OpinionModifierInstance>> opinionModifiers = new Dictionary<Character, ISet<OpinionModifierInstance>>();
         protected Game Game { get; private set; }
 
+        protected Weights publicWeights;
+        protected Weights privateWeights;
+
+
         public string Fullname
         {
             get { return Name + " " + Dynasty.Name; }
@@ -91,6 +95,11 @@ namespace CourtIntrigue
             jobs = new Dictionary<string, Job>();
             prestigeModifiers = new HashSet<PrestigeModifier>();
             Children = new List<Character>();
+
+            //TODO: have actual personality in the weights.
+            //TODO: public and private weights should be different
+            publicWeights = new Weights(this);
+            privateWeights = new Weights(this);
         }
 
         public void AssignFamily(Character spouse, List<Character> children, Room home, DNA husbandDna, DNA wifeDna)
@@ -137,9 +146,13 @@ namespace CourtIntrigue
             return Game.GetPortrait(DNA);
         }
 
-        public Weights GetWeights()
+        public Weights GetWeights(Character perspective)
         {
-            return new Weights(this);
+            if (perspective == this)
+                return privateWeights;
+
+
+            return publicWeights;
         }
 
         public IEnumerable<OpinionModifierInstance> GetOpinionModifiersAbout(Character character)
@@ -273,9 +286,9 @@ namespace CourtIntrigue
         {
             InformationInstance[] information;
             if (type == InformationType.Positive)
-                information = KnownInformation.Where(info => info.EvaluateOnTold(about, Game) > 0.0).ToArray();
+                information = KnownInformation.Where(info => info.EvaluateOnTold(this, about, Game) > 0.0).ToArray();
             else if (type == InformationType.Negative)
-                information = KnownInformation.Where(info => info.EvaluateOnTold(about, Game) < 0.0).ToArray();
+                information = KnownInformation.Where(info => info.EvaluateOnTold(this, about, Game) < 0.0).ToArray();
             else
                 information = KnownInformation.ToArray();
             int index = OnChooseInformation(information);
@@ -344,11 +357,12 @@ namespace CourtIntrigue
 
         public bool HasInformationAbout(Character about, InformationType type)
         {
+            Weights weights = GetWeights(this);
             foreach(var info in KnownInformation)
             {
                 if (info.IsAbout(about))
                 {
-                    double result = info.EvaluateOnTold(about, Game);
+                    double result = info.EvaluateOnTold(this, about, Game);
                     if (type == InformationType.Positive && result > 0.0)
                         return true;
                     else if (type == InformationType.Negative && result < 0.0)

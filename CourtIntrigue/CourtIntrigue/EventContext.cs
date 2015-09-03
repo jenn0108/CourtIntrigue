@@ -33,6 +33,24 @@ namespace CourtIntrigue
             }
         }
 
+        public EventContext(EventContext context)
+        {
+            //Copy the scopes.
+            scopes.AddRange(context.scopes);
+
+            //We can refer to the other parameters directly because we never change them.
+            parameters = context.parameters;
+
+            //Copy all the changed variables.
+            foreach(var charVars in context.changedVariables)
+            {
+                foreach(var varPair in charVars.Value)
+                {
+                    SetVariable(charVars.Key, varPair.Key, varPair.Value);
+                }
+            }
+        }
+
         public EventContext(Character initiator)
         {
             scopes.Add(new KeyValuePair<string, object>("ROOT", initiator));
@@ -83,6 +101,11 @@ namespace CourtIntrigue
                     return pair.Value;
             }
             return parameters[name];
+        }
+
+        public bool HasChanges()
+        {
+            return changedVariables.Count != 0;
         }
 
         public Character[] GetCharacters()

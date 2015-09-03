@@ -77,14 +77,36 @@ namespace CourtIntrigue
             EventOption[] options = GetAvailableOptions(context, game);
             if (options.Length > 0)
             {
-                //We need to choose an option some way:
-                //1. Average the options (Choosing this one for now because it's easier)
-                //2. Choose an optimal one for the (potentially) different character.
+                //Get the weights that will be used to decide the best option.
+                Weights optionWeights = context.CurrentCharacter.GetWeights(weights.Perspective);
 
-                foreach (EventOption option in options)
+                //Evaluate each option from the perpsective of the character choosing.
+                EventOption[] bestOptions = AIHelper.GetBest(options, optionWeights, (option, w) =>
                 {
-                    result += option.DirectExecute.Evaluate(game, context, weights) / options.Length;
+                    //We are only considering things theoretically: Don't make any changes to the context
+                    //we are given.  We want a new local context for each option so variable changes for
+                    //one option don't influence the others.
+                    EventContext localContext = new EventContext(context);
+                    double localResult = option.DirectExecute.Evaluate(game, localContext, w);
+                    //We need to take into account any prestige modifiers because we are throwing away
+                    //the local context now.
+                    return localResult + w.MeasureAfter(localContext, game);
+                });
+
+                //The current character will choose one of the best (or so we think)
+                //We need to evaluate the options from our perspective and average those values.
+                foreach(var best in bestOptions)
+                {
+                    //We are only considering things theoretically: Don't make any changes to the context
+                    //we are given.  We want a new local context for each option so variable changes for
+                    //one option don't influence the others.
+                    EventContext localContext = new EventContext(context);
+                    result += best.DirectExecute.Evaluate(game, localContext, weights);
+                    //We need to take into account any prestige modifiers because we are throwing away
+                    //the local context now.
+                    result += weights.MeasureAfter(localContext, game);
                 }
+                result /= bestOptions.Length;
             }
             return result;
         }

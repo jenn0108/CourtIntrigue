@@ -7,7 +7,7 @@ using System.Diagnostics;
 
 namespace CourtIntrigue
 {
-    class Execute
+    static class Execute
     {
         public static IExecute NOOP = new NoOpExecute();
         public static IExecute DEBUG = new DebugExecute();
@@ -16,16 +16,16 @@ namespace CourtIntrigue
 
     class Weights
     {
-        private Character perspective;
+        public Character Perspective { get; private set; }
 
         public Weights(Character perspective)
         {
-            this.perspective = perspective;
+            Perspective = perspective;
         }
 
         public double MeasureGold(Character currentCharacter, int gold)
         {
-            if (perspective == currentCharacter)
+            if (Perspective == currentCharacter)
                 return gold * 1.0;
             else
                 return 0.0;
@@ -33,7 +33,7 @@ namespace CourtIntrigue
 
         public double MeasurePrestige(Character currentCharacter, int change)
         {
-            if (perspective == currentCharacter)
+            if (Perspective == currentCharacter)
                 return change * 100.0;
             else
                 return 0.0;
@@ -41,7 +41,7 @@ namespace CourtIntrigue
 
         public double MeasureOpinion(Character charWithOpinion, Character opinionOf, OpinionModifier mod)
         {
-            if (perspective == opinionOf)
+            if (Perspective == opinionOf)
                 return mod.Change * 1.0;
             else
                 return 0.0;
@@ -49,7 +49,7 @@ namespace CourtIntrigue
 
         public double MeasureJob(Character currentCharacter, Job job)
         {
-            if (perspective == currentCharacter)
+            if (Perspective == currentCharacter)
                 return 1000.0; //Jobs are great.  Really we should measure prestige modifiers since jobs can give you one.
             else
                 return 0.0;
@@ -57,7 +57,7 @@ namespace CourtIntrigue
 
         public double MeasureAllowEventSelection(Character currentCharacter)
         {
-            if (perspective == currentCharacter)
+            if (Perspective == currentCharacter)
                 return 0.0; // Nobody cares about getting their turn back.
             else
                 return 0.0;
@@ -67,11 +67,11 @@ namespace CourtIntrigue
         {
             // 1. Is info about the perspective character
             // then we like it as much as we like whatever the OnObserve of that information does.
-            if (info.IsAbout(perspective))
+            if (info.IsAbout(Perspective))
             {
-                return info.EvaluateOnObserve(perspective, game);
+                return info.EvaluateOnObserve(Perspective, Perspective, game);
             }
-            else if (observingCharacter == perspective)
+            else if (observingCharacter == Perspective)
             {
                 return 100.0; // It's good to know things about people.
             }
@@ -89,22 +89,25 @@ namespace CourtIntrigue
             return 0.0;
         }
 
-        public double MeasureChangedVariable(EventContext context, Game game)
+        public double MeasureAfter(EventContext context, Game game)
         {
             //Do the changed variables belong to us?
-            if(perspective is AICharacter)
+            if(Perspective is AICharacter && context.HasChanges())
             {
                 double result = 0.0;
-                AICharacter me = perspective as AICharacter;
+                AICharacter me = Perspective as AICharacter;
                 foreach(var pair in me.GetImportantCharacters())
                 {
                     double change = EvaluateChangedModifiers(pair.Key, context, game);
-                    if (pair.Value == Relationship.Family)
-                        result += change;
-                    else if (pair.Value == Relationship.Friend)
-                        result += change * 0.5;
-                    else if (pair.Value == Relationship.Rival)
-                        result -= change;
+                    if (change != 0.0)
+                    {
+                        if (pair.Value == Relationship.Family)
+                            result += change;
+                        else if (pair.Value == Relationship.Friend)
+                            result += change * 0.5;
+                        else if (pair.Value == Relationship.Rival)
+                            result -= change;
+                    }
                 }
                 return result;
             }
@@ -120,7 +123,7 @@ namespace CourtIntrigue
             game.GetChangedModifiers(context, addedModifiers, removedModifiers);
 
             double result = 0.0;
-            if (addedModifiers.Count > 0 && removedModifiers.Count > 0)
+            if (addedModifiers.Count > 0 || removedModifiers.Count > 0)
             {
                 foreach (var added in addedModifiers)
                 {
@@ -141,7 +144,7 @@ namespace CourtIntrigue
         // about what our own will be.
         public bool IsMyDecision(Character currentCharacter)
         {
-            return perspective == currentCharacter;
+            return Perspective == currentCharacter;
         }
     }
 
@@ -361,31 +364,37 @@ namespace CourtIntrigue
         }
         public double Evaluate(Game game, EventContext context, Weights weights)
         {
-            if (weights.IsMyDecision(context.CurrentCharacter))
-            {
-                // This will always be called with CurrentCharacter as an AI so we don't need to worry about showing
-                // character pickers randomly but throw an exception just incase
-                if (context.CurrentCharacter is PlayerCharacter)
-                    throw new EventIncorrectException("Player character is making a decision using weights!!");
+            //Get the weights for the character that will be choosing the character.
+            Weights charWeights = context.CurrentCharacter.GetWeights(weights.Perspective);
 
-                Character chosen = context.CurrentCharacter.ChooseCharacter(game.FilterCharacters(requirements, context), operation, context, scopeName);
-                context.PushScope(chosen, scopeName);
-                double result = operation.Evaluate(game, context, weights);
-                context.PopScope();
-                return result;
-            }
-            else
+            //Figure out which ones we think he will choose.
+            Character[] bestChars = AIHelper.GetBest(game.FilterCharacters(requirements, context), charWeights, (character, localWeights) =>
             {
-                double result = 0.0;
-                Character[] filteredCharacters = game.FilterCharacters(requirements, context);
-                foreach (Character character in filteredCharacters)
-                {
-                    context.PushScope(character, scopeName);
-                    result += operation.Evaluate(game, context, weights) / filteredCharacters.Length;
-                    context.PopScope();
-                }
-                return result;
+                //We are only considering things theoretically: Don't make any changes to the context
+                //we are given.  We want a new local context for each character so variable changes for
+                //one character don't influence the others.
+                EventContext localContext = new EventContext(context);
+                localContext.PushScope(character, scopeName);
+                double directResult = operation.Evaluate(game, localContext, localWeights);
+                //We need to take into account any prestige modifiers because we are throwing away
+                //the local context now.
+                return directResult + localWeights.MeasureAfter(localContext, game);
+            });
+            //Evaluate each of those character using our weights
+            double result = 0.0;
+            foreach(var best in bestChars)
+            {
+                //We are only considering things theoretically: Don't make any changes to the context
+                //we are given.  We want a new local context for each character so variable changes for
+                //one character don't influence the others.
+                EventContext localContext = new EventContext(context);
+                localContext.PushScope(best, scopeName);
+                result += operation.Evaluate(game, localContext, weights);
+                //We need to take into account any prestige modifiers because we are throwing away
+                //the local context now.
+                result += weights.MeasureAfter(localContext, game);
             }
+            return result / bestChars.Length;
         }
     }
 
@@ -665,7 +674,7 @@ namespace CourtIntrigue
                 throw new InvalidOperationException("Cannot assign to special properties: " + varName);
 
             context.SetVariable(context.CurrentCharacter, varName, newValue.Calculate(context, game));
-            return weights.MeasureChangedVariable(context, game);
+            return 0.0;
         }
     }
 
@@ -693,7 +702,7 @@ namespace CourtIntrigue
                 throw new InvalidOperationException("Cannot assign to special properties: " + varName);
 
             context.OffsetVariable(context.CurrentCharacter, varName, offset.Calculate(context, game));
-            return weights.MeasureChangedVariable(context, game);
+            return 0.0;
         }
     }
 

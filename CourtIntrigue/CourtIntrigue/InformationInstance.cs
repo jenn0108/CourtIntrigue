@@ -62,18 +62,20 @@ namespace CourtIntrigue
             observeContext.Commit();
         }
 
-        public double EvaluateOnTold(Character currentCharacter, Game game)
+        public double EvaluateOnTold(Character perspectiveCharacter, Character evaluateCharacter, Game game)
         {
-            //The current character is the character whose opinion on the information we care about.
-            EventContext observeContext = new EventContext(currentCharacter, parameters);
-            return information.OnTold.Evaluate(game, observeContext, currentCharacter.GetWeights());
+            //The perspectiveCharacter is the character performing the query.
+            //The evaluateCharacter is the character whose opinion on the information we care about.
+            EventContext observeContext = new EventContext(evaluateCharacter, parameters);
+            return information.OnTold.Evaluate(game, observeContext, evaluateCharacter.GetWeights(perspectiveCharacter));
         }
 
-        public double EvaluateOnObserve(Character currentCharacter, Game game)
+        public double EvaluateOnObserve(Character perspectiveCharacter, Character evaluateCharacter, Game game)
         {
-            //The current character is the character whose opinion on the information we care about.
-            EventContext observeContext = new EventContext(currentCharacter, parameters);
-            return information.OnObserve.Evaluate(game, observeContext, currentCharacter.GetWeights());
+            //The perspectiveCharacter is the character performing the query.
+            //The evaluateCharacter is the character whose opinion on the information we care about.
+            EventContext observeContext = new EventContext(evaluateCharacter, parameters);
+            return information.OnObserve.Evaluate(game, observeContext, evaluateCharacter.GetWeights(perspectiveCharacter));
         }
 
         public bool IsExpired(int currentDayInTicks)
