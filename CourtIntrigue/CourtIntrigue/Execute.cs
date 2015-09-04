@@ -101,8 +101,10 @@ namespace CourtIntrigue
                     double change = EvaluateChangedModifiers(pair.Key, context, game);
                     if (change != 0.0)
                     {
-                        if (pair.Value == Relationship.Family)
+                        if (pair.Value == Relationship.Self)
                             result += change;
+                        else if (pair.Value == Relationship.Family)
+                            result += change * 0.9;
                         else if (pair.Value == Relationship.Friend)
                             result += change * 0.5;
                         else if (pair.Value == Relationship.Rival)

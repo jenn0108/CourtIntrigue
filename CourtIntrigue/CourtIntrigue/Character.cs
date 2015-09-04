@@ -399,7 +399,7 @@ namespace CourtIntrigue
             return traits.ContainsKey(traitId);
         }
 
-        protected void CharacterLog(string text)
+        public void CharacterLog(string text)
         {
             Game.Log(Fullname + ": " + text);
         }

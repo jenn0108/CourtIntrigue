@@ -267,15 +267,13 @@ namespace CourtIntrigue
 
             foreach (var modifier in prestigeModifiers)
             {
-                if (modifier.EvaluateRequirements(context, game))
+                if (modifier.EvaluateRequirements(context, game) && !modifier.EvaluateRequirements(context.CurrentCharacter, game))
                 {
-                    if (!context.CurrentCharacter.HasModifier(modifier))
-                        added.Add(modifier);
+                    added.Add(modifier);
                 }
-                else
+                else if (!modifier.EvaluateRequirements(context, game) && modifier.EvaluateRequirements(context.CurrentCharacter, game))
                 {
-                    if(context.CurrentCharacter.HasModifier(modifier))
-                        removed.Add(modifier);
+                    removed.Add(modifier);
                 }
             }
         }

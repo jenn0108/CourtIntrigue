@@ -291,7 +291,7 @@
         <var_gt name="WellDressed">TIME</var_gt>
       </all_child>
     </requirements>
-    <daily_change>2</daily_change>
+    <daily_change>1</daily_change>
   </prestige_mod>
 
   <prestige_mod>
@@ -304,7 +304,7 @@
         <var_lt name="WellDressed">TIME</var_lt>
       </any_child>
     </requirements>
-    <daily_change>-2</daily_change>
+    <daily_change>-1</daily_change>
   </prestige_mod>
 
   <prestige_mod>

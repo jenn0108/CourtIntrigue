@@ -8,6 +8,7 @@ namespace CourtIntrigue
 {
     enum Relationship
     {
+        Self,
         Family,
         Rival,
         Powerful,
@@ -49,7 +50,7 @@ namespace CourtIntrigue
             if(interestingCharacters.Count == 0)
             {
                 //You are your own family.
-                interestingCharacters.Add(this, Relationship.Family);
+                interestingCharacters.Add(this, Relationship.Self);
                 //Add family
                 if (Spouse != null)
                     interestingCharacters.Add(Spouse, Relationship.Family);
@@ -133,7 +134,9 @@ namespace CourtIntrigue
                 double localResult = option.DirectExecute.Evaluate(Game, localContext, weights);
                 //We need to take into account any prestige modifiers because we are throwing away
                 //the local context now.
-                return localResult + weights.MeasureAfter(localContext, Game);
+                double localAfter = weights.MeasureAfter(localContext, Game);
+                CharacterLog(string.Format("{0}+{1}={2}:{3}", localResult, localAfter, localResult + localAfter, option.Label));
+                return localResult + localAfter;
             });
 
             int chosenIndex = bestIndexes[Game.GetRandom(bestIndexes.Length)];
@@ -171,10 +174,12 @@ namespace CourtIntrigue
                 //one character don't influence the others.
                 EventContext localContext = new EventContext(context);
                 localContext.PushScope(character, chosenName);
-                double result =  operation.Evaluate(Game, localContext, weights);
+                double localResult =  operation.Evaluate(Game, localContext, weights);
                 //We need to take into account any prestige modifiers because we are throwing away
                 //the local context now.
-                return result + weights.MeasureAfter(localContext, Game);
+                double localAfter = weights.MeasureAfter(localContext, Game);
+                CharacterLog(string.Format("{0}+{1}={2}:{3}", localResult, localAfter, localResult + localAfter, character.Name));
+                return localResult + localAfter;
             });
 
             if (bestCharacters.Length == 0)
@@ -200,6 +205,10 @@ namespace CourtIntrigue
                         actionValue += ev.Evaluate(Game, context, weights) / actionDescriptor.Action.Events.Count();
                     }
                 }
+                if(actionDescriptor.Target == null)
+                    CharacterLog(string.Format("{0}:{1}", actionValue, actionDescriptor.Action.Label));
+                else if (actionDescriptor.Target != null)
+                    CharacterLog(string.Format("{0}:{1} with {2}", actionValue, actionDescriptor.Action.Identifier, actionDescriptor.Target.Name));
                 return actionValue;
             });
 
